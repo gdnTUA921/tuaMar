@@ -1,0 +1,57 @@
+.itemcontainer {
+    background: rgb(34,108,44);
+    background: linear-gradient(0deg, rgba(34,108,44,1) 12%, rgba(159,159,159,1) 61%, rgba(219,219,219,1) 100%);
+    width: 100%; 
+    min-height: 100vh;
+    display: flex; 
+    justify-content: left; 
+    align-items: flex-start; 
+    padding: 20px; 
+    
+}
+.detailsbar {
+    background-color: white;
+    width: 150vh;
+    height: 85vh;
+    margin-left: 30vh;
+    margin-top: 20px;
+}
+.itemtitle {
+    font-size: 20px;
+    font-family: Arial;
+    color: #547B3E;
+    margin-top: 60px;
+    margin-left: 70vh;
+}
+.itemimage {
+    width: 50vh;
+    height: 40vh;
+    border: 5px solid #547B3E;
+    border-radius: 10px;
+    margin-left: 30px;
+    margin-top: -250px;
+}
+.price {
+    font-size: 20px;
+    font-family: Arial;
+    margin-left: 70vh;
+    color: #547B3E;
+    margin-top: 30px;
+}
+.condition, .category, .descriptions
+ {
+    font-family: Arial, bold;
+    margin-left: 70vh;
+}
+.hearticon {
+    margin-left: 135vh;
+    margin-top: -44vh;
+    color: #547B3E;
+}
+.contactbutton {
+    margin-top: 40vh;
+    margin-left: 30px;
+    width: 55vh;
+    padding: 10px;
+    border-radius: 5px;
+}

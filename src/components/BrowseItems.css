@@ -1,0 +1,27 @@
+.browsecontainer {
+    background: rgb(34,108,44);
+    background: linear-gradient(0deg, rgba(34,108,44,1) 12%, rgba(159,159,159,1) 61%, rgba(219,219,219,1) 100%);
+    width: 100%; 
+    min-height: 100vh;
+    display: flex; 
+    justify-content: left; 
+    align-items: center; 
+    padding: 20px; 
+}
+
+.filecontainer {
+    height: 100vh;
+    padding: 60px 30px 10px 20px;
+    background-color: white;
+    display: left;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+    width: 20%;
+    height: 500px;
+    margin-top: 20px;
+    margin-bottom: 20%;
+    margin-left: 50px;
+
+  }
+ 
