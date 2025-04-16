@@ -25,7 +25,7 @@ function Home() {
       </div>
     
       <div className="button1">
-        <button>Start Shopping</button>
+      <Link to="/browseItems"><button>Start Shopping</button></Link>
       </div>
           
       <div className="button2">

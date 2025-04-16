@@ -30,11 +30,11 @@ function Sell() {
 
           <form className="sell-form">
             <label htmlFor="itemName">Item Name:</label>
-            <input type="text" id="itemName" className="sell-input" name="itemName" placeholder="Enter Item Name"/>
+            <input type="text" id="itemName" className="sell-input" name="itemName" placeholder="Enter Item Name" required/>
 
             <label htmlFor="price">Price:</label>
             <div className="currencySign">&#8369;</div>
-            <input type="number" id="price" className="sell-input no-arrows" name="price" min="0" step="0.01" placeholder="Enter price"/>
+            <input type="number" id="price" className="sell-input no-arrows" name="price" min="0" step="0.01" placeholder="Enter price" required/>
 
             <label htmlFor="category">Category:</label>
             <select id="category" className="sell-select" name="category">
@@ -57,7 +57,7 @@ function Sell() {
             </select>
 
             <label htmlFor="description">Description:</label>
-            <textarea id="description" className="sell-description" name="description" placeholder="Describe what you are selling and include any details a buyer might be interested in."></textarea>
+            <textarea id="description" className="sell-description" name="description" placeholder="Describe what you are selling and include any details a buyer might be interested in." required></textarea>
 
             <div className="buttonsDisplay">
               <button type="submit" className="sell-button"><b>Submit</b></button>

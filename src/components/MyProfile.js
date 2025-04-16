@@ -31,8 +31,8 @@ function MyProfile() {
 
 
   const items = [
-    { id: 1, title: "ITEM #1", price: 600, condition: "Like New" },
-    { id: 2, title: "ITEM #2", price: 600, condition: "Like New" },
+    { id: 1, title: "Jollibee Sanrio Happy Meal Collection", price: 600, condition: "Like New" },
+    { id: 2, title: "NBA Cards - Victor Wembanyama Top Class Rookie Card (RC)", price: 600, condition: "Like New" },
     { id: 3, title: "ITEM #3", price: 600, condition: "Like New" },
     { id: 4, title: "ITEM #4", price: 600, condition: "Like New" },
     { id: 5, title: "ITEM #5", price: 600, condition: "Like New" },
@@ -54,11 +54,11 @@ function MyProfile() {
           <div className="profile-nameBox">
             <div className="profile-coverBG"></div>
             <div className="profile-pic">
-              <img src="https://lh3.googleusercontent.com/a-/ALV-UjWINyPoMWaXdtmYTSbahawn8qSdguuctzGyJ_9Fq-v1i9If0No1=s1000-p" alt="Profile Photo" />
+              <img src="https://lh3.googleusercontent.com/a-/ALV-UjUIStqWY_RaxX007NIEzp3CHWWc_H0573ci0o-N61I=s1000" alt="Profile Photo" />
             </div>
             <div className="profile-name">
-              <h1>Elisha Marie Vea Daliba</h1>
-              <p>elishamarieveapdaliba@tua.edu.ph</p>
+              <h1>{"Elisha Marie Vea Daliba"}</h1>
+              <p>{"elishamarieveapdaliba@tua.edu.ph"}</p>
               <div className="rating-container">
                 <span id="starReview">
                   <i className="bi bi-star-fill"></i>
@@ -132,7 +132,7 @@ function MyProfile() {
                     </div>
                   ))
                 ) : (
-                  <p>No items found.</p>
+                  <p><b>No items found.</b></p>
                 )}
               </div>
             </div>
@@ -143,7 +143,7 @@ function MyProfile() {
               <h2>Reviews</h2>
               <div className='reviewCard'>
                 <div className="profile-reviews">
-                  <img src="https://lh3.googleusercontent.com/a/ACg8ocInfF0pAGz6RsZGPKxs_P-n2BipXD1njwq_4_moG8MBWq2FJME=s1000-p" alt="Profile Photo" />
+                  <img src="https://lh3.googleusercontent.com/a/ACg8ocL0ay37DbsBCGDn_jmSQ2eFz3NJoFRlmcAc0gNp0llDGfPAYaY=s1000-p-k-rw-no" alt="Profile Photo" />
                   <p>{"Giancarlo Nonato"}</p>
                   <p>&#x2022;&nbsp;Review from {"buyer"}</p>
                   <p>{"10/30/2025"}</p>
@@ -158,7 +158,7 @@ function MyProfile() {
                 </div>
 
                 <div className="review-description">
-                  <p>Seller is very friendly and easy to deal with. She is also very beautiful. I think I have a crush on this seller.</p>
+                  <p>Seller is very friendly and easy to deal with. Hope we can do more transactions again soon.</p>
                 </div>
 
                 <hr/>
@@ -168,7 +168,7 @@ function MyProfile() {
                 <div className="profile-reviews">
                 <img src="https://lh3.googleusercontent.com/a-/ALV-UjUWuYwvrpzPj7i5lL5Zcz99CCVQl1zzI9B2cbu2kx1fdjKWSKw=s1000-p-k-rw-no" alt="Profile Photo" />
                 <p>{"Jandrik Lana"}</p>
-                <p>&#x2022;&nbsp;Review from {"buyer"}</p>
+                <p>&#x2022;&nbsp;Review from {"seller"}</p>
                 <p>{"09/21/2025"}</p>
                 </div>
 
@@ -181,7 +181,7 @@ function MyProfile() {
                 </div>
 
                 <div className="review-description">
-                  <p>Seller is very friendly and easy to deal with. To more deals to come.</p>
+                  <p>Buyer is very friendly and easy to deal with. To more deals to come.</p>
                 </div>
 
                 <hr/>

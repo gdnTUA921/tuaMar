@@ -76,7 +76,7 @@ button:hover{
 
 
 
-@media (max-width: 1200px){
+@media (max-width: 1350px){
 
     .welcome{
         font-size: 45px;
@@ -101,6 +101,11 @@ button:hover{
 
 
 @media (max-height: 600px) {
+
+    .button1{
+        left: 50%;
+        position: absolute;
+    }
     
     .button2{
         top: 89%;

@@ -16,7 +16,7 @@ img{
 }
 
 h1{
-    padding-left: 10px;
+    padding-left: 20px;
     font-size: 25px;
 }
 
@@ -90,7 +90,8 @@ nav{
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
-    translate: 180px 25px;
+    top: 85px;
+    right: 35px; /* Icon stays on the right */
     width: 120px; 
     text-align: center;
     gap: 5px;
@@ -116,7 +117,7 @@ nav{
   
 
 
-@media (max-width: 1250px) {
+@media (max-width: 1240px) {
 
     .homeLogo, header{
         flex-direction: column;
@@ -160,6 +161,18 @@ nav{
         right: 60px; /* Adjust position */
         font-size: 40px;
     }
+
+    .productDropDown {
+        top: 75px; /* Move further left */
+        right: 50px; /* Adjust position */
+        padding: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .productDropDown a, .logOut{
+        font-size: 15px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -167,12 +180,33 @@ nav{
         right: 35px; /* Move further left */
         
     }
+
+    .productDropDown {
+        top: 75px; /* Move further left */
+        right: 15px; /* Move further left */
+        width: 25%;
+        padding: 8px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .productDropDown a, .logOut{
+        font-size: 12px;
+    }
 }
 
 @media (max-width: 360px) {
     #headerIcon {
         right: 10px; /* Adjust even more */
-        font-size: 25px;
-       
+        font-size: 25px; 
+    }
+
+    .productDropDown {
+        top: 60px; /* Move further left */
+        right: 5px; /* Move further left */
+    }
+
+    .productDropDown a, .logOut{
+        font-size: 10px;
     }
 }

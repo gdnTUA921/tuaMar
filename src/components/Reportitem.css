@@ -1,7 +1,7 @@
 .reportcontainer{
-    height: 100vh;
+    height: auto;
     background: rgb(34,108,44);
-background: linear-gradient(0deg, rgba(34,108,44,1) 12%, rgba(159,159,159,1) 61%, rgba(219,219,219,1) 100%);
+    background: linear-gradient(135deg, #9bb69e, #7fa47f, #7f9a7f);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,9 +14,10 @@ background: linear-gradient(0deg, rgba(34,108,44,1) 12%, rgba(159,159,159,1) 61%
     align-items: center;
     margin-top: 50px;
     margin-bottom: 50px;
+    border-radius: 10px;
 }
 .reporttitle {
-   
+   margin-top: 35px;
     margin-left: 40px;
     color: #547B3E;
     font-size: 30px;
@@ -43,7 +44,7 @@ background: linear-gradient(0deg, rgba(34,108,44,1) 12%, rgba(159,159,159,1) 61%
 .desc-input {
     margin: 10px 0; /* Reduce excessive margins */
     padding: 10px;
-    margin-left: 45px;
+    margin-left: 40px;
     width: calc(100% - 40px); /* Responsive width */
     
 }

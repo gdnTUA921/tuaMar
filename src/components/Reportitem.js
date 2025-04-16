@@ -5,11 +5,12 @@ const Reportitem = () => {
   return (
     <div className = "reportcontainer">
         <div className= 'reportbox'>
-        <h2 className ='reporttitle'>Report</h2>
+        <h2 className ='reporttitle'>Report Item</h2>
         <h3 className='subheading'>Please fill out the form below to report the item</h3>
+        
         <div className = "itembar"> 
         <h3>This is the item (change here)</h3>
-       </div>
+        </div>
    
 
        <label className = "reasontitle" htmlFor="category">Reason for report</label>
