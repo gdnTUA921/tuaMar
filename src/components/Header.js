@@ -26,7 +26,7 @@ function Header() {
       <div class="container">
         <i className="bi bi-person-fill" id="headerIcon"></i>
         <div class="productDropDown">
-          <a href="#"><i class="bi bi-box-arrow-right logOut">&nbsp;&nbsp;&nbsp;Log Out</i></a>
+          <a href="#" onClick={() => alert("Logged Out")}><i class="bi bi-box-arrow-right logOut">&nbsp;&nbsp;&nbsp;Log Out</i></a>
         </div>
       </div>
       

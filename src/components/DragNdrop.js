@@ -4,11 +4,10 @@ import "./DragNdrop.css";
 
 const fileTypes = ["JPG", "JPEG", "PNG"];
 
-function DragNdrop() {
-  const [files, setFiles] = useState([]);
+function DragNdrop({ onImagesChange }) {
+  const [images, setImages] = useState([]);
 
-  const handleChange = (selectedFiles) => {
-    
+  const handleChange = async (selectedFiles) => {
     let filesArray = [];
 
     if (selectedFiles instanceof FileList) {
@@ -19,19 +18,35 @@ function DragNdrop() {
       filesArray = [selectedFiles];
     }
 
-    // Limit the number of files to 3
-    if (files.length + filesArray.length <= 3) {
-      setFiles((prevFiles) => [...prevFiles, ...filesArray]);
-    } else {
+    if (images.length + filesArray.length > 3) {
       alert("You can only upload up to 3 images.");
+      return;
     }
-    
+
+    const newBase64Images = await Promise.all(
+      filesArray.map((file) => convertToBase64(file))
+    );
+
+    const updatedImages = [...images, ...newBase64Images];
+    setImages(updatedImages);
+
+    // Send base64 images to parent component
+    onImagesChange(updatedImages);
+  };
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
   };
 
   return (
     <div>
       <div className="preview-container">
-        {files.length === 0 ? (
+        {images.length === 0 ? (
           <div className="blank-upload-container">
             {[1, 2, 3].map((_, index) => (
               <div key={index} className="blank-upload-box">
@@ -40,16 +55,14 @@ function DragNdrop() {
             ))}
           </div>
         ) : (
-          files.map((file, index) =>
-            file instanceof File ? (
-              <img
-                key={index}
-                src={URL.createObjectURL(file)}
-                alt="Preview"
-                className="preview-image"
-              />
-            ) : null
-          )
+          images.map((base64, index) => (
+            <img
+              key={index}
+              src={base64}
+              alt={`Preview ${index}`}
+              className="preview-image"
+            />
+          ))
         )}
       </div>
       <FileUploader handleChange={handleChange} name="files" types={fileTypes} multiple>

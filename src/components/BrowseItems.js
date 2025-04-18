@@ -1,47 +1,39 @@
-import React from "react";
-import { useState } from "react";
-import { Flag } from "lucide-react";
-import { Heart } from "lucide-react";
-import { X } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Flag, Heart, X } from "lucide-react";
 import "./BrowseItems.css";
 import { Link } from "react-router-dom";
 
 const BrowseItems = () => {
+  const [items, setItems] = useState([]);
 
-      const [searchQuery, setSearchQuery] = useState("");
+  const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
+  
+  useEffect(() => {
+    fetch(`${ip}/tua_marketplace/browseItems.php`)
+      .then((response) => response.json())
+      .then((data) => setItems(data))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
-    /* Placholder Values. Change this code in database retrieval */
-    const items = [
-        { id: 1, title: "Jollibee Sanrio Happy Meal Collection", price: 600, condition: "Like New" },
-        { id: 2, title: "NBA Cards - Victor Wembanyama Top Class Rookie Card (RC)", price: 600, condition: "Like New" },
-        { id: 3, title: "Funko Pop Iron Man 2025 Summer Convention Exclusive", price: 600, condition: "Like New" },
-        { id: 4, title: "NBA Cards - Miami Heat 2013-14 Panini NBA (International) #151 - LeBron James Dwayne Wade Chris Bosh", price: 600, condition: "Like New" },
-        { id: 5, title: "TUA Uniform", price: 600, condition: "Like New" },
-        { id: 6, title: "ITEM #6", price: 600, condition: "Like New" },
-        { id: 7, title: "ITEM #7", price: 600, condition: "Like New" },
-        { id: 8, title: "ITEM #8", price: 600, condition: "Like New" },
-      ]; 
-    
-      // Filter items based on search input
-      const filteredItems = items.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  const [searchQuery, setSearchQuery] = useState("");
 
-      //For filter menu box
-      const [isOpen, setIsOpen] = useState(false);
+  const filteredItems = items.filter((item) =>
+    item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-      const navStyle = {
-        width: isOpen ? '228px' : '0',
-        transition: '0.5s',
-        padding: isOpen ? '25px' : '0',
-        paddingTop: isOpen ? '30px' : '0',
-      };
+  const [isOpen, setIsOpen] = useState(false);
 
-      const browseMove = {
-        marginLeft: isOpen ? '265px' : '35px',
-        transition: '0.5s',
-      };
+  const navStyle = {
+    width: isOpen ? "228px" : "0",
+    transition: "0.5s",
+    padding: isOpen ? "25px" : "0",
+    paddingTop: isOpen ? "30px" : "0",
+  };
 
+  const browseMove = {
+    marginLeft: isOpen ? "265px" : "35px",
+    transition: "0.5s",
+  };
 
   return (
     <div className="browsecontainer">
@@ -119,53 +111,68 @@ const BrowseItems = () => {
 
           <div className="items-browse" style={browseMove}>
             {filteredItems.length > 0 ? (
-                filteredItems.map((item) => (
-                    <div className="itemCard-browse" key={item.id}>
-                        <Link to="/itemdetails" state={{passedWord: item.title}} className="item-details-link">
-                        <img
-                            src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/objects.png"
-                            style={{
-                              width: "180px",
-                              height: "180px",
-                              border: "3px solid green",
-                              borderRadius: "12px",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              marginLeft: "5.5px",
-                              objectFit: "cover",
-                              padding: "0"
-                            }}
-                            alt="Item"
-                          /></Link>
+              filteredItems.map((item) => (
+                <div className="itemCard-browse" key={item.item_id}>
+                  <Link
+                    to="/itemdetails"
+                    state={{passedID: item.item_id, passedWord: item.item_name, passedPic: item.preview_pic, passedPrice: item.price, passedCond: item.condition, passedCat: item.category, passedDesc: item.description}}
+                    className="item-details-link"
+                  >
+                    <img
+                      src={item.preview_pic}
+                      alt={item.item_name}
+                      style={{
+                        width: "180px",
+                        height: "180px",
+                        border: "3px solid green",
+                        borderRadius: "12px",
+                        objectFit: "cover",
+                        marginLeft: "5.5px",
+                        padding: "0"
+                      }}
+                    />
+                  </Link>
 
-                        <div className="itemDeets-browse">
-                            <Link to="/itemdetails" state={{passedWord: item.title}} className="item-details-link">
-                            <div className="itemTitle">
-                              <h3>{item.title}</h3> {/* Change this via database retrieval*/}
-                            </div></Link>
+                  <div className="itemDeets-browse">
+                    <Link
+                      to="/itemdetails"
+                      state={{passedID: item.item_id, passedWord: item.item_name, passedPic: item.preview_pic, passedPrice: item.price,  passedCond: item.condition, passedCat: item.category, passedDesc: item.description}}
+                      className="item-details-link"
+                    >
+                      <div className="itemTitle">
+                        <h3>{item.item_name}</h3>
+                      </div>
+                    </Link>
 
-                            <div className="listButtons">
-                            <Heart className="heart"/>
-                            <Link to="/reportitem" className="browse-flag"><Flag size={20}/></Link>
-                            </div>
-                            
-
-                            <div className="browse-price-condition">
-                              <p>&#8369;{item.price}.00</p>
-                              <p>&#x2022; {item.condition}</p>
-                            </div>
-                            
-                            <div className="itemSeller">
-                                <img src="https://lh3.googleusercontent.com/a-/ALV-UjWgmyu8CmNMWPDq_ODNxIvVbNzd_XMpu93FNWeUiWuh9aXd_ZeO=s1000-p"/>
-                                <p>{"Marc Adrian"}<br/>{"Miranda"}</p>
-                            </div>
-                        </div>
+                    <div className="listButtons">
+                      <Heart className="heart" />
+                      <Link to="/reportitem" className="browse-flag">
+                        <Flag size={20} />
+                      </Link>
                     </div>
-                      ))
-                    ) : (
-                      <center><p className="noItems">No items found.</p></center>
-                    )}
-            </div>
+
+                    <div className="browse-price-condition">
+                      <p>&#8369;{item.price}</p>
+                      <p>&#x2022; {item.condition}</p>
+                    </div>
+
+                    <div className="itemSeller">
+                      <img src="https://lh3.googleusercontent.com/a-/ALV-UjWgmyu8CmNMWPDq_ODNxIvVbNzd_XMpu93FNWeUiWuh9aXd_ZeO=s1000-p" />
+                      <p>
+                        {"Marc Adrian"}
+                        <br />
+                        {"Miranda"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <center>
+                <p className="noItems">No items found.</p>
+              </center>
+            )}
+          </div>
         </div>
       </div>
     </div>

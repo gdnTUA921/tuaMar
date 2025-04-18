@@ -15,10 +15,15 @@
     padding: 50px;
     padding-top: 20px;
     border-radius: 14px;
+    width: 80%;
+    height: auto;
+}
+
+.itemDeetails{
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 80%;
+    margin-left: 50px;
 }
 
 .itemimage {
@@ -28,7 +33,26 @@
     border-radius: 10px;
     box-sizing: border-box;
     padding: 0;
-    object-fit: fill;
+    object-fit: cover;
+}
+
+.smallImgSlots{
+   display: flex;
+   margin: auto;   
+   margin-bottom: 30px;
+   margin-top: 20px;
+   gap: 12px;
+}
+
+.smallPics{
+    width: 80px;
+    height: 80px;
+    border: 2px solid #547B3E;
+    border-radius: 6px;
+    box-sizing: border-box;
+    padding: 0;
+    object-fit: cover;
+
 }
 
 .itemContents1{
@@ -47,7 +71,7 @@
     display: flex;
     flex-direction: column;
     padding: 35px;
-    margin-left: 20px;
+    margin-left: 30px;
 }
 
 .itemtitle {
@@ -70,9 +94,19 @@
 }
 
 .condition, .category, .descriptions{
-    font-family: Arial, bold;
+    font-family: Arial;
     margin-bottom: 40px; 
     font-size: 20px;
+}
+
+.itemDeetsRow{
+    display: flex;
+}
+
+.deetsLabel{
+    margin-top: 23.5px;
+    margin-left: 35px;
+    font-weight:500;
 }
 
 .itemDesc{
@@ -80,9 +114,8 @@
     margin-top: -22px;
     font-size: 16px;
     line-height: 1.5;
+    white-space: pre-wrap;
 }
-
-
 
 .numLikes {
     margin: auto;
@@ -107,13 +140,94 @@
    font-size: 20px;
 }
 
+.sellerSection{
+    padding: 5px 15px;
+    padding-bottom: 10px;
+    height: 265px;
+    position: relative;
+}
+
+.sellerSection h1{
+    font-size: 25px;
+}
+
+.seller-profile-pic{
+    position: relative;
+    margin-top: 35px;
+    margin-left: 120px;
+    display: flex;
+    justify-content: left; /* Center the image */
+    align-items: center;
+    flex-shrink: 0; /* Prevents resizing */
+}
+
+.seller-profile-pic img {
+    border: 5px solid grey;
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    object-fit: cover;
+    padding: 0;
+}
+
+/* Profile Name and Details */
+.seller-profile-name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 320px;
+    margin-top: -150px;
+    flex-grow: 1;
+}
+
+.seller-profile-name h1 {
+    font-size: 25px;
+    margin-bottom: 5px;
+    padding: 0;
+}
+
+.seller-profile-name p {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+/* Rating Container */
+.seller-rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: left; /* Center the star and rating */
+    margin-top: 0px; /* Space between the email and rating */
+    gap: 15px;
+}
+
+/* Star Icon */
+#seller-starReview {
+    font-size: 30px;
+    color: #547B3E;
+    margin-top: -15px;
+}
+
+/* Rating Score */
+.seller-rating-score {
+    font-size: 20px !important;
+    font-weight: bold;
+    margin-top: 7px !important;
+}
+
 
 @media (max-width: 1000px) {
 
     .detailsbar{
+        padding: 12px;
+        padding-top: 5px;
+        padding-bottom: 35px;
+    }
+
+    .itemDeetails{
         flex-direction: column;
         align-items: center;
-        padding: 12px;
+        padding: 0px;
+        margin-left: 0;
     }
 
     .itemimage{
@@ -132,7 +246,7 @@
 
     .itemtitle {
         margin-top: -60px;
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .price{
@@ -141,6 +255,81 @@
 
     .numLikes {
         margin-top: 18px;
+    }
+
+    .sellerSection{
+        height: 285px;
+    }
+
+    .sellerSection h1{
+        font-size: 20px;
+        margin-left: 12px;
+    }
+
+    .seller-profile-pic{
+        position: relative;
+        margin-top: 25px; /* Overlapping the cover photo */
+        display: flex;
+        justify-content: center; /* Center the image */
+        align-items: center;
+        margin-left: 0;
+        flex-shrink: 0; /* Prevents resizing */
+    }
+    
+    .seller-profile-pic img {
+        border: 5px solid grey;
+        border-radius: 50%;
+        height: 100px;
+        width: 100px;
+        object-fit: cover;
+        padding: 0;
+    }
+    
+    /* Profile Name and Details */
+    .seller-profile-name {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; /* Center text */
+        margin-left: 0;
+        margin-top: 5px;
+        flex-grow: 1;
+    }
+    
+    .seller-profile-name h1 {
+        font-size: 18px;
+        margin-bottom: 5px;
+        margin-left: 0;
+    }
+    
+    .seller-profile-name p {
+        font-size: 12px;
+        margin-top: 0px;
+        margin-left: 0;
+    }
+    
+    /* Rating Container */
+    .seller-rating-container {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Center the star and rating */
+        margin-top: -5px; /* Space between the email and rating */
+        margin-left: -8px;
+        gap: 10px;
+    }
+    
+    /* Star Icon */
+    #seller-starReview {
+        font-size: 20px;
+        color: #547B3E;
+        margin-top: -15px;
+    }
+    
+    /* Rating Score */
+    .seller-rating-score {
+        font-size: 18px !important;
+        font-weight: bold;
+        margin-top: 5px !important;
     }
 }
 
