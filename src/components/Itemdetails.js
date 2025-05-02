@@ -7,18 +7,16 @@ import { Heart } from "lucide-react"; {/* Library for icons*/}
 const Itemdetails = () => {
 
     const location = useLocation();
-    const { passedID, passedWord, passedPic, passedPrice, passedCond, passedCat, passedDesc} = location.state || {}; {/* For Passing of Values from One Page to another*/}
+    const { passedID, passedPic } = location.state || {}; {/* For Passing of Values from One Page to another*/}
     let num = 0;
 
     const [pics, setPics] = useState([]);
+    const [itemDeets, setItemDeets] = useState([]);
     
     const ip = process.env.REACT_APP_LAPTOP_IP;
     useEffect(() => {
         fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
         body: JSON.stringify({
             item_id: passedID,
         }),
@@ -26,7 +24,17 @@ const Itemdetails = () => {
           .then((response) => response.json())
           .then((pics) => {setPics(pics); })
           .catch((error) => console.error("Error fetching data:", error));
-      }, []);
+
+        fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
+        method: "POST",
+        body: JSON.stringify({
+            item_id: passedID,
+        }),
+        })
+          .then((response) => response.json())
+          .then((data) => {setItemDeets(data); })
+          .catch((error) => console.error("Error fetching data:", error));
+      });
 
       const [picsDisplay, setPicsDisplay] = useState(passedPic);
 
@@ -68,25 +76,25 @@ const Itemdetails = () => {
                 <div className="itemContents2">
                     <div className='itemtitle'> 
                         <h2>
-                            {passedWord} {/* Sample Passing */}
+                            {itemDeets.itemName} {/* Sample Passing */}
                         </h2>
                     </div>
             
                     <div className='price'>
                     <h2 >
-                        &#8369;{passedPrice}
+                        &#8369;{itemDeets.price}
                     </h2>
                     </div>
 
                     <div className='itemdetails'>
                         <div className="itemDeetsRow">
                             <h3 className='condition'>Condition: </h3> 
-                            <h3 className='deetsLabel'>{passedCond}</h3>
+                            <h3 className='deetsLabel'>{itemDeets.item_condition}</h3>
                         </div>
                         
                         <div className="itemDeetsRow">
                             <h3 className='category'>Category: </h3> 
-                            <h3 className='deetsLabel'>{passedCat}</h3>
+                            <h3 className='deetsLabel'>{itemDeets.category}</h3>
                         </div>
                         
                             
@@ -95,7 +103,7 @@ const Itemdetails = () => {
                         </h3>
 
                         <p className='itemDesc'>
-                        {passedDesc}
+                        {itemDeets.description}
                         </p>
                     </div>          
                 </div>
@@ -104,14 +112,14 @@ const Itemdetails = () => {
             <div className="sellerSection">
                 <h1>Meet The Seller</h1>
                 <div className="seller-profile-pic">
-                    <img src="https://lh3.googleusercontent.com/a-/ALV-UjUIStqWY_RaxX007NIEzp3CHWWc_H0573ci0o-N61I=s1000" alt="Profile Photo" />
+                    <img src={itemDeets.profilePic} alt="Profile Photo" />
                 </div>
                 <div className="seller-profile-name">
-                    <h1>{"Elisha Marie Vea Daliba"}</h1>
-                    <p>{"elishamarieveapdaliba@tua.edu.ph"}</p>
+                    <h1>{itemDeets.firstName + " " + itemDeets.lastName}</h1>
+                    <p>{itemDeets.email}</p>
                     <div className="seller-rating-container">
                         <i id="seller-starReview" className="bi bi-star-fill"></i>
-                        <p className="seller-rating-score">5.0</p>
+                        <p className="seller-rating-score">{"0.0"}</p>
                     </div>
                 </div>
         </div>

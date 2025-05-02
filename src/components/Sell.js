@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DragNdrop from './DragNdrop';
 import './Sell.css';
 import { useNavigate } from "react-router-dom";
@@ -30,6 +30,26 @@ function Sell() {
   };
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
+
+
+  useEffect(() => {
+    //Checking if logged in, if not redirected to log-in
+      fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data.user_id) {
+            navigate("/"); // Redirect to login if not authenticated
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching session data:", error);
+        });
+    }, [ip]);
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -46,6 +66,7 @@ function Sell() {
         description,
         images, // Base64 strings included here
       }),
+      credentials: 'include'
     })
       .then((res) => res.json())
       .then((data) => {

@@ -43,10 +43,10 @@ function Header() {
         <Link to="/myProfile" className="nav-link"><h2>My Profile</h2></Link>
       </nav>
 
-      <div class="container">
+      <div className="container">
         <i className="bi bi-person-fill" id="headerIcon"></i>
-        <div class="productDropDown">
-          <Link onClick={handleLogOut}><i class="bi bi-box-arrow-right logOut">&nbsp;&nbsp;&nbsp;Log Out</i></Link>
+        <div className="productDropDown">
+          <Link onClick={handleLogOut}><i className="bi bi-box-arrow-right logOut">&nbsp;&nbsp;&nbsp;Log Out</i></Link>
         </div>
       </div>
       

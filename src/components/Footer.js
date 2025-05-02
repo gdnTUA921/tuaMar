@@ -12,11 +12,11 @@ function Footer() {
           <a href=""><h3>09151234567</h3></a>
         </div>
         <div className="conDetails">
-          <i class="bi bi-envelope-at-fill envelope"/>
+          <i className="bi bi-envelope-at-fill envelope"/>
           <a href=""><h3>tuamarketplace.support@gmail.com</h3></a>
         </div>
         <div className="conDetails">
-          <i class="bi bi-geo-alt-fill location"/>
+          <i className="bi bi-geo-alt-fill location"/>
           <a href=""><h3>TUA - Student Affairs Center<br/>SSC Building (2nd Floor)</h3></a>
         </div>         
       </div>

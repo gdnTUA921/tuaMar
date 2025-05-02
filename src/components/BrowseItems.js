@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Flag, Heart, X } from "lucide-react";
 import "./BrowseItems.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 
 const BrowseItems = () => {
   const [items, setItems] = useState([]);
 
+  const navigate = useNavigate();
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
   
  useEffect(() => {
+
+  //Checking if logged in, if not redirected to log-in
+ fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+  method: "GET",
+  credentials: "include",
+})
+  .then((response) => response.json())
+  .then((data) => {
+    if (!data.user_id) {
+      navigate("/"); // Redirect to login if not authenticated
+    }
+  })
+  .catch((error) => {
+    console.error("Error fetching session data:", error);
+  });
+
+  //fetching items posted in the marketplace
   fetch(`${ip}/tua_marketplace/browseItems.php`)
     .then((response) => response.json())
     .then((data) => {
@@ -24,7 +42,7 @@ const BrowseItems = () => {
       console.error("Error fetching data:", error);
       setItems([]); // Fallback to an empty array
     });
-}, []);
+  }, []);
 
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -127,7 +145,7 @@ const BrowseItems = () => {
                 <div className="itemCard-browse" key={item.item_id}>
                   <Link
                     to="/itemdetails"
-                    state={{passedID: item.item_id, passedWord: item.item_name, passedPic: item.preview_pic, passedPrice: item.price, passedCond: item.item_condition, passedCat: item.category, passedDesc: item.description}}
+                    state={{passedID: item.item_id, passedPic: item.preview_pic}}
                     className="item-details-link"
                   >
                     <img
@@ -148,7 +166,7 @@ const BrowseItems = () => {
                   <div className="itemDeets-browse">
                     <Link
                       to="/itemdetails"
-                      state={{passedID: item.item_id, passedWord: item.item_name, passedPic: item.preview_pic, passedPrice: item.price,  passedCond: item.item_condition, passedCat: item.category, passedDesc: item.description}}
+                      state={{passedID: item.item_id, passedPic: item.preview_pic}}
                       className="item-details-link"
                     >
                       <div className="itemTitle">

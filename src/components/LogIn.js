@@ -84,9 +84,6 @@ function LogIn() {
             // Send email to PHP session for processing
             await fetch(`${ip}/tua_marketplace/handleGoogleLogIn.php`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
                 body: JSON.stringify({ email }),
                 credentials: "include", // Important for sending cookies/session ID
             });
@@ -112,7 +109,7 @@ function LogIn() {
             <h1>TUA Marketplace</h1>
         </header>
 
-        <div class="logInBG">
+        <div className="logInBG">
             <div className="logInBox">
                 <div className="logInContents">
                     <h1 className="logInTitle">Welcome to TUA Marketplace</h1>
