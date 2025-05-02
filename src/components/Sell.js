@@ -26,7 +26,7 @@ function Sell() {
   };
 
   const goHome = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
@@ -51,7 +51,7 @@ function Sell() {
       .then((data) => {
         console.log("Server response:", data);
         alert("Server Response: " + data.message);
-        navigate("/");
+        navigate("/home");
       })
       .catch((error) => console.error("Error:", error));
   };

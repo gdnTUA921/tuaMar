@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import "./MyProfile.css";
 
 function MyProfile() {
@@ -12,6 +12,24 @@ function MyProfile() {
   const [oldPassView, setOldPassView] = useState("bi bi-eye-fill");
   const [newPassView, setNewPassView] = useState("bi bi-eye-fill");
   const [confirmPassView, setConfirmPassView] = useState("bi bi-eye-fill");
+
+
+  const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
+  useEffect(() => {
+    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Session Data:", data);
+        alert(`Session Email: ${data.email}`);
+      })
+      .catch((error) => {
+        console.error("Error fetching session data:", error);
+      });
+  }, [ip]);
+  
 
 
   const togglePassword = (field) => {
@@ -204,7 +222,7 @@ function MyProfile() {
                   <label>Enter Old Password:</label>
                   <div class="password-wrapper">
                       <input type={oldPasswordType} id="password1" placeholder="Old Password" name="oldPass"/>
-                      <i id="eyeBtn1" className={oldPassView} onClick={() => togglePassword("oldPassword")}></i>
+                      <i id="eyeBtn_1" className={oldPassView} onClick={() => togglePassword("oldPassword")}></i>
                   </div><br/><br/>
 
                   <label>Enter New Password:</label>

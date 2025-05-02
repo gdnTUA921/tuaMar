@@ -58,7 +58,7 @@ const Itemdetails = () => {
                     
 
 
-                    <Link to="/itemdetails" ><button className = 'contactbutton'>Contact Seller</button></Link>
+                    <Link to="/messages" ><button className = 'contactbutton'>Contact Seller</button></Link>
                     <div className='numLikes'>
                         <Heart size={40} className='hearticon'/> {/*style={{ fill: '#547B3E', stroke: '#547B3E' }} - to be used later */} 
                         <p>{num} Likes</p>

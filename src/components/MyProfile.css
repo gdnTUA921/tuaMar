@@ -395,7 +395,7 @@
 }
 
 /* Style the eye buttons */
-#eyeBtn1, #eyeBtn2, #eyeBtn3 {
+#eyeBtn_1, #eyeBtn2, #eyeBtn3 {
     position: absolute;
     right: 18px; /* Position to the right inside input */
     top: 60%; /* Center vertically */
