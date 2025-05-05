@@ -3,6 +3,7 @@
     background: linear-gradient(135deg, #9bb69e, #7fa47f, #7f9a7f);
     width: 100%; 
     display: flex;  
+    flex-direction: column;
 }
 
 .detailsbar {
@@ -17,6 +18,15 @@
     border-radius: 14px;
     width: 80%;
     height: auto;
+}
+
+.detailsbar > hr {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border: none;
+    border-top: 2px solid #ccc;
+    width: 100%;
+    display: block;
 }
 
 .itemDeetails{
@@ -141,9 +151,8 @@
 }
 
 .sellerSection{
-    padding: 5px 15px;
-    padding-bottom: 10px;
-    height: 265px;
+    padding: 0px 15px;
+    height: 225px;
     position: relative;
 }
 
@@ -258,7 +267,7 @@
     }
 
     .sellerSection{
-        height: 285px;
+        height: 250px;
     }
 
     .sellerSection h1{

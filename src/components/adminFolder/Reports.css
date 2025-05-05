@@ -1,0 +1,74 @@
+.reports-container {
+    background-color: #d9d9d9;
+    padding: 20px;
+    padding-right: 1000px;
+    border-radius: 10px;
+  }
+  
+  .reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .reports-header label {
+    margin-left: 100px;
+    margin-right: 20px;
+  }
+  
+  .search-bar {
+    margin-left: 10px;
+    padding: 10px;
+    padding-right: 30px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .sort-dropdown {
+    padding: 10px;
+    border-radius: 10px;
+    padding-right: 40px;
+    border: 1px solid #ccc;
+  }
+  
+  .reports-content {
+    background: white;
+    padding: 30px;
+    padding-right: 385px;
+    border-radius: 10px;
+  }
+  
+  .reports-table {
+    width: 140%;
+    height: 370px;
+    border-collapse: collapse;
+  }
+  
+  .reports-table th, .reports-table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .view-btn {
+    background-color: gray;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    align-items: center;
+  }
+  
+  .resolved { background-color: green; color: white; }
+  .pending { background-color: yellow; color: black; }
+  .dismissed { background-color: red; color: white; }
+  

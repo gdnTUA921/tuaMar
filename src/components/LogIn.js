@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import './Header.css';
 import './LogIn.css';
 import { useNavigate } from "react-router-dom";
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, signOut} from 'firebase/auth';
 import { auth, googleProvider } from '../firebaseConfig';
 
 function LogIn() {
@@ -43,9 +43,6 @@ function LogIn() {
     
         fetch(`${ip}/tua_marketplace/handleLogIn.php`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
           body: JSON.stringify({
             user,
             password
@@ -57,7 +54,7 @@ function LogIn() {
             console.log("Server response:", data);
             if (data.status === "success") {
                 alert("Log In Successful.");
-                navigate("/home");
+                navigate("/admin");
             } else {
                 alert("Login failed: " + data.message);
             }
@@ -73,12 +70,22 @@ function LogIn() {
             const email = user.email;
             const displayName = user.displayName;
     
-            console.log("Logged in user email:", displayName);
+            console.log("Logged in user email:", email);
     
             // Check if email ends with "@tua.edu.ph"
             if (!email.endsWith("@tua.edu.ph")) {
                 alert("Access denied: Only users with a TUA email address are allowed.");
-                return; // Prevent further actions if the email is not valid
+                // Try to delete the user from Firebase Auth
+                try {
+                    await user.delete(); // Only works if auth is fresh
+                    console.log("Unauthorized user deleted from Firebase.");
+                } catch (deleteError) {
+                    console.warn("Failed to delete user:", deleteError);
+                }
+
+                // Sign out just in case
+                await signOut(auth);
+                return;
             }
     
             // Send email to PHP session for processing
