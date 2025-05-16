@@ -1,27 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link, useParams} from "react-router-dom";
+import { Flag, Heart, X, Search} from "lucide-react";
 import "./MyProfile.css";
 
-function MyProfile() {
+function UserProfile() {
   const [activeTab, setActiveTab] = useState("myListings");
   const [searchQuery, setSearchQuery] = useState("");
-
-  /* (For change password in case implemented)
-  const [oldPasswordType, setOldPasswordType] = useState("password");
-  const [newPasswordType, setNewPasswordType] = useState("password");
-  const [confirmPasswordType, setConfirmPasswordType] = useState("password");
-
-  const [oldPassView, setOldPassView] = useState("bi bi-eye-fill");
-  const [newPassView, setNewPassView] = useState("bi bi-eye-fill");
-  const [confirmPassView, setConfirmPassView] = useState("bi bi-eye-fill");*/
 
   const [userData, setUserData] = useState([]);
 
   const navigate = useNavigate();
+  const { userId: sellerId } = useParams();
 
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
   useEffect(() => {
+
     //Checking if logged in, if not redirected to log-in
     fetch(`${ip}/tua_marketplace/fetchSession.php`, {
       method: "GET",
@@ -32,29 +26,39 @@ function MyProfile() {
         if (!data.user_id) {
           navigate("/"); // Redirect to login if not authenticated
         }
+
+        if (sellerId == data.user_id){
+          navigate("/myProfile");
+        }
       })
       .catch((error) => {
         console.error("Error fetching session data:", error);
       });
 
 
-    //fetching account owner details
-    fetch(`${ip}/tua_marketplace/fetchMyProfileDeets.php`, {
-      method: "GET",
+    //fetching account user details
+    fetch(`${ip}/tua_marketplace/fetchUserProfileDeets.php`, {
+      method: "POST",
       credentials: "include",
+      body: JSON.stringify({
+        user_id: sellerId,
+      }),
     })
       .then((response) => response.json())
       .then((data) => {
         setUserData(data);
       })
       .catch((error) => {
-        console.error("Error fetching session data:", error);
+        console.error("Error fetching user data:", error);
       });
 
     //fetching items owned by account owner
-    fetch(`${ip}/tua_marketplace/fetchMyProfileItems.php`, {
-      method: "GET",
+    fetch(`${ip}/tua_marketplace/fetchUserProfileItems.php`, {
+      method: "POST",
       credentials: "include",
+      body: JSON.stringify({
+        user_id: sellerId,
+      }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -67,35 +71,24 @@ function MyProfile() {
   }, []);
   
 
-  /* (For change password in case implemented)
-  const togglePassword = (field) => {
-    if (field === "oldPassword") {
-      setOldPasswordType(oldPasswordType === "password" ? "text" : "password");
-      setOldPassView(oldPassView === "bi bi-eye-fill" ? "bi bi-eye-slash-fill" : "bi bi-eye-fill");
-    } 
-    else if (field === "newPassword") {
-      setNewPasswordType(newPasswordType === "password" ? "text" : "password");
-      setNewPassView(newPassView === "bi bi-eye-fill" ? "bi bi-eye-slash-fill" : "bi bi-eye-fill");
-    } 
-    else if (field === "confirmPassword") {
-      setConfirmPasswordType(confirmPasswordType === "password" ? "text" : "password");
-      setConfirmPassView(confirmPassView === "bi bi-eye-fill" ? "bi bi-eye-slash-fill" : "bi bi-eye-fill");
-    }
-  };*/
-
-
-  const handleMarkSold = () => {
-    window.confirm("Are you sure?");
-
-  }
-
-
   const [item, setItem] = useState([]);
 
   // Filter items based on search input
   const filteredItems = item.filter((item) =>
     item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+
+   //for setting likes
+   const [liked, setLiked] = useState([]);
+  
+    const toggleLike = (itemId) => { //(param)we called the item.item_id
+      setLiked((prev) => ({ //prev is the state of liked, it is a state where heart icon dont have fillings yet
+        ...prev, //if we unclicked the filled heart icon, it will go back to the state of liked(icon without fillings)
+        [itemId]: !prev[itemId], //fills the heart icon because it is not in previous state
+      }));
+    };
+
 
   return (
     <>
@@ -155,41 +148,45 @@ function MyProfile() {
                       <div className="soldBanner" style={{display:"none"}}> {/*set this up if item is considered sold*/}
                         SOLD
                       </div>
-                      <Link
-                        to={`/itemdetails/${item.item_id}/${item.item_name}`}
-                        className="item-details-link"> 
-                        <img
-                          src={item.preview_pic}
-                          style={{
-                            width: "180px",
-                            height: "180px",
-                            border: "3px solid green",
-                            borderRadius: "12px",
-                            alignItems: "center",
-                            marginLeft: "5.5px"
-                          }}
-                          alt="Item"
-                        />
-                      </Link> 
-                      <div className="itemDeets">
                         <Link
+                        to={`/itemdetails/${item.item_id}/${item.item_name}`}
+                        className="item-details-link"
+                        >
+                            <img
+                                src={item.preview_pic}
+                                style={{
+                                width: "180px",
+                                height: "180px",
+                                border: "3px solid green",
+                                borderRadius: "12px",
+                                alignItems: "center",
+                                marginLeft: "5.5px"
+                                }}
+                                alt="Item"
+                            />
+                        </Link>
+
+                        <div className="itemDeets">
+                            <Link
                             to={`/itemdetails/${item.item_id}/${item.item_name}`}
-                            className="item-details-link">  
-                          <div className="itemTitle">
-                            <h3>{item.item_name}</h3>
-                          </div>
-                         </Link>
-                        <i className="bi bi-heart-fill heart1"></i>
-                        <p className="heartCount1">{0}</p>
+                            className="item-details-link">     
+                                <div className="itemTitle">
+                                <h3>{item.item_name}</h3>
+                                </div>
+                            </Link>
+
+                    <div className="listButtons">
+                      <Heart className="heart" onClick={() => toggleLike(item.item_id)} fill= {liked[item.item_id] ?'green' : 'none'} color= {liked[item.item_id] ?'green' : 'black'}/>
+                      <Link to="/reportitem"  className="browse-flag" state={{ passedID: item.item_id }} >
+                        <Flag size={20} />
+                      </Link>
+                    </div>
 
                         <div className="price-condition">
                           <p></p>
                           <p>&#8369;{item.price}</p>
                           <p>&#x2022; {item.item_condition}</p>
                         </div>
-                        
-                        <button className="editListButton">EDIT LISTING</button>
-                        <button className="soldButton" onClick={handleMarkSold}>MARK SOLD</button>
                       </div>
                     </div>
                   ))
@@ -280,31 +277,6 @@ function MyProfile() {
                   </tbody>
                 </table>
                 <br/><hr/>
-
-                {/* (For change password in case implemented)
-                <h3>Change Password</h3><br/>
-                
-                <form action="">
-                  <label>Enter Old Password:</label>
-                  <div class="password-wrapper">
-                      <input type={oldPasswordType} id="password1" placeholder="Old Password" name="oldPass"/>
-                      <i id="eyeBtn_1" className={oldPassView} onClick={() => togglePassword("oldPassword")}></i>
-                  </div><br/><br/>
-
-                  <label>Enter New Password:</label>
-                  <div class="password-wrapper">
-                      <input type={newPasswordType} id="password2" placeholder="New Password" name="newPass"/>
-                      <i id="eyeBtn2" className={newPassView} onClick={() => togglePassword("newPassword")}></i>
-                  </div><br/><br/>
-
-                  <label>Confirm New Password:</label>
-                  <div class="password-wrapper">
-                      <input type={confirmPasswordType} id="password3" placeholder="Confirm New Password" name="confirmPass"/>
-                      <i id="eyeBtn3" className={confirmPassView} onClick={() => togglePassword("confirmPassword")}></i>
-                  </div>
-
-                  <center><button>Update</button></center>
-                </form>*/}
               </div>
               
           </div>
@@ -314,4 +286,4 @@ function MyProfile() {
   );
 }
 
-export default MyProfile;
+export default UserProfile;

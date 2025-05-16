@@ -1,42 +1,59 @@
 import React, {useState, useEffect} from 'react'
 import "./Itemdetails.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react"; {/* Library for icons*/}
 
-
 const Itemdetails = () => {
+  const { itemId, itemName } = useParams();
+  const navigate = useNavigate();
 
-    const location = useLocation();
-    const { passedID, passedPic } = location.state || {}; {/* For Passing of Values from One Page to another*/}
-    let num = 0;
+  let num = 0;
 
-    const [pics, setPics] = useState([]);
-    const [itemDeets, setItemDeets] = useState([]);
-    
-    const ip = process.env.REACT_APP_LAPTOP_IP;
-    useEffect(() => {
-        fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
-        method: "POST",
-        body: JSON.stringify({
-            item_id: passedID,
-        }),
+  const [pics, setPics] = useState([]);
+  const [itemDeets, setItemDeets] = useState([]);
+  const [userID, setUserID] = useState("");
+  const [picsDisplay, setPicsDisplay] = useState("");
+
+  const ip = process.env.REACT_APP_LAPTOP_IP;
+
+  useEffect(() => {
+    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.user_id) {
+          navigate("/");
+        } else {
+          setUserID(data.user_id);
+        }
+      })
+      .catch((error) => console.error("Error fetching session data:", error));
+
+
+    //fetching item pictures
+    fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
+      method: "POST",
+      body: JSON.stringify({ item_id: itemId }),
+    })
+      .then((response) => response.json())
+      .then((pics) => {
+        setPics(pics);
+        setPicsDisplay(pics[0].image);
         })
-          .then((response) => response.json())
-          .then((pics) => {setPics(pics); })
-          .catch((error) => console.error("Error fetching data:", error));
+      .catch((error) => console.error("Error fetching pics:", error));
 
-        fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
-        method: "POST",
-        body: JSON.stringify({
-            item_id: passedID,
-        }),
-        })
-          .then((response) => response.json())
-          .then((data) => {setItemDeets(data); })
-          .catch((error) => console.error("Error fetching data:", error));
-      });
 
-      const [picsDisplay, setPicsDisplay] = useState(passedPic);
+    //fetching item details
+    fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
+      method: "POST",
+      body: JSON.stringify({ item_id: itemId, item_name: itemName }),
+    })
+      .then((response) => response.json())
+      .then((data) => setItemDeets(data))
+      .catch((error) => console.error("Error fetching item details:", error));
+  }, [itemId]);
 
 
   return (
@@ -46,7 +63,7 @@ const Itemdetails = () => {
                 <div className="itemContents1">
                     <img className='itemimage'
                     src={picsDisplay}
-                    alt="TUA Logo" 
+                    alt={itemDeets.itemName}
                     />
                     
                     <div className="smallImgSlots">
@@ -63,10 +80,8 @@ const Itemdetails = () => {
                             <p>No additional images.</p>
                         )}
                     </div>
-                    
 
-
-                    <Link to="/messages" state={{passedUserID: itemDeets.user_id}}><button className = 'contactbutton'>Contact Seller</button></Link>
+                    <Link to="/messages" state={{passedUserID: itemDeets.user_id}} style={{textDecoration: "none"}}><button className = 'contactbutton' style={{ display: userID == itemDeets.user_id ? "none" : "block"}}>Contact Seller</button></Link>
                     <div className='numLikes'>
                         <Heart size={40} className='hearticon'/> {/*style={{ fill: '#547B3E', stroke: '#547B3E' }} - to be used later */} 
                         <p>{num} Likes</p>
@@ -111,11 +126,16 @@ const Itemdetails = () => {
             <hr/>
             <div className="sellerSection">
                 <h1>Meet The Seller</h1>
-                <div className="seller-profile-pic">
-                    <img src={itemDeets.profilePic} alt="Profile Photo" />
-                </div>
-                <div className="seller-profile-name">
-                    <h1>{itemDeets.firstName + " " + itemDeets.lastName}</h1>
+                
+                  <div className="seller-profile-pic">
+                    <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.user_id }`} className="sellerLink">
+                      <img src={itemDeets.profilePic} alt="Profile Photo" />
+                    </Link>
+                  </div>
+                
+                
+                <div className="seller-profile-name">   
+                    <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.user_id}`} className="sellerLink"><h1>{itemDeets.firstName + " " + itemDeets.lastName}</h1></Link>
                     <p>{itemDeets.email}</p>
                     <div className="seller-rating-container">
                         <i id="seller-starReview" className="bi bi-star-fill"></i>

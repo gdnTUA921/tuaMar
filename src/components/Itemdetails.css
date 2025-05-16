@@ -75,6 +75,7 @@
     width: 350px;
     padding: 10px;
     border-radius: 5px;
+    text-decoration: none;
 }
 
 .itemContents2{
@@ -185,7 +186,7 @@
     flex-direction: column;
     justify-content: center;
     margin-left: 320px;
-    margin-top: -150px;
+    margin-top: -155px;
     flex-grow: 1;
 }
 
@@ -221,6 +222,17 @@
     font-size: 20px !important;
     font-weight: bold;
     margin-top: 7px !important;
+}
+
+.sellerLink{
+    display: inline-flex;
+    text-decoration: none;
+    color: black;
+    z-index: 5;
+}
+
+.sellerLink :hover{
+    color: green;
 }
 
 
@@ -301,7 +313,7 @@
         justify-content: center;
         align-items: center; /* Center text */
         margin-left: 0;
-        margin-top: 5px;
+        margin-top: 15px;
         flex-grow: 1;
     }
     

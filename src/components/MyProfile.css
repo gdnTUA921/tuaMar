@@ -276,6 +276,22 @@
     outline: none;
 }
 
+.soldBanner{
+    background-color: green;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 10px;
+    height: 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: white;
+    width: 162px;
+    translate: 8px 153.5px;
+    position: absolute;
+    font-size: 14px;
+}
+
 
 /* REVIEWS */
 
@@ -287,6 +303,15 @@
     padding-left: 75px;
     padding-right: 75px;
     padding-bottom: 25px;
+}
+
+.reviewCard > hr {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    border: none;
+    border-top: 2px solid #ccc;
+    width: 100%;
+    display: block;
 }
 
 .reviews h2{
@@ -360,8 +385,8 @@
 }
 
 .settingsCard{ 
-    padding-left: 80px;
-    padding-right: 80px;
+    padding-left: 100px;
+    padding-right: 100px;
     padding-bottom: 25px;
     margin-top: -25px;
     position: relative;
@@ -385,6 +410,39 @@
 .settingsCard form{
     margin-left: 22px;
 }
+
+.settingsCard > hr {
+    margin-bottom: 40px;
+    border: none;
+    border-top: 2px solid #ccc;
+    width: 100%;
+    display: block;
+}
+
+.settingsCard table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 25px;
+  }
+  
+.settingsCard td {
+    padding: 20px 20px;
+    font-size: 20px;
+    vertical-align: middle;
+  }
+  
+  /* Style first column (labels) */
+  .settingsCard td:first-child {
+    font-weight: bold;
+    text-align: left;
+    width: 200px; /* Adjust as needed */
+  }
+  
+  /* Style second column (data) */
+  .settingsCard td:last-child {
+    text-align: left; /* Change to 'right' or 'center' if needed */
+  }
+  
 
 /* Ensure input fields are wrapped properly */
 .password-wrapper {
@@ -595,6 +653,10 @@
         margin-left: 280px;
         margin-top: 35px;
     }
+
+    .settingsCard td {
+        font-size: 16px;
+    }
 }
 
 /* Extra Small Screens */
@@ -680,6 +742,31 @@
     .profile-reviews img{
         height: 50px;
         width: 50px;
+    }
+
+    .settingsCard table {
+        margin-left: -14px;
+    }
+
+    .settingsCard td {
+        font-size: 14px;
+        padding: 20px 10px;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 400px) {
+
+    .myListings h2, .settings h2, .reviews h2{
+        font-size: 20px;
+    }
+    .settingsCard table {
+        margin-left: -20px;
+    }
+
+    .settingsCard td {
+        font-size: 11px;
+        padding: 15px 10px;
     }
 }
 

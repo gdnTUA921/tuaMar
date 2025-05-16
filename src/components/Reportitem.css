@@ -8,65 +8,150 @@
 
 }
 .reportbox {
+    display: flex;
+    flex-direction: column;
     background-color: white;
-    height: 100vh;
+    min-height: 85vh;
+    height: auto;
     width: 100vh;
-    align-items: center;
+    align-items: left;
     margin-top: 50px;
     margin-bottom: 50px;
     border-radius: 10px;
+    padding: 25px 0px;
 }
 .reporttitle {
-   margin-top: 35px;
-    margin-left: 40px;
+    margin-top: 25px;
+    margin-left: 85px;
     color: #547B3E;
     font-size: 30px;
 }
 .subheading {
-    margin-left: 40px;
-    opacity: 50%;
+    opacity: 60%;
     font-size: medium;
     font-family: Times New Roman;
+    margin-left: 85px;
+    margin-top: 10px;
 }
 .itembar {
-    background-color: gray;
-    opacity: 80%;
+    display: flex;
+    background-color: lightgray;
+    padding: 15px;
+    padding-left: 50px;
+    padding-top: 35px;
+    padding-bottom: 35px;
     height: 10vh;
-    width: 80vh;
-    margin-left: 50px;
+    width: 565px;
     align-items: center;
+    margin: auto;
     margin-top: 30px;
-    margin-bottom: 50px;
+    margin-bottom: 35px;
+    border-radius: 10px;
+    gap: 40px;
 }
-.report-select,
-.reasontitle,
-.reasondesc,
-.desc-input {
-    margin: 10px 0; /* Reduce excessive margins */
-    padding: 10px;
-    margin-left: 40px;
+
+.reportImg {
+    width: 100px;
+    height: 100px;
+    border: 3.5px solid green;
+    border-radius: 12px;
+    object-fit: cover;
+    padding: 0
+}
+
+form{
+    margin: auto;
+}
+
+.reasontitle, .reasondesc{
     width: calc(100% - 40px); /* Responsive width */
-    
+    font-weight: bold; 
+    font-size: 16px;
+    margin-left: 85px;
 }
-.desc-input {
-    padding: 50px;
-    width: 70vh;
-    opacity: 80%;
- 
-}
+
 .report-select{
-    width: 85vh;
+    width: calc(100% - 60px);
+    max-width: 620px;
+    font-size: 14px;
+    padding: 10px;
+    width: 650px;
+    margin: auto;
+    margin-left: 85px;
 }
+
+
+.desc-input {
+    height: 100px;
+    resize: none;
+    overflow: scroll;
+    text-align: justify;
+    padding: 15px;
+    margin-bottom: 35px;
+    width: 79vh;
+    max-width: 585px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    margin: auto;
+    margin-left: 85px;
+}
+
+
 .submit {
-    width: 87vh;
-    margin-left: 45px;
-    padding: 4px;
+    width: 78vh;
+    padding: 10px;
     background-color: red;
-    border-radius: 0px;
+    border-radius: 10px;
+    text-align: center;
+    margin: auto;
+    margin-top: 35px;
+    margin-bottom: 35px;
+    margin-left: 85px;
 }
-.selections {
-    opacity: 50%;
+
+
+
+  @media (max-width: 1200px){
+
+    .reportcontainer {
+      padding: 35px;
+    }
+
+    .reportbox {
+      padding-left: 50px;
+      padding-right: 50px;
+      width: 60%;
+    }
+
+    .itembar{
+        width: 85%;
+        padding-left: 30px;
+        gap: 30px;
+    }
+
+    .desc-input{
+        width: 95%;
+    }
+
+    .submit {
+        margin: auto;
+        margin-top: 25px;
+    }
+
+    .cancel-button {
+      margin: auto;
+  }
+
+    .buttonsDisplay{
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
 }
-.report-select {
-    opacity: 70%;
+
+@media only screen and (max-height: 375px) {
+  .sell-container {
+    height: 350vh;
+  }
 }

@@ -40,6 +40,14 @@
     gap: 66px;
     padding: 10px;
   }
+
+  .preview-box {
+    position: relative;
+    display: inline-block;
+    margin: -5px;
+    margin-right: 10px;
+    margin-top: 10px;
+  }
   
   .preview-image {
     width: 150px;
@@ -77,6 +85,28 @@
     font-weight: bold;
     text-align: center;
   }
+
+  .remove-icon {
+    width: 1.2em;
+    height: 1.2em;
+    cursor: pointer;
+    position: absolute;
+    translate: -12px -5px;
+  }
+
+  .remove-icon-bg {
+    fill: black;
+  }
+
+  .remove-icon-x {
+    fill: white;
+  }
+
+  /* Optional hover effect */
+  .remove-icon:hover .remove-icon-bg {
+    fill: #cc0000; /* dark red background on hover */
+  }
+
   
   @media (max-width: 1200px) {
     .custom-dropzone {
@@ -98,13 +128,25 @@
       font-size: 8px;
       height: 85px;
     }
+
+    .preview-box {
+      margin-left: 15px;
+      margin-right: 10px;
+    }
   }
   
-  @media (max-width: 950px) {
+  @media (max-width: 1000px) {
     .custom-dropzone {
       width: 100%;
       max-width: 350px;
       margin: auto;
+    }
+
+    .remove-icon {
+      width: 1.5em;
+      height: 1.5em;
+      top: 0px;
+      right: -18px;
     }
   }
   

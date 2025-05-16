@@ -12,6 +12,7 @@ import Reportitem from "./components/Reportitem";
 import Message from "./components/Message";
 // import Reviewmod from "./components/Reviewmod";
 import ScrollToTop from './ScrollToTop';
+import UserProfile from "./components/UserProfile";
 import Admin from "./components/adminFolder/TuaMarAdmin";
 
 function App() {
@@ -34,8 +35,9 @@ function App() {
           <Route path="/sell" element={<Sell />} />
           <Route path="/messages" element={<Message />} />
           <Route path="/myProfile" element={<MyProfile />} />
-          <Route path="/itemdetails" element={<Itemdetails />} />
+          <Route path="/itemdetails/:itemId/:itemName" element={<Itemdetails />} />
           <Route path="/reportitem" element={<Reportitem />} />
+          <Route path="/userProfile/:userId" element={<UserProfile />} />
         </Route>
       </Routes>
     </div>

@@ -1,7 +1,7 @@
 .browsecontainer {
     background-color: #D9D9D9;
     height: auto;
-    min-height: 90vh;
+    min-height: 135vh;
     display: flex; 
     margin: 0;
     padding-bottom: 50px;
@@ -21,9 +21,9 @@
     margin-top: 208px;
     margin-left: 75px;
     border-radius: 8px;
-    height: 550px;
+    height: 600px;
     position: absolute;
-    z-Index: 1;
+    z-Index: 10;
     top: 0;
     left: 0;
     background-color: white;
@@ -73,10 +73,18 @@
 }
 
 .applyFilter{
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 8px;
+}
+
+.resetFilter{
     margin-top: 15px;
     padding: 10px;
     font-size: 15px;
     border-radius: 8px;
+    background-color: grey;
 }
 
 .search-container-browse {
@@ -90,10 +98,23 @@
 .search-container-browse input {
     width: 100%;
     padding: 8px 12px;
+    padding-left: 45px;
     font-size: 16px;
     border: 2px solid black;
     border-radius: 8px;
     outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    translate: 15px 7px;
+    stroke-width: 3px;
+    width: 20px;
+}
+
+.search-icon:hover{
+    cursor: pointer;
+    color: #547B3E;
 }
 
 .items-browse {
@@ -101,6 +122,7 @@
     flex-wrap: wrap;
     margin: auto;
     padding: 15px;
+    gap: 25px;
   }
   
 
@@ -160,10 +182,6 @@
     height: 23px;
     position: absolute;
     translate: 48px -17px;
-}
-
-.listButtons .heart:hover{
-    color: green;
 }
 
 .listButtons .browse-flag{
@@ -286,7 +304,7 @@
     .filecontainer{
        margin-top: 760px;
        margin-left: 100px;
-       height: 530px;
+       height: 600px;
        overflow: hidden;
        padding-bottom: 40px !important;
     }
@@ -326,7 +344,6 @@
     .filecontainer{
        margin-top: 90%;
        margin-left: 60px;
-       height: 530px;
        overflow: hidden;
     }
 
@@ -359,7 +376,6 @@
     .filecontainer{
         margin-top: 620px;
         margin-left: 60px;
-        height: 530px;
         overflow: hidden;
      }
 
@@ -380,9 +396,8 @@
 @media (max-width: 450px) {
 
     .filecontainer{
-        margin-top: 585px;
-        margin-left: 60px;
-        height: 530px;
+        margin-top: 575px;
+        margin-left: 55px;
         overflow: hidden;
      }
 
@@ -411,7 +426,8 @@
 @media (max-width: 390px) {
 
     .browseDiv{
-        margin-left: 20px !important;
+        margin-left: 16px !important;
+        margin-right: 10px !important;
     }
 
     .browsecontainer{
@@ -420,9 +436,8 @@
     }
 
     .filecontainer{
-       margin-top: 575px !important;
-       margin-left: 60px;
-       height: 530px;
+       margin-top: 568px !important;
+       margin-left: 50px;
        overflow: hidden;
     }
 

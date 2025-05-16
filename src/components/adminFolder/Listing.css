@@ -9,7 +9,7 @@
     overflow: scroll;
 }
 /* Content Sections */
-.admin-listing-wrapper .myListings, .reviews, .settings {
+.admin-listing-wrapper .myListings, .admin-listing-wrapper .reviews, .admin-listing-wrapper .settings {
     background-color: white;
     max-width: 90%;
     width: 100%;
