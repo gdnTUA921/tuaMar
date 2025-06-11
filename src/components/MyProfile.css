@@ -1,0 +1,908 @@
+.profile-container {
+    background-color: #D9D9D9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* Profile Header */
+.profile-nameBox {
+    background-color: white;
+    max-width: 90%;
+    width: 100%;
+    height: 470px;
+    margin-top: 50px;
+    border-radius: 10px;
+    overflow: hidden;
+    padding-bottom: 20px;
+}
+
+/* Cover Photo */
+.profile-coverBG {
+    background-color: #547B3E;
+    width: 100%;
+    height: 200px;
+}
+
+/* Profile Picture */
+.profile-pic {
+    position: relative;
+    margin-top: -75px; /* Overlapping the cover photo */
+    display: flex;
+    justify-content: center; /* Center the image */
+    align-items: center;
+    flex-shrink: 0; /* Prevents resizing */
+}
+
+.profile-pic img {
+    border: 5px solid grey;
+    border-radius: 50%;
+    height: 180px;
+    width: 180px;
+    object-fit: cover;
+    padding: 0;
+}
+
+/* Profile Name and Details */
+.profile-name {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Center text */
+    margin-left: 0;
+    flex-grow: 1;
+}
+
+.profile-name h1 {
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.profile-name p {
+    font-size: 20px;
+    margin-top: 5px;
+    margin-left: 0;
+}
+
+/* Rating Container */
+.rating-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the star and rating */
+    margin-top: 5px; /* Space between the email and rating */
+    gap: 12px; /* Space between the star and the rating score */
+}
+
+/* Star Icon */
+#starReview {
+    font-size: 30px;
+    color: #547B3E;
+    margin-top: -15px;
+}
+
+/* Rating Score */
+.rating-score {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 5px !important;
+}
+
+/* Navigation Tabs */
+.profile-tabs {
+    background-color: white;
+    max-width: 90%;
+    width: 100%;
+    height: 60px;
+    margin-top: 20px;
+    display: flex;
+    border-radius: 10px;
+}
+
+.navMenu {
+    display: flex;
+    gap: 20px;
+}
+
+.navMenu a {
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    text-decoration: none;
+    padding-top: 18px;
+    padding-left: 50px;
+    padding-bottom: 15px;
+    transition: color 0.3s ease;
+}
+
+.navMenu a:hover {
+    color: #547B3E;
+}
+
+/* Content Sections */
+.myListings, .reviews, .settings, .likeditems{
+    background-color: white;
+    max-width: 90%;
+    width: 100%;
+    min-height: 300px;
+    margin: 20px auto;
+    margin-bottom: 5cqmax;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.myListings h2, .likeditems h2{
+    margin-left: 80px;
+    margin-top: 50px;
+    font-size: 25px;
+    margin-bottom: 50px;
+}
+
+.listingsCard{
+    position: relative;
+}
+
+.items{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.itemCard{
+    display: block;
+    border-radius: 7px;
+    border: 1px solid #ddd;
+    margin: 5px 10px 50px 10px;
+    padding: 30px;
+    padding-top: 30px;
+    padding-bottom: 25px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+    height: auto;
+    font-family: Arial;
+    font-size: 16px;
+}
+
+.itemCard img{
+    object-fit: cover;
+    padding: 0;
+}
+
+.itemCard h3{
+    margin-top: 25px;
+}
+
+.itemCard:hover{
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.7);
+}
+
+.itemDeets{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.itemDeets h3{
+    font-size: 15px;
+}
+
+.price-condition{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.itemDeets p:nth-of-type(1){
+    position: absolute;
+    translate: 200px 7px;
+    font-size: 18px;
+}
+
+.price-condition{
+    position: relative;
+    display: flex;
+    gap: 60px;
+}
+
+
+.itemTitle{
+    width: 145px;
+    padding: 0;
+}
+
+.itemTitle h3{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    line-clamp: 2; /* optional for future compatibility */
+    max-height: 3em; /* approximate height for 2 lines, depending on font-size/line-height */
+}
+
+.heart1{
+    color: #547B3E;
+    font-size: 20px;
+    position: absolute;
+    translate: 158px 25px;
+}
+
+.heartCount1{
+    color: black;
+    font-weight: bold;
+    position: absolute;
+    translate: 185px 7px !important;
+}
+
+.actionButtons{
+    display: flex;
+    gap: 0px;
+    margin-top: 10px;
+}
+
+.editListButton{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: white;
+    color: black;
+    border: none;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 12px;
+    width: 50%;
+    border-radius: 8px;
+}
+
+.deleteListButton{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: white;
+    color: black;
+    border: none;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 12px;
+    width: 50%;
+    border-radius: 8px;
+}
+
+.editListButton:hover{
+    color: #547B3E;
+}
+
+.deleteListButton:hover{
+    color: red;
+}
+
+.reserveButton, .sold-or-availableButton{
+    background-color: #547B3E;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 14px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.reserveButton:hover, .sold-or-availableButton:hover{
+    background-color: #5d9c3a;
+}
+
+.reserveButton:disabled{
+  background-color: gray;   /* Gray background */
+  color: black;              /* Dimmed text */
+  cursor: not-allowed;
+  border: 1px solid #999;   /* Optional for clarity */
+  opacity: 0.6;             /* Optional for fade-out effect */
+}
+
+.sold-or-availableButton:disabled {
+  background-color: gray;   /* Gray background */
+  color: black;              /* Dimmed text */
+  cursor: not-allowed;
+  border: 1px solid #999;   /* Optional for clarity */
+  opacity: 0.6;             /* Optional for fade-out effect */
+}
+
+.reserveButton:disabled:hover, .soldButton:disabled:hover{
+  color: black          /* Optional for fade-out effect */
+}
+
+.search-container {
+    position: relative;  /* Ensure it stays inside the parent */
+    display: flex;  /* Aligns the input and any icons inside */
+    width: 500px;
+    margin: auto;
+    margin-top: -18px;
+    margin-bottom: 35px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 8px;
+    outline: none;
+}
+
+.soldBanner{
+    background-color: green;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 10px;
+    height: 18px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    font-weight: bold;
+    color: white;
+    width: 162px;
+    translate: 8px 156px;
+    position: absolute;
+    font-size: 14px;
+}
+
+.reservedBanner{
+    background-color: purple;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 5px;
+    padding-left: 10px;
+    height: 18px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: 1px solid green;
+    border-right: 1px solid green;
+    border-bottom: 1px solid green;
+    font-weight: bold;
+    color: white;
+    width: 165px;
+    translate: 7.5px 154.5px;
+    position: absolute;
+    font-size: 14px;
+}
+
+.reviewBanner{
+    background-color: #FFDB58;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 5px;
+    padding-left: 10px;
+    height: 18px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: 1px solid green;
+    border-right: 1px solid green;
+    border-bottom: 1px solid green;
+    font-weight: bold;
+    color: black;
+    width: 165px;
+    translate: 7.5px 154.5px;
+    position: absolute;
+    font-size: 14px;
+}
+
+
+.three-dots{
+    position: absolute;
+    color: white;
+    background-color: #547B3E;
+    width: 30px;
+    height: 30px;
+    translate: 160px 10px;
+}
+
+
+/* REVIEWS */
+
+.reviews{
+    padding-bottom: 30px;
+}
+
+.reviewCard{
+    padding-left: 75px;
+    padding-right: 75px;
+    padding-bottom: 25px;
+}
+
+.reviewCard > hr {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    border: none;
+    border-top: 2px solid #ccc;
+    width: 100%;
+    display: block;
+}
+
+.reviews h2{
+    margin-left: 80px;
+    margin-top: 50px;
+    font-size: 25px;
+    margin-bottom: 50px;
+}
+
+.profile-reviews{
+    margin-left: 50px;
+    display: flex;
+    gap: 35px;
+}
+
+.profile-reviews img{
+    border: 2px solid grey;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    padding: 0;
+}
+
+.profile-reviews p:nth-of-type(1){
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.profile-reviews p:nth-of-type(2){
+    margin-left: 35px;
+    font-size: 18px;
+}
+
+.profile-reviews p:nth-of-type(3){
+    margin-left: 35px;
+    font-size: 18px;
+}
+
+.stars{
+    display: flex;
+    gap: 35px;
+    margin-top: 18px;
+    margin-left: 50px;
+}
+
+.stars i{
+    font-size: 35px;
+    color: #547B3E;
+}
+
+.review-description p{
+    font-size: 18px;
+    margin-left: 50px;
+    margin-top: 30px;
+    margin-bottom: 35px;
+}
+
+
+/* SETTINGS */
+
+.settings{
+    padding-bottom: 30px;
+}
+
+.settings h2{
+    margin-left: 80px;
+    margin-top: 50px;
+    font-size: 25px;
+    margin-bottom: 50px;
+}
+
+.settingsCard{ 
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-bottom: 25px;
+    margin-top: -25px;
+    position: relative;
+}
+
+.settingsCard p{
+    font-size: 18px;
+}
+
+.settingsCard h3{
+    font-size: 20px;
+    margin-top: 35px;
+}
+      
+.settingsCard label{
+    font-weight: bold;
+    font-size: 18px;
+    margin-right: 35px;
+}
+
+.settingsCard form{
+    margin-left: 22px;
+}
+
+.settingsCard > hr {
+    margin-bottom: 40px;
+    border: none;
+    border-top: 2px solid #ccc;
+    width: 100%;
+    display: block;
+}
+
+.settingsCard table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 25px;
+  }
+  
+.settingsCard td {
+    padding: 20px 20px;
+    font-size: 20px;
+    vertical-align: middle;
+  }
+  
+  /* Style first column (labels) */
+  .settingsCard td:first-child {
+    font-weight: bold;
+    text-align: left;
+    width: 200px; /* Adjust as needed */
+  }
+  
+  /* Style second column (data) */
+  .settingsCard td:last-child {
+    text-align: left; /* Change to 'right' or 'center' if needed */
+  }
+  
+
+/* Ensure input fields are wrapped properly */
+.password-wrapper {
+    position: relative; /* Allows absolute positioning of the eye icon */
+    width: 100%;
+    max-width: 600px; /* Match input width */
+}
+
+/* Style the input fields */
+.password-wrapper input {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    padding-right: 40px; /* Ensure space for the eye icon */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+/* Style the eye buttons */
+#eyeBtn_1, #eyeBtn2, #eyeBtn3 {
+    position: absolute;
+    right: 18px; /* Position to the right inside input */
+    top: 60%; /* Center vertically */
+    transform: translateY(-50%);
+    font-size: 20px;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+.settingsCard button{
+    margin-top: 50px;
+    padding: 15px;
+}
+
+
+/* 🔹 RESPONSIVE DESIGN */
+
+@media (max-width: 1250px) {
+    .heart{
+        translate: 152px 25px;
+    }
+
+    .itemDeets p:nth-of-type(1){
+        translate: 178px 7px;
+    }
+
+    .settingsCard{
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .search-container{
+        width: 350px;
+    }
+
+    .myListings h2, .settings h2, .reviews h2, .likeditems h2{
+        margin-left: 40px;
+    }
+
+    .settingsCard form{
+        margin-left: 0;
+    }
+
+    .settingsCard h3{
+        font-size: 25px;
+    }
+}
+
+/* Medium Screens (Tablets) */
+@media (max-width: 746px) {
+    .profile-nameBox {
+        height: auto;
+    }
+
+    .profile-coverBG {
+        height: 150px;
+    }
+
+    /* 🔹 Center everything on tablets */
+    .profile-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-pic {
+        margin-top: -75px;
+        margin-left: 0;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .profile-pic img {
+        height: 150px;
+        width: 150px;
+    }
+
+    .profile-name {
+        margin-top: 15px;
+        margin-left: 0;
+        align-items: center; /* Center text on small screens */
+    }
+
+    .profile-name h1 {
+        font-size: 24px;
+    }
+
+    .profile-name p {
+        font-size: 16px;
+    }
+
+    .navMenu a {
+        font-size: 16px;
+        padding-left: 0;
+    }
+
+    .search-container{
+        width: 250px;
+    }
+
+}
+
+/* Small Screens (Phones) */
+@media (max-width: 768px) {
+    .profile-coverBG {
+        height: 120px;
+    }
+
+    /* 🔹 Force everything to center on small screens */
+    .profile-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-pic {
+        margin-left: 0;
+    }
+
+    .profile-pic img {
+        height: 120px;
+        width: 120px;
+    }
+
+    .profile-name {
+        align-items: center;
+    }
+
+    .profile-name h1 {
+        font-size: 22px;
+    }
+
+    .profile-name p {
+        font-size: 14px;
+    }
+
+    .profile-tabs {
+        height: auto;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .navMenu {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .navMenu a {
+        font-size: 16px;
+        padding-left: 0;
+    }
+
+    .search-container{
+        width: 215px;
+    }
+
+    .reviewCard{
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .profile-reviews{
+        margin-left: 30px;
+        flex-direction: column;
+    }
+
+    .profile-reviews p:nth-of-type(1){
+        position: absolute;
+        margin-left: 80px;
+        margin-top: 5px;
+        font-size: 20px;
+    }
+
+    .profile-reviews p:nth-of-type(2){
+        position: absolute;
+        margin-left: 80px;
+        margin-top: 35px;
+    }
+
+    .profile-reviews p:nth-of-type(3){
+        position: absolute;
+        margin-left: 280px;
+        margin-top: 35px;
+    }
+
+    .settingsCard td {
+        font-size: 16px;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 500px) {
+    .profile-coverBG {
+        height: 100px;
+    }
+
+    .profile-pic img {
+        height: 100px;
+        width: 100px;
+    }
+
+    .profile-name {
+        align-items: center;
+    }
+
+    .profile-name h1 {
+        font-size: 20px;
+    }
+
+    .profile-name p {
+        font-size: 12px;
+    }
+
+    .navMenu {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .reviewCard{
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    .profile-reviews{
+        margin-left: 15px;
+        flex-direction: column;
+    }
+
+    .profile-reviews p:nth-of-type(1){
+        position: absolute;
+        margin-left: 80px;
+        margin-top: 0px;
+        font-size: 18px;
+    }
+
+    .profile-reviews p:nth-of-type(2){
+        position: absolute;
+        margin-left: 80px;
+        margin-top: 30px;
+        font-size: 15px;
+    }
+
+    .profile-reviews p:nth-of-type(3){
+        position: relative;
+        margin-left: 80px;
+        margin-top: -30px;
+        font-size: 15px;
+    }
+
+    .stars{
+        display: flex;
+        gap: 22px;
+        margin-top: 15px;
+        margin-left: 20px;
+    }
+    
+    .stars i{
+        font-size: 30px;
+        color: #547B3E;
+    }
+    
+    .review-description p{
+        font-size: 18px;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 30px;
+        margin-bottom: 35px;
+        text-align: justify;
+    }
+
+    .profile-reviews img{
+        height: 50px;
+        width: 50px;
+    }
+
+    .settingsCard table {
+        margin-left: -14px;
+    }
+
+    .settingsCard td {
+        font-size: 14px;
+        padding: 20px 10px;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 400px) {
+
+    .myListings h2, .settings h2, .reviews h2{
+        font-size: 20px;
+    }
+    .settingsCard table {
+        margin-left: -20px;
+    }
+
+    .settingsCard td {
+        font-size: 11px;
+        padding: 15px 10px;
+    }
+}
+
+@media only screen and (max-height: 375px) {
+    .profile-nameBox {
+        height:300px;
+    }
+
+    .navMenu a {
+        font-size: 16px;
+        padding-left: 0;
+    }
+
+  }
+
+  @media only screen 
+  and (min-device-width: 768px) 
+  and (max-device-width: 1023px) 
+  and (-webkit-min-device-pixel-ratio: 2) {
+  
+    .profile-nameBox {
+        height: 300px;
+    }
+
+}
+
+@media only screen 
+and (min-device-width: 820px) 
+and (max-device-width: 1180px) 
+and (-webkit-min-device-pixel-ratio: 2) {
+
+  .profile-nameBox {
+      height: 475px;
+  }
+}

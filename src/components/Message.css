@@ -1,0 +1,77 @@
+.messagecontainer {
+    background: rgb(34,108,44);
+    background: linear-gradient(135deg, #b7d2b3, #90b88c, #6e8f6e);
+    width: 100%; 
+    min-height: 100vh;
+    display: flex; 
+    justify-content: left; 
+    align-items: flex-start; 
+    padding: 25px; 
+    
+}
+.messagebox{
+    background-color: white;
+    width: 25%;
+    height: 90vh;
+    margin-left: 0;
+}
+.messagetitle{
+    margin-left: 10px;
+    padding-top: 10px;
+    padding-left: 25px;
+    margin-bottom: -25px;
+}
+
+.messagebox > hr {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    border: none;
+    border-top: 2px solid #ccc;
+    width: 100%;
+    display: block;
+}
+
+.messagebar {
+    background-color: #82AA6D;
+    border: 1px solid white;
+    width: 70%;
+    height: 12vh;
+    margin-left: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    
+}
+.messagesholder{
+    background-color: white;
+    width: 109.6vh; 
+    height: 71vh;
+    padding: 10px;
+    margin-top: 35px;
+    margin-left: -10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    justify-content: flex-start; 
+}
+.profile {
+    color: white;
+    margin-top: 30px;
+}
+.sendinput {
+    height: 200px;
+    width: 109vh;
+    margin-bottom: 50px;
+    margin-top: 250px;
+}
+.messagescroll {
+    height: 400px;    
+    background-color: #6e8f6e;
+    width: 110vh;
+}
+.submitmessage {
+    background-color: #82AA6D;
+    width: 50vh;
+    height: 30px;
+    padding: 30px;
+    margin-left: 180px;
+}

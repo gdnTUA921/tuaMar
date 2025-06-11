@@ -1,0 +1,224 @@
+.reportcontainer{
+    height: auto;
+    background: rgb(34,108,44);
+    background: linear-gradient(135deg, #9bb69e, #7fa47f, #7f9a7f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.reportbox {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    min-height: 85vh;
+    height: auto;
+    align-items: left;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    border-radius: 10px;
+    padding: 25px 0px;
+    padding-left: 160px;
+    width: 60%;
+    max-width: 800px;
+}
+
+.reporttitle {
+    margin-top: 25px;
+    color: #547B3E;
+    font-size: 30px;
+}
+
+.subheading {
+    opacity: 60%;
+    font-size: medium;
+    font-family: Times New Roman;
+    margin-top: 10px;
+}
+
+.itembar {
+    display: flex;
+    background-color: lightgray;
+    padding: 15px;
+    padding-left: 50px;
+    padding-top: 35px;
+    padding-bottom: 35px;
+    height: 10vh;
+    width: 575px;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 35px;
+    border-radius: 10px;
+    gap: 40px;
+}
+
+.reportImg {
+    width: 100px;
+    height: 100px;
+    border: 3.5px solid green;
+    border-radius: 12px;
+    object-fit: cover;
+    padding: 0
+}
+
+form{
+    margin: auto;
+}
+
+.reasontitle, .reasondesc{
+    width: calc(100% - 40px); /* Responsive width */
+    font-weight: bold; 
+    font-size: 16px;
+}
+
+.report-select {
+  width: 100%;
+  max-width: 625px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-bottom: 15px;
+}
+
+
+.desc-input {
+  width: 100%;
+  max-width: 600px;
+  height: 165px;
+  resize: none;
+  overflow: scroll;
+  text-align: left;
+  padding: 10px;
+  margin-bottom: 35px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.report-form{
+    margin: 0;
+    width: 100%;
+    max-width: 700px;
+    overflow: hidden;
+}
+
+.buttons-display{
+      display: flex;
+      gap: 30px;
+      width: 88%;
+      margin-bottom: 25px;
+      align-items: center;
+      justify-content: center;
+}
+  
+.reportbox .submit-report {
+    display: flex;
+    gap: 10px;
+    width: 150px;
+    padding: 10px;
+    margin-top: 25px;
+    background-color: #547B3E;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    align-items: center;
+    justify-content: center;
+}
+  
+.reportbox .sell-button:hover, .reportbox .cancel-button:hover{
+    color: yellow;
+}
+
+.reportbox .cancel-button{
+    width: 150px;
+    padding: 10px;
+    margin-top: 25px;
+    background-color: #B90e0a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+  @media (max-width: 1200px){
+
+    .reportcontainer {
+      padding: 35px;
+    }
+
+    .reportbox {
+      padding-left: 50px;
+      padding-right: 40px;
+      width: 70%;
+      height: auto;
+      min-height: 100px;
+    }
+
+    .itembar{
+        width: 100%;
+        height: auto;
+        min-height: 75px;
+        padding: 0px;
+        padding-top: 25px;
+        padding-bottom: 5px;
+        gap: 5px;
+        flex-direction: column;
+    }
+
+    .itembar h3{
+        font-size: 14px;
+        margin: 15px auto;
+        align-self: flex-start;
+        text-align: center;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 1;
+        line-clamp: 1; /* optional for future compatibility */
+        max-height: 3em; /* approximate height for 2 lines, depending on font-size/line-height */
+    }
+
+    .desc-input {
+    width: 89.5%;
+    }
+
+    .submit-report {
+        margin: auto;
+        margin-top: 25px;
+    }
+
+    .cancel-button {
+      margin: auto;
+      margin-top: -5px !important;
+  }
+
+    .buttons-display{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 25px;
+    }
+}
+
+@media (max-width: 350px) {
+ .desc-input {
+    width: 88%;
+    }
+}
+
+@media only screen and (max-height: 375px) {
+  .sell-container {
+    height: 350vh;
+  }
+}

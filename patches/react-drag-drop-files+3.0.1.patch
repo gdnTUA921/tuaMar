@@ -1,0 +1,11 @@
+diff --git a/package.json b/package.json
+index 8ed4db7..011ba33 100644
+--- a/package.json
++++ b/package.json
+@@ -1,5 +1,5 @@
+ {
+-  "name": "react-drag-drop-files-patched",
++  "name": "react-drag-drop-files",
+   "version": "3.0.1",
+   "description": "Light React Drag & Drop files and images library styled by styled-components",
+   "author": "Karim <karimmokhtar28@gmail.com>",

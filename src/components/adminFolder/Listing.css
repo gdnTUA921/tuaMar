@@ -1,0 +1,141 @@
+.admin-listing-wrapper .profile-container {
+    background-color: #D9D9D9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1250px;
+    border-radius: 10px;
+    height: 90vh;
+    overflow: scroll;
+}
+/* Content Sections */
+.admin-listing-wrapper .myListings, .admin-listing-wrapper .reviews, .admin-listing-wrapper .settings {
+    background-color: white;
+    max-width: 90%;
+    width: 100%;
+    min-height: 300px;
+    margin: 50px auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: scroll;
+}
+
+.admin-listing-wrapper .myListings h2{
+    margin-left: 80px;
+    margin-top: 50px;
+    font-size: 30px;
+    margin-bottom: 50px;
+}
+
+.admin-listing-wrapper .listingsCard{
+    position: relative;
+}
+
+.admin-listing-wrapper .items{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: auto;
+    align-items: center;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.admin-listing-wrapper .itemCard{
+    display: block;
+    border-radius: 7px;
+    border: 1px solid #ddd;
+    margin: 5px 15px 50px 10px;
+    padding: 25px;
+    padding-top: 30px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+    min-height: 400px !important;
+    height: auto;
+    font-family: Arial;
+    font-size: 16px;
+    
+}
+
+.admin-listing-wrapper .itemCard h3{
+    margin-top: 25px;
+}
+
+.admin-listing-wrapper .itemCard:hover{
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.7);
+}
+
+.admin-listing-wrapper .itemDeets{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.admin-listing-wrapper .itemDeets p:nth-of-type(1){
+    position: relative;
+    margin-left: -200px;
+    font-size: 18px;
+}
+
+.admin-listing-wrapper .itemDeets p:nth-of-type(2){
+    position: absolute;
+    translate: 178px 10px;
+    font-size: 18px;
+}
+
+.admin-listing-wrapper .itemDeets p:nth-of-type(3){
+    position: relative;
+    margin-top: -30px;
+    margin-left: 105px;
+    
+}
+
+.admin-listing-wrapper .itemTitle{
+    width: 135px;
+    padding: 0;
+}
+
+.admin-listing-wrapper .heart{
+    color: #547B3E;
+    font-size: 20px;
+    position: absolute;
+    translate: 152px 28px;
+}
+
+.admin-listing-wrapper .editListButton{
+    background-color: grey;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 12px;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.admin-listing-wrapper .editListButton:hover, .soldButton:hover{
+    color: yellow;
+}
+
+.admin-listing-wrapper .soldButton{
+    background-color: #547B3E;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 12px;
+    font-size: 15px;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.admin-listing-wrapper .search-container{
+    margin-left: 240px;
+    margin-top: -90px;
+    width: 18em; 
+
+}
+
+.admin-listing-wrapper .search-container input{
+    border: 2px solid black;
+    padding: 12px;
+    padding-left: 20px;
+    border-radius: 10px;
+    width: 100%;
+}

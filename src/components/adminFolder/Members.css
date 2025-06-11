@@ -1,0 +1,167 @@
+.userscontainer .members-container {
+    width: 100%;
+    height: calc(100vh - 80px);  /* Adjust based on header height */
+    background-color: #d9d9d9;
+    padding: 100px 90px 100px 10px;
+    border-radius: 10px;
+    flex-direction: column;
+    overflow-y: auto;  /* Enables vertical scrolling */
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+    max-height: 1000px;  /* Restricts the height to prevent stretching */
+    display: flex;      /* Ensures contents stack vertically inside the container */
+}
+
+  
+.userscontainer h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: left;
+    margin-top: -90px;
+    margin-bottom: 10px;
+    margin-right: 1100px;
+  }
+  
+.userscontainer .counters {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+  }
+  
+.userscontainer .counter-card {
+    background: linear-gradient(to right, #6f996d 50%, #c2c299 50%);
+    padding: 5px;
+    flex: 1;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+  }
+  
+.userscontainer .counter-card p {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+.userscontainer .counter-card h3 {
+    font-size: 30px;
+    margin: 0;
+  }
+  
+.userscontainer .tabs-search {
+    display: flex;
+    align-items: center;
+    gap: 20px;           /* Space between tabs and search bar */
+    margin-bottom: 20px;
+    flex-wrap: wrap;     /* Optional: prevents overflow on smaller screens */
+  }
+
+.userscontainer .tabs button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    margin-right: 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+  }
+  
+.userscontainer .tabs button.active {
+    border-bottom: 2px solid green;
+    font-weight: bold;
+  }
+
+
+.userscontainer .search-bar {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-left: 0;     /* Remove auto-push */
+  }
+
+  
+.userscontainer .search-bar input {
+    padding: 10px 35px 10px 15px;  /* room for icon on the right */
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    margin-right: 0;               /* remove the huge 370px */
+  }
+
+.userscontainer .search-icon {
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+  }
+
+
+.userscontainer .user-table {
+    background: white;
+    border-radius: 8px;
+    padding: 0;
+    overflow-y: auto; /* Added to allow independent scrolling */
+    max-height: 400px; /* Restricts table height */
+}
+
+/* Reset box-sizing for consistency */
+.userscontainer * {
+    box-sizing: border-box;
+}
+  
+.userscontainer .user-table table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+.userscontainer .user-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+    text-align: center;
+    padding: 12px;
+    border-bottom: 2px solid #ccc;
+  }
+  
+.userscontainer .user-table tbody {
+    display: block;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+.userscontainer .user-table thead, .userscontainer .user-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+  
+.userscontainer .user-table td {
+    text-align: center;
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  
+.userscontainer .view-btn {
+    background: gray;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+.userscontainer .update-btn {
+    background: green;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+.userscontainer .delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
