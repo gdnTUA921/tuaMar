@@ -259,18 +259,18 @@
     padding-right: 550px;
   }
   
-  .settings-box p {
+  .backgroundsettingscontainer .settings-box p {
     font-size: 25px;
     text-align: left !important;
     margin-left: 30px;
   }
   
-  .password-field {
+  .backgroundsettingscontainer .password-field {
     margin: 15px 0;
     margin-left: 30px;
   }
   
-  .input-group {
+  .backgroundsettingscontainer .input-group {
     display: flex;
     align-items: center;
     border: 1px solid #ccc;
@@ -279,20 +279,20 @@
     width: 400px;
   }
   
-  .input-group input {
+  .backgroundsettingscontainer .input-group input {
     width: 100%;
     padding: 10px;
     border: none;
     outline: none;
   }
   
-  .eye-icon {
+  .backgroundsettingscontainer .eye-icon {
     padding: 10px;
     color: #888;
     cursor: pointer;
   }
   
-  .update-btn {
+  .backgroundsettingscontainer .update-btn {
     background: #2e7d32;
     color: white;
     border: none;
@@ -303,14 +303,11 @@
     margin-left: 30px;
   }
   
-  .update-btn:hover {
+  .backgroundsettingscontainer .update-btn:hover {
     background: #1b5e20;
   }
   
-  hr {
-    width: 160%; /* Sets the line to 80% of the container's width */
-  }
-  .settings-box h3 {
+  .backgroundsettingscontainer .settings-box h3 {
     margin-left: 30px;
   }
   
@@ -319,20 +316,20 @@
   }
   
   /* ================================================================================================================================================================ */
-  /* DASHBOARD ! */
+  /* DASHBOARD */
   /* ================================================================================================================================================================ */
   
   /* Dashboard Styling */
   .dashboard-container {
     width: 100%;
-    height: calc(100vh - 80px);  /* Adjust based on header height */
+    height: calc(100vh - 80px);  
     padding: 20px;
     background: #d9d9d9;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow-y: auto;  /* Enables vertical scrolling */
-    overflow-x: hidden; /* Prevents horizontal scrolling */
+    overflow-y: auto;
+    overflow-x: hidden;
     border-radius: 10px;
   }
   
@@ -340,19 +337,19 @@
     margin-left: 10px;
   }
   
-  .filter-container {
+  .dashboard-container .filter-container {
     display: flex;
     justify-content: flex-start;
     gap: 10px;
     align-items: center;
   }
   
-  .filter-container label {
+  .dashboard-container .filter-container label {
     font-weight: bold;
     font-size: 1.2rem; 
   }
   
-  .filter-container select {
+  .dashboard-container.filter-container select {
     padding: 15px 20px;  /* Increased button size */
     font-size: 1rem;
     border: 1px solid #ccc;
@@ -362,13 +359,13 @@
     transition: all 0.3s ease;
   }
   
-  .stats-section {
+  .dashboard-container .stats-section {
     display: flex;
     /* flex-direction: column;   /* Stack the stats vertically  Sira sya pag column kaso accurate sya sa figma. */
     gap: 20px;
   }
   
-  .stat-box {
+  .dashboard-container .stat-box {
     background: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -379,38 +376,38 @@
     gap: 15px;
   }
   
-  .stat-icon {
+  .dashboard-container .stat-icon {
     font-size: 3rem;
     color: gray;
   }
   
-  .stat-title {
+  .dashboard-container .stat-title {
     font-weight: bold;
     font-size: 1.2rem;
   }
   
-  .stat-number {
+  .dashboard-container .stat-number {
     font-size: 2rem;
     font-weight: bold;
   }
   
-  .stat-description {
+  .dashboard-container .stat-description {
     color: #888;
     font-size: 0.9rem;
   }
   
-  .chart-container {
+  .dashboard-container .chart-container {
     background: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 20px;
   }
   
-  .chart-container h3 {
+  .dashboard-container .chart-container h3 {
     margin-left: 10px;
   }
   
-  .chart-placeholder {
+  .dashboard-container .chart-placeholder {
     height: 300px;
     background: #e0e0e0;
     display: flex;
@@ -456,7 +453,7 @@
   }
   
   /* Form Layout */
-  .registration-form {
+  .registration-container .registration-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -465,7 +462,7 @@
   }
   
   /* Form Row Styling */
-  .form-row {
+  .registration-container .form-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -473,26 +470,26 @@
   }
   
   /* First & Last Name Split Row */
-  .registration-form .split-row {
+  .registration-container .registration-form .split-row {
     display: flex;
     justify-content: space-between;
     gap: 100px;
   }
   
-  .registration-form .form-group {
+  .registration-container .registration-form .form-group {
     padding-left: 50px;
     flex: 1;
   }
   
   /* Label Styling */
-  .registration-form label {
+  .registration-container .registration-form label {
     font-weight: bold;
     width: 200px;
     padding-left: 70px;
   }
   
   /* Input & Select Styling */
-  .registration-form input,
+  .registration-container .registration-form input,
   .registration-form select {
     flex: 1;
     padding: 12px;
@@ -502,7 +499,7 @@
   }
   
   /* Submit Button Styling */
-  .registration-form .submit-btn {
+  .registration-container .registration-form .submit-btn {
     background: #2e7d32;
     color: white;
     border: none;
@@ -517,7 +514,7 @@
     width: 120px;
   }
   
-  .registration-form .alignsubbutton {
+  .registration-container .registration-form .alignsubbutton {
     display: flex;            
     justify-content: center;   
     align-items: center;       
@@ -525,12 +522,15 @@
     padding-left: 95px;            
   }
   
-  
   .registration-form .submit-btn:hover {
     background: #1b5e20;
   }
+  /* ================================================================================================================================================================ */
+  /* HINDI KO ALAM BAKIT DITO GUMAGANA YUN FORMATTING SABI NI CHATGPT DITO, BASTA MEDYO MAAYOS NA YUN RESPONSIVENESS  CHANGE LATER */
+  /* REPORTS CONTAINER*/
+  /* ================================================================================================================================================================ */
   .reports-container {
-    background-color: #d9d9d9; /* Background color */
+    background-color: #d9d9d9; 
     padding: 150px;
     padding-right: 1000px;
     padding-top: 10px;
@@ -538,13 +538,13 @@
     min-height: 300px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align items to the left */
-    justify-content: flex-start; /* Align content to the top */
+    align-items: flex-start;
+    justify-content: flex-start;
   }
   
   .reports-container h1 {
-    margin-top: 0; /* Reset any default margin */
-    padding-top: 0; /* Reset padding */
+    margin-top: 0;
+    padding-top: 0;
     
     
   }
@@ -557,12 +557,13 @@
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
-    min-height: 200px; /* Adjust as needed */
+    min-height: 200px;
     align-items: flex-start;
   }
 
-
-
+/* ================================================================================================================================================================ */
+/* responsiveness */
+/* ================================================================================================================================================================ */
 @media (max-width: 1240px) {
 
     .logo img {
@@ -570,7 +571,7 @@
         height: 70px;
         padding-left: 0;
         margin-right: 0;
-        margin-bottom: 0px; /* Add space below the logo */
+        margin-bottom: 0px;
     }
 
     .admin-button{
@@ -616,4 +617,137 @@
 
 }
   
-  
+@media (max-width: 768px) {
+  .stats-section {
+    flex-direction: column;
+  }
+
+  .stat-box {
+    width: 100%;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    transition: left 0.3s ease;
+    z-index: 999;
+  }
+
+  .sidebar.show {
+    left: 0;
+  }
+
+  .dashboard-container {
+    padding: 10px;
+  }
+
+  .chart-container {
+    padding: 10px;
+  }
+
+  .admin-button {
+    font-size: 0.9rem;
+    padding: 10px;
+    gap: 5px;
+  }
+
+  .filter-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerTitle {
+    font-size: 1.2rem;
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+  }
+
+  .chart-placeholder {
+    height: 200px;
+  }
+
+  .registration-form label {
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .input-group {
+    width: 100%;
+  }
+
+  .settings-container {
+    padding: 20px;
+    margin-left: 0;
+    padding-right: 20px;
+  }
+
+  .reports-container,
+  .reports-content {
+    padding: 20px !important;
+  }
+}
+
+/* Make layout fully fluid on ultra small screens */
+@media (max-width: 360px) {
+  .stat-title,
+  .stat-description {
+    font-size: 0.8rem;
+  }
+
+  .stat-number {
+    font-size: 1.2rem;
+  }
+
+  .admin-button {
+    font-size: 0.75rem;
+  }
+}
+
+.backgroundsettingscontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #d9d9d9;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: calc(100vh - 80px);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.settings-container {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 20px;
+  }
+
+  .settings-box p {
+    font-size: 18px;
+  }
+
+  .update-btn {
+    width: 100%;
+  }
+}

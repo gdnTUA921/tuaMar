@@ -216,9 +216,3 @@ form{
     width: 88%;
     }
 }
-
-@media only screen and (max-height: 375px) {
-  .sell-container {
-    height: 350vh;
-  }
-}

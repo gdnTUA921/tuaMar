@@ -2,34 +2,50 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Header.css';
 import { Link } from "react-router-dom";
+import { signInWithPopup, signOut} from 'firebase/auth';
+import { auth, googleProvider } from '../firebaseConfig';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 function Header() {
 
+    //for IP address
+    const ip = process.env.REACT_APP_LAPTOP_IP;
+
     const MySwal = withReactContent(Swal);
 
     const navigate = useNavigate();
 
-    const handleLogOut = (event) => {
+    const handleLogOut = async (event) => {
       event.preventDefault();
 
-      fetch(`http://localhost/tua_marketplace/logOut.php`, {
-        credentials: "include", // This is important for cookies!
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          MySwal.fire({
-            icon: 'success',
-            title: 'Log-Out Successful',
-            showConfirmButton: false,
-            timer: 1500
-          });
-          navigate("/");
-        })
-        .catch((error) => console.error("Error fetching data:", error));
+      try{
+          await signOut(auth);
 
-  }
+          const response = await fetch(`${ip}/tua_marketplace/logOut.php`, {
+            credentials: "include", // This is important for cookies!
+          });
+
+          const data = await response.json();
+
+          if (data.message){
+            MySwal.fire({
+                icon: 'success',
+                title: 'Log-Out Successful',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate("/");
+          }
+      } catch (error) {
+          console.error("Logout error:", error);
+            MySwal.fire({
+              icon: 'error',
+              title: 'Log-Out Failed',
+              text: 'Something went wrong while logging out.',
+          });
+      }
+    }
 
 
   return (

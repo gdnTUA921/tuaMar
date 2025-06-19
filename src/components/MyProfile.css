@@ -101,7 +101,8 @@
 
 .navMenu {
     display: flex;
-    gap: 20px;
+    gap: 100px;
+    padding-left: 80px;
 }
 
 .navMenu a {
@@ -110,12 +111,13 @@
     font-size: 18px;
     text-decoration: none;
     padding-top: 18px;
-    padding-left: 50px;
     padding-bottom: 15px;
-    transition: color 0.3s ease;
+    background: linear-gradient(currentColor 0 0) center  80% / 0 3px no-repeat;
+    transition:0.5s;   
 }
 
 .navMenu a:hover {
+    background-size:  100% 3px;
     color: #547B3E;
 }
 
@@ -663,9 +665,13 @@
         font-size: 16px;
     }
 
-    .navMenu a {
-        font-size: 16px;
+    .navMenu {
         padding-left: 0;
+    }
+
+    .navMenu a {
+        padding-left: 0;
+        font-size: 16px;
     }
 
     .search-container{

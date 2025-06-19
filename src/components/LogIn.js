@@ -82,6 +82,7 @@ function LogIn() {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
             const email = user.email;
+            const uid = user.uid;
             //const displayName = user.displayName;
             let displayPic = user.photoURL;
 
@@ -117,7 +118,7 @@ function LogIn() {
             // Send email to PHP session for processing
             await fetch(`${ip}/tua_marketplace/handleGoogleLogIn.php`, {
                 method: "POST",
-                body: JSON.stringify({ email, displayPic}),
+                body: JSON.stringify({ email, displayPic, uid }),
                 credentials: "include", // Important for sending cookies/session ID
             });
     
@@ -162,7 +163,7 @@ function LogIn() {
                     </button>
                 </div>
                 <div className="logInContents_admin" style={{display: adminLogIn == "none" ? "none" : "flex"}}>
-                    <div class="adminLogInHeader">
+                    <div className="adminLogInHeader">
                         <img src="/tuamar.png" alt="TUA Logo" />
                         <h2>Admin Login</h2>
                     </div>

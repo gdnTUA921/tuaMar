@@ -8,6 +8,7 @@ import "./TuaMarAdmin.css";
 import Reports from "./Reports.js";
 import Listings from "./Listing.js";
 import Members from "./Members.js";
+import PendingListing from "./PendingListing.js";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -37,7 +38,6 @@ export default function Admin() {
   }, [ip]);
 
 
-
   //alerts
   const MySwal = withReactContent(Swal);
 
@@ -52,15 +52,18 @@ export default function Admin() {
   const [showReports, setShowReports] = useState(false); // New state for Reports UI
   const [showListing, setShowlistings] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
+  const [showPendingListing, setShowPendingListings] = useState(false);
 
   const menuItems = [
-    { name: "Dashboard", icon: <FaTachometerAlt /> },
-    { name: "Users", icon: <FaUsers /> },
-    { name: "Reports", icon: <FaChartBar /> },
-    { name: "Listings", icon: <FaList /> },
-    { name: "Registrations", icon: <FaUserPlus /> },
-    { name: "Settings", icon: <FaCog /> }
-  ];
+  { name: "Dashboard", icon: <FaTachometerAlt /> },
+  { name: "Registrations", icon: <FaUserPlus /> },
+  { name: "Users", icon: <FaUsers /> },
+  { name: "Reports", icon: <FaChartBar /> },
+  { name: "Listings", icon: <FaList /> },
+  { name: "PendingListings", icon: <FaList /> },
+  { name: "Settings", icon: <FaCog /> }
+];
+
 
   const handleMenuClick = (itemName) => {
     setActive(itemName);
@@ -70,6 +73,7 @@ export default function Admin() {
     setShowReports(itemName === "Reports"); // Handle Reports UI visibility
     setShowlistings(itemName === "Listings");
     setShowMembers(itemName === "Users");
+    setShowPendingListings(itemName === "PendingListings");
     
   };
 
@@ -104,6 +108,11 @@ export default function Admin() {
   const [idNumber, setIdNumber] = useState("");
   const [department, setDepartment] = useState("");
   const [email, setEmail] = useState("");
+  
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
 
   const handleTypeUserChange = (event) => setTypeUser(event.target.value);
   const handleFirstNameChange = (event) => setFirstName(event.target.value);
@@ -160,6 +169,54 @@ export default function Admin() {
 
   }
 
+    useEffect(() => {
+      fetch(`${ip}/tua_marketplace/getadmininfo.php`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === "success") {
+            setEmail(data.email);
+          } else {
+            console.error(data.message);
+          }
+        });
+    }, []);
+
+    const handlePasswordUpdate = () => {
+      if (newPassword !== confirmPassword) {
+        Swal.fire("Error", "New passwords do not match", "error");
+        return;
+      }
+
+      fetch(`${ip}/tua_marketplace/updateadminpassword.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          old_password: oldPassword,
+          new_password: newPassword,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.status === "success") {
+            Swal.fire("Success", data.message, "success");
+            setOldPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+          } else {
+            Swal.fire("Error", data.message, "error");
+          }
+        })
+        .catch((err) => {
+          console.error("Error:", err);
+          Swal.fire("Error", "Server error occurred", "error");
+        });
+    };
+
 
   return (
     <div>
@@ -212,36 +269,30 @@ export default function Admin() {
           <main className="content"> 
             {showSettings ? (
               <div className="backgroundsettingscontainer">
-                <h1>ACCOUNT SETTINGS</h1>
                 <div className="settings-container">
+                  <h1>ADMIN SETTINGS</h1>
                   <div className="settings-box">
-                    <p><strong>Account Type:</strong> admin</p>
-                    <p><strong>User ID:</strong> 1</p>
-                    <p><strong>Email:</strong> tuamarketplace.support@gmail.com</p>
-                    <hr />
+                    <p><strong>Email:</strong> {email || "Loading..."}</p>
                     <h3>Change Password:</h3>
                     <div className="password-field">
                       <label>Enter Old Password:</label>
                       <div className="input-group">
-                        <input type="password" />
-                        <FaEye className="eye-icon" />
+                        <input type="password" placeholder="Enter Old Password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)}/>
                       </div>
                     </div>
                     <div className="password-field">
                       <label>Enter New Password:</label>
                       <div className="input-group">
-                        <input type="password" />
-                        <FaEye className="eye-icon" />
+                        <input type="password" placeholder="Enter New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}/>
                       </div>
                     </div>
                     <div className="password-field">
                       <label>Confirm New Password:</label>
                       <div className="input-group">
-                        <input type="password" />
-                        <FaEye className="eye-icon" />
+                        <input type="password" placeholder="Confirm New Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                       </div>
                     </div>
-                    <button className="update-btn">UPDATE</button>
+                    <button className="update-btn" onClick={handlePasswordUpdate}>UPDATE</button>
                   </div>
                 </div>
               </div>
@@ -315,7 +366,7 @@ export default function Admin() {
                         <option value="CAHS">CAHS</option>
                         <option value="CMT">CMT</option>
                         <option value="CEIS">CEIS</option>
-                        <option value="IBaM">IBaM</option>
+                        <option value="IBAM">IBAM</option>
                         <option value="SLCN">SLCN</option>
                         <option value="">Others</option>
                       </select>
@@ -332,12 +383,18 @@ export default function Admin() {
                   </form>
                 </div>
               </div>
-          ) : showReports ? (
+          ) : 
+          showReports ? (
             <Reports />
-          ) : showListing ? (
+          ) : 
+          showListing ? (
             <Listings />
-          ) :  showMembers ? (
+          ) : 
+          showMembers ? (
             <Members /> 
+          ) :
+          showPendingListing ? (
+            <PendingListing /> 
           ) : (
             <h2 className="heading">{active}</h2>
           )}

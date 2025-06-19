@@ -3,12 +3,16 @@ body{
     margin: 0;
 }
 
+
 header{
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 15px;
+
+
 }
+
 
 img{
     width: 70px;
@@ -16,10 +20,12 @@ img{
     padding-left: 18px;
 }
 
+
 h1{
     padding-left: 20px;
     font-size: 25px;
 }
+
 
 nav{
     padding-left: 120px;
@@ -29,6 +35,7 @@ nav{
     gap: 30px;
 }
 
+
 #headerIcon {
     font-size: 50px;
     position: absolute;
@@ -36,22 +43,30 @@ nav{
     right: 80px; /* Icon stays on the right */
 }
 
-.nav-link {
-    text-decoration: none;   
-    color: #000;             
-    font-size: 15px;               
-  }
 
+.nav-link {
+    text-decoration: none;  
+    color: #000;            
+    font-size: 15px;    
+     background:
+      linear-gradient(currentColor 0 0)
+      center  80% / 0 3px
+    no-repeat;
+  transition:0.5s;          
+  }
+ 
 .nav-link:hover {
-    text-decoration: none;   
-    color: #456a31;                         
+      background-size:  100% 3px;
+    color: #456a31;  
+       
 }
+
 
 .profile-icon-container {
     position: relative;
     display: inline-block;
   }
-  
+ 
   .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -63,17 +78,18 @@ nav{
     min-width: 150px;
     z-index: 1000;
   }
-  
+ 
   .dropdown-menu a {
     display: block;
     padding: 10px;
     text-decoration: none;
     color: black;
   }
-  
+ 
   .dropdown-menu a:hover {
     background: #f0f0f0;
   }
+
 
   .homeLogo{
     text-decoration: none;
@@ -81,6 +97,8 @@ nav{
     display: flex;
     align-items: center;
   }
+
+
 
 
   .productDropDown {
@@ -93,17 +111,19 @@ nav{
     font-weight: bold;
     top: 80px;
     right: 35px; /* Icon stays on the right */
-    width: 120px; 
+    width: 120px;
     text-align: center;
     gap: 5px;
     border-radius: 5px;
 }
+
 
 .container:hover .productDropDown {
     display: flex;
     position: absolute;
     z-index: 10;
 }
+
 
 .productDropDown a, .logOut{
     color: white;
@@ -112,17 +132,22 @@ nav{
     font-size: 16px;
 }
 
+
 .productDropDown a:hover, .logOut:hover{
     color: yellow;
 }
-  
+ 
+
+
 
 
 @media (max-width: 1240px) {
 
+
     .homeLogo, header{
         flex-direction: column;
     }
+
 
     img {
         width: 15vw;
@@ -132,10 +157,12 @@ nav{
         margin-bottom: 0px; /* Add space below the logo */
     }
 
+
     h1{
         padding-left: 0;
         font-size: 35px;
     }
+
 
     nav{
         flex-direction: column;
@@ -143,25 +170,29 @@ nav{
         padding-left: 0;
         gap: 3px;
     }
-    
+   
 }
+
 
 @media (max-width: 800px) {
     .nav-link{
         font-size: 12px;
     }
 
+
     h1{
         padding-left: 0;
-        font-size: 4vw;
+        font-size: 5vw;
     }
 }
+
 
 @media (max-width: 768px) {
     #headerIcon {
         right: 60px; /* Adjust position */
         font-size: 40px;
     }
+
 
     .productDropDown {
         top: 75px; /* Move further left */
@@ -171,16 +202,19 @@ nav{
         padding-right: 5px;
     }
 
+
     .productDropDown a, .logOut{
         font-size: 15px;
     }
 }
 
+
 @media (max-width: 480px) {
     #headerIcon {
         right: 35px; /* Move further left */
-        
+       
     }
+
 
     .productDropDown {
         top: 70px; /* Move further left */
@@ -191,23 +225,29 @@ nav{
         padding-right: 0;
     }
 
+
     .productDropDown a, .logOut{
         font-size: 12px;
     }
 }
 
+
 @media (max-width: 360px) {
     #headerIcon {
         right: 10px; /* Adjust even more */
-        font-size: 25px; 
+        font-size: 25px;
     }
+
 
     .productDropDown {
         top: 60px; /* Move further left */
         right: 5px; /* Move further left */
     }
 
+
     .productDropDown a, .logOut{
         font-size: 10px;
     }
 }
+
+
