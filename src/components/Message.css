@@ -216,20 +216,31 @@
     right: 35px;
 }
 
-.review-button{
-    font-size: 13px;
-    padding: 12px;
-    width: 135px;
-    border-radius: 8px;
-}
-
-.view-profile-button{
-    background-color: lightgray;
-    color: black;
+.review-button:disabled {
+  background-color: gray;   /* Gray background */
+  color: black;              /* Dimmed text */
+  cursor: not-allowed;
+  border: 1px solid #999;   /* Optional for clarity */
+  opacity: 0.8;  
 }
 
 .itemInquired {
     display: flex;
+    padding: 12px;
+    background-color: lightgray;
+    height: 6vh;
+    gap: 25px;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    position: relative;
+    border-left: 3px solid white;
+    border-right: 3px solid white;
+    border-bottom: 3px solid white;
+}
+
+.itemInquiredDetails{
+   display: flex;
     padding: 12px;
     background-color: lightgray;
     height: 6vh;
@@ -266,10 +277,10 @@
     right: 35px;
 }
 
-.view-button {
+.review-button, .view-button {
   background: #989393;
   border-color: #547B3E;
-  padding: 10px 20px;
+  padding: 12px;
   display: inline-block;
   font-size: 12px;
   font-weight: 600;
@@ -277,6 +288,8 @@
   text-transform: uppercase;
   cursor: pointer;
   transform: skew(-0deg);
+  width: 135px;
+  border-radius: 8px;
 }
 
 
@@ -286,7 +299,7 @@
 }
 
 
-.view-button::before {
+.review-button::before, .view-button::before {
   content: '';
   position: absolute;
   top: 0;
@@ -301,15 +314,23 @@
 }
 
 
-.view-button:hover {
-  color: black;
+.review-button:hover, .view-button:hover {
+  color: yellow;
 }
 
 
-.view-button:hover::before {
+.review-button:hover::before, .view-button:hover::before {
   left: 0;
   right: 0;
   opacity: 1;
+}
+
+.review-button:disabled, .review-button:disabled:hover,  .review-button:disabled:hover::before{
+  background-color: gray;   /* Gray background */
+  color: black;              /* Dimmed text */
+  cursor: not-allowed;
+  border: 1px solid #999;   /* Optional for clarity */
+  opacity: 0.8;  
 }
 
 
@@ -320,6 +341,12 @@
     flex: 1;
     overflow: hidden ;
 }
+
+.messageholder.time-stamp:hover {
+    color: black;
+    cursor: pointer;        
+}
+
 
 
 .adjust-holder {
@@ -344,6 +371,27 @@
 .received-message{
     background-color: lightgray;
 }
+
+.specific-messages .time-stamp {
+  display: none;
+   
+}
+
+
+.specific-messages:hover .time-stamp {
+  display: inline;
+  position: absolute;
+   margin-left: 20px;
+ 
+}
+.sent-message:hover .time-stamp {
+    display: inline;
+    position: absolute;
+    margin-right: 230px;
+    right: 0;
+}
+
+
 
 
 .send-container{
@@ -397,8 +445,70 @@
 }
 
 
+.time-stamp {
+    font-size: 10px;
+    color: gray;
+    margin-top: 5px;
+    text-align: right;
+    margin-right: 10px;
+    font-style: bold    ;
+   
+}
+
+
+
 
 /* Responsiveness */
+
+@media (max-width: 1240px) {
+
+    .itemInquiredDetails {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .itemInquired {
+        gap: 5px;
+        padding-left: 5px;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding-bottom: 15px;
+        padding-top: 5px;
+        height: auto;
+    }
+
+    .itemInquiredDeets h3{
+        font-size: 14px;
+    }
+
+    .itemInquiredDeets p{
+        font-size: 12px;
+    }
+
+    .itemInquiredDetails{
+        padding-left: 0px;
+    }
+
+    .item-buttons{
+        position: relative;
+        left: 20px;
+    }
+
+    .review-button{
+        width: 100px;
+        padding: 8px;
+        font-size: 10px;
+    }
+
+    .view-button{
+        width: 100px;
+        padding: 8px;
+        font-size: 10px;
+    }
+    
+
+}
 
 @media (max-width: 950px) {
 
@@ -409,6 +519,7 @@
     .messagebox{
         display: block;
         width: 100%;
+        height: 80vh;
     }
 
     .messagebox-dup{
@@ -421,6 +532,7 @@
 
     .messageRightCon{
         width: 100%;
+        height: 80vh;
     }
 
     .profile{
@@ -437,31 +549,99 @@
         padding-left: 25px;
     }
 
-    .itemInquired {
-        gap: 10px;
-        padding-left: 25px;
+    .messagebar h3{
+        font-size: 15px;
     }
 
-    .itemInquired img{
-        margin: 10px;
+    .itemInquired {
+        gap: 5px;
+        padding-left: 5px;
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding-bottom: 12px;
+        padding-top: 5px;
+    }
+
+    .itemInquiredDeets h3{
+        font-size: 14px;
+    }
+
+    .itemInquiredDeets p{
+        font-size: 12px;
+    }
+
+    .itemInquiredDetails{
+        padding-left: 0px;
     }
 
     .item-buttons{
-        display: none;
+        position: relative;
+        left: 20px;
     }
 
     .review-button{
-        display: none;
+        width: 100px;
+        padding: 8px;
+        font-size: 10px;
     }
 
-
-
-
-
+    .view-button{
+        width: 100px;
+        padding: 8px;
+        font-size: 10px;
+    }
 }
 
-@media (max-width: 820px) {
+@media (max-width: 550px) {
 
+    .item-buttons{
+        gap: 10px;
+    }
 
+    .review-button{
+        width: 90px;
+        padding: 8px;
+        font-size: 8px;
+    }
 
+    .view-button{
+        width: 90px;
+        padding: 8px;
+        font-size: 8px;
+    }
+    
+}
+
+@media (max-width: 375px) {
+
+    .messagebox{
+        height: 90vh;
+    }
+
+    .messageRightCon{
+        height: 90vh;
+    }
+
+    .itemInquiredDetails {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .item-buttons{
+        gap: 5px;
+    }
+
+    .review-button{
+        width: 85px;
+        padding: 8px;
+        font-size: 8px;
+    }
+
+    .view-button{
+        width: 85px;
+        padding: 8px;
+        font-size: 8px;
+    }
+    
 }

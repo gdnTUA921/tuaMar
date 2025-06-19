@@ -102,7 +102,8 @@
 }
 
 .admin-listing-wrapper .editListButton{
-    background-color: grey;
+    background-color: green;
+    color: white;
     margin-top: 20px;
     margin-bottom: 10px;
     padding: 12px;
@@ -112,7 +113,7 @@
 }
 
 .admin-listing-wrapper .editListButton:hover, .soldButton:hover{
-    color: yellow;
+    color: black;
 }
 
 .admin-listing-wrapper .soldButton{

@@ -31,6 +31,9 @@ export default function Admin() {
         if (!data.admin_id) {
           navigate("/"); // Redirect to login if not authenticated
         }
+        else {
+          setEmail(data.email);
+        }
       })
       .catch((error) => {
         console.error("Error fetching session data:", error);
@@ -169,20 +172,6 @@ export default function Admin() {
 
   }
 
-    useEffect(() => {
-      fetch(`${ip}/tua_marketplace/getadmininfo.php`, {
-        method: "GET",
-        credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.status === "success") {
-            setEmail(data.email);
-          } else {
-            console.error(data.message);
-          }
-        });
-    }, []);
 
     const handlePasswordUpdate = () => {
       if (newPassword !== confirmPassword) {
@@ -216,6 +205,47 @@ export default function Admin() {
           Swal.fire("Error", "Server error occurred", "error");
         });
     };
+
+
+  //fetch total number of users and total items
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalItems, setTotalItems] = useState(0);
+
+  useEffect(() => {
+    fetch(`${ip}/tua_marketplace/fetchTotalUsers.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          setTotalUsers(data.total_users);
+        } else {
+          console.error("Error fetching total users:", data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching total users:", error);
+      });
+
+    fetch(`${ip}/tua_marketplace/fetchTotalItems.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          setTotalItems(data.total_items);
+        } else {
+          console.error("Error fetching total items:", data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching total items:", error);
+      });
+  }, [ip]);
+
+
 
 
   return (
@@ -312,7 +342,7 @@ export default function Admin() {
                     <FaUsers className="stat-icon" />
                     <div>
                       <p className="stat-title">Total Users</p>
-                      <p className="stat-number">5,067 (placeholder)</p>
+                      <p className="stat-number">{totalUsers}</p>
                       <p className="stat-description">Registered users across all colleges</p>
                     </div>
                   </div>
@@ -320,7 +350,7 @@ export default function Admin() {
                     <FaList className="stat-icon" />
                     <div>
                       <p className="stat-title">Total Items</p>
-                      <p className="stat-number">600 (placeholder)</p>
+                      <p className="stat-number">{totalItems}</p>
                       <p className="stat-description">Listed items across all categories</p>
                     </div>
                   </div>

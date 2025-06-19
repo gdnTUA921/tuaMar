@@ -44,12 +44,17 @@ function Message() {
   const [itemName, setItemName] = useState("");
   const [itemPrice, setItemPrice] = useState("");
   const [itemPicture, setItemPicture] = useState("");
+  const [itemStatus, setItemStatus] = useState("");
   const [receiverPicture, setReceiverPicture] = useState("");
   const [chat_id, setChat_id] = useState("");
 
-  
-  //for chat refreshing after sending message
-  const [refreshChats, setRefreshChats] = useState(false);
+  //Setting up seller and buyer ID
+  const [buyerID, setBuyerID] = useState("");
+  const [sellerID, setSellerID] = useState("");
+
+
+  //setting up message count
+  const [messageCount, setMessageCount] = useState(0);
 
 
   //changed ito
@@ -94,6 +99,7 @@ function Message() {
             setItemName(data.item_name);
             setItemPrice(data.price);
             setItemPicture(data.preview_pic);
+            setItemStatus(data.status);
             setReceiverPicture(data.profile_pic);
             setItemId(passedItemID);
           })
@@ -269,6 +275,7 @@ function Message() {
         // Sort by timestamp if available
         if (messageList.length > 0 && messageList[0].timestamp) {
           messageList.sort((a, b) => a.timestamp - b.timestamp);
+          setMessageCount(messageList.length);
         }
        
         console.log("Processed messages:", JSON.stringify(messageList, null, 2));
@@ -307,7 +314,7 @@ function Message() {
     });
    
     return () => unsubscribe();
-  }, [itemId]);
+  }, [itemId, currentUserId]);
 
 
 
@@ -328,7 +335,7 @@ function Message() {
 
 
 
-  const openChat = (itemId, userName, itemName, price, itemPicture, receiverPic, chat_id, receiverId) => {
+  const openChat = (itemId, userName, itemName, price, itemPicture, receiverPic, status, chat_id, receiverId, buyerID, sellerID) => {
     console.log( itemId, userName, itemName, price, receiverPic, receiverId);
     console.log ("currentUserId: " + currentUserId);
     setItemId(itemId);
@@ -336,10 +343,13 @@ function Message() {
     setItemName(itemName);
     setItemPrice(price);
     setItemPicture(itemPicture);
+    setItemStatus(status);
     setReceiverPicture(receiverPic);
     setReceiverID(receiverId);
     setChatBlock(true);
     setChat_id(chat_id);
+    setBuyerID(buyerID);
+    setSellerID(sellerID);
   }
 
 
@@ -367,7 +377,7 @@ function Message() {
           const receiverId = currentUserId === `${chat.seller_id}` ? `${chat.buyer_id}` : `${chat.seller_id}`;
 
           return (
-           <div className="listChats" key={i} onClick={(e) => {e.preventDefault(); openChat(chat.item_id, chat.fullName, chat.item_name, chat.price, chat.preview_pic, chat.profile_pic, chat.chat_id, receiverId);}}>
+           <div className="listChats" key={i} onClick={(e) => {e.preventDefault(); openChat(chat.item_id, chat.fullName, chat.item_name, chat.price, chat.preview_pic, chat.profile_pic, chat.status, chat.chat_id, receiverId, chat.buyer_id, chat.seller_id);}}>
              <img src= {chat.profile_pic} className="messagePFP"/>
              <div className="nameMessage">
                <p style={{display: "none"}}>{chat.item_id}</p>
@@ -399,58 +409,70 @@ function Message() {
               <img src={receiverPicture} className="right-con-pfp"/>
               <h3>{userName}</h3>   {/* change fetch in db */}
               <Flag color='white'/>
-            </div>      
-
-
-            <div className = "profile-buttons">
-              <button className="review-button">Leave Review</button>
-            </div>      
+            </div>           
         </div>
 
 
         <div className='itemInquired'>
-          <img src={itemPicture}/>
-          <div className='itemInquiredDeets'>
-            <h3>{itemName}</h3>
-            <p>&#8369;{itemPrice}</p>
+          <div className='itemInquiredDetails'>
+            <img src={itemPicture}/>
+            <div className='itemInquiredDeets'>
+              <h3>{itemName}</h3>
+              <p>&#8369;{itemPrice} {itemStatus === "AVAILABLE" ? "" : " • " + itemStatus}</p>
+            </div>
           </div>
           <div className = "item-buttons">
-              <button className="view-button">
-                <span>Mark Sold</span>
-              </button>
-              <button className="view-button">
-                <span>Reserve</span>
-              </button>
+            <button className="review-button" disabled={messageCount < 10}>Leave Review</button>
+            <button className="view-button" style = {{display: currentUserId != sellerID ? "none" : "block"}}>
+              <span>Mark Sold</span>
+            </button>
+            <button className="view-button" style = {{display: currentUserId != sellerID ? "none" : "block"}}>
+              <span>Reserve</span>
+            </button>
           </div>    
         </div>
 
 
-        <div className='messagesholder'> {/* start  */}
-            <div className='adjust-holder' >
-              {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    justifyContent: msg.senderId === currentUserId ? "flex-end" : "flex-start",
-                    paddingRight: msg.senderId === currentUserId ? "10px" : "0",
-                    paddingLeft: msg.senderId !== currentUserId ? "25px" : "0",
-                  }}
-                >
-                  <p
-                    className={
-                      msg.senderId === currentUserId
-                        ? "specific-messages sent-message"
-                        : "specific-messages received-message"
-                    }
-                  >
-                    {msg.text}
-                  </p>
-                </div>
-              ))}
-              {/* 👇 Invisible anchor to scroll to */}
-              <div ref={messagesEndRef} />
-            </div>
+       <div className='messagesholder'> {/* start  */}
+           <div className='adjust-holder' >
+             {messages.map((msg, i) => (
+               <div
+                 key={i}
+                 style={{
+                   display: "flex",
+                   justifyContent: msg.senderId === currentUserId ? "flex-end" : "flex-start",
+                   paddingRight: msg.senderId === currentUserId ? "10px" : "0",
+                   paddingLeft: msg.senderId !== currentUserId ? "25px" : "0",
+                 }}
+               >
+                 <p
+                   className={
+                     msg.senderId === currentUserId
+                       ? "specific-messages sent-message"
+                       
+                       : "specific-messages received-message"
+                       
+                   }
+                 >
+                   {msg.text}
+                   <span className="time-stamp">
+                    {msg.timestamp
+                      ? (() => {
+                        const date = new Date(msg.timestamp);
+                        const dateStr = date.toLocaleDateString();
+                        const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        return `${dateStr} ${timeStr}`;
+                      })()
+                      : ""}
+                 </span>
+                 </p>
+               
+               
+               </div>
+             ))}
+             {/* 👇 Invisible anchor to scroll to */}
+             <div ref={messagesEndRef} />
+           </div>
 
 
 
