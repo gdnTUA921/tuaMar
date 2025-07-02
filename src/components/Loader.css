@@ -1,0 +1,74 @@
+
+.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.loader::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url(https://www.tua.edu.ph/wp-content/uploads/2017/12/1-845x650.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+    filter: brightness(50%) contrast(120%);
+    z-index: -1;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-logo {
+  width: 200px;
+  height: 200px;
+  padding-left: 0;
+  animation: spin 10s linear infinite;
+}
+
+.loader-logo:hover {
+  animation-play-state: paused;
+}
+
+
+.loader-logo{
+    margin-bottom: 35px;
+    width: 180px;
+    height: 180px;
+    padding-left: 0;
+}
+
+.loading-text-message{
+    margin-top: 40px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.8;
+}
+
+.loading-subtext {
+  font-size: 1.2rem;
+  color: white;
+  font-weight: bold;
+  margin-top: 16px;
+  text-align: center;
+  line-height: 1.6;
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+  letter-spacing: 0.01em;
+}

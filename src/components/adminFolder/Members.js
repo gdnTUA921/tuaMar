@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Members.css"; // Don't forget the CSS!
+import UserListingsPopup from "./UserListingsPopup.js";
 
 export default function Members() {
   const ip = process.env.REACT_APP_LAPTOP_IP; // IP address (see env file for set up);
@@ -11,6 +12,12 @@ export default function Members() {
 
   const [users, setUsers] = useState([]); // State to hold the list of users
   const [userCounts, setUserCounts] = useState({}); // State to hold user counts
+
+  const [selectedUserListings, setSelectedUserListings] = useState([]);
+  const [showListingsPopup, setShowListingsPopup] = useState(false);
+
+  const [editUser, setEditUser] = useState(null); // selected user to edit
+  const [editedData, setEditedData] = useState({});
 
 
 //Fetching list of users from the server
@@ -63,11 +70,36 @@ export default function Members() {
     return matchesTab && matchesSearch;
   });
 
+  const handleDeleteUser = async (user_id) => {
+  const confirmDelete = window.confirm(`Are you sure you want to delete this user (ID: ${user_id})?`);
+  if (!confirmDelete) return;
+
+  try {
+    const response = await fetch(`${ip}/tua_marketplace/deleteUser.php`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id }),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      alert("User deleted successfully.");
+      setUsers((prev) => prev.filter((u) => u.id !== user_id));
+    } else {
+      alert("Failed to delete user: " + result.message);
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    alert("An error occurred while deleting the user.");
+  }
+};
+
+
   return (
     <div className="userscontainer">
 
       <div className="members-container">
-        <h2>Members</h2>
+        <h2>Users</h2>
 
         {/* Counter Cards */}
         <div className="counters">
@@ -80,7 +112,7 @@ export default function Members() {
             <h3>{userCounts.Faculty}</h3>
           </div>
           <div className="counter-card">
-            <p>NTP</p>
+            <p>Staff</p>
             <h3>{userCounts.Staff}</h3>
           </div>
         </div>
@@ -88,7 +120,7 @@ export default function Members() {
         {/* Tabs and Search */}
         <div className="tabs-search">
           <div className="tabs">
-            {["Student", "Faculty", "NTP", "All Users"].map((tab) => (
+            {["Student", "Faculty", "Staff", "All Users"].map((tab) => (
               <button
                 key={tab}
                 className={activeTab === tab ? "active" : ""}
@@ -130,16 +162,178 @@ export default function Members() {
                   <td>{user.id}</td>
                   <td>{user.name}</td>
                   <td>{user.type}</td>
-                  <td><button className="view-btn">View Lists</button></td>
-                  <td><button className="update-btn">Update</button></td>
-                  <td><button className="delete-btn">Remove</button></td>
+                  <td><button className="view-btn" 
+                  onClick={() => {fetch(`${ip}/tua_marketplace/getmemberslistings.php?user_id=${user.id}`)
+                  .then(res => res.json())
+                  .then(data => {
+                    setSelectedUserListings(data);
+                    setShowListingsPopup(true);})
+                  .catch(err => {
+                    console.error("Error fetching user listings:", err);
+                    setSelectedUserListings([]);
+                    setShowListingsPopup(true);});}}>View Lists</button></td>
+                  <td><button className="update-btn" onClick={() => {
+                      fetch(`${ip}/tua_marketplace/updateuserdetails.php?user_id=${user.id}`)
+                        .then((res) => res.json())
+                        .then((data) => {
+                          if (data.error) {
+                            alert("Failed to load user: " + data.error);
+                          } else {
+                            setEditUser(data);
+                            setEditedData({
+                              user_id: data.id,
+                              first_name: data.first_name,
+                              last_name: data.last_name,
+                              email: data.email,
+                              id_number: data.id_number,
+                              department: data.department,
+                              user_type: data.type,
+                            });
+                          }
+                        })
+                        .catch((err) => {
+                          console.error("Fetch failed:", err);
+                          alert("Something went wrong while fetching user details.");
+                        });
+                    }}
+                  >
+                    Update
+                  </button></td>
+                  <td>
+                  <button className="delete-btn" onClick={() => handleDeleteUser(user.id)}>Remove</button>
+                </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+    
+
+    {showListingsPopup && (
+    <UserListingsPopup
+      listings={selectedUserListings}
+      onClose={() => setShowListingsPopup(false)}
+    />
+    )}
+
+    {editUser && (
+        <div className="popup-overlay" onClick={() => setEditUser(null)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <h3>Edit User</h3>
+            <form
+              className="edit-user-form"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const res = await fetch(`${ip}/tua_marketplace/updateUser.php`, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    user_id: editUser.id,
+                    first_name: editedData.first_name?.trim() || "",
+                    last_name: editedData.last_name?.trim() || "",
+                    email: editedData.email?.trim() || "",
+                    id_number: editedData.id_number || "",
+                    department: editedData.department?.trim() || "",
+                    user_type: editedData.user_type?.trim() || "",
+                  }),
+                });
+
+                const result = await res.json();
+                if (result.success) {
+                  alert("Changes have been saved successfully.");
+                  setEditUser(null);
+
+                  fetch(`${ip}/tua_marketplace/fetchListUsers.php`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                      if (Array.isArray(data)) {
+                        setUsers(data);
+                      }
+                    });
+                } else {
+                  alert("Update failed: " + result.message);
+                }
+              }}
+            >
+              <div className="form-row">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  name="first_name"
+                  id="first_name"
+                  value={editedData.first_name}
+                  onChange={(e) => setEditedData({ ...editedData, first_name: e.target.value })}
+                  placeholder="Enter first name"
+                />
+              </div>
+              <div className="form-row">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  value={editedData.last_name}
+                  onChange={(e) => setEditedData({ ...editedData, last_name: e.target.value })}
+                  placeholder="Enter last name"
+                />
+              </div>
+
+              <div className="form-row">
+                <label>Email:</label>
+                <input
+                  type="email"
+                  value={editedData.email}
+                  onChange={(e) => setEditedData({ ...editedData, email: e.target.value })}
+                  placeholder="Enter Email"
+                />
+              </div>
+
+              <div>
+                <label>ID Number: </label>
+                <input
+                  type="number"
+                  value={editedData.id_number}
+                  onChange={(e) => setEditedData({ ...editedData, id_number: e.target.value })}
+                  placeholder="Enter ID number"
+                />
+              </div>
+
+              <div className="form-row">
+                <label>Department</label>
+                <select
+                  value={editedData.department || ""}
+                  onChange={(e) => setEditedData({ ...editedData, department: e.target.value })}
+                >
+                  <option value="" disabled hidden>Select Department</option>
+                  {["CASE", "CAHS", "CMT", "CEIS", "IBAM", "SLCN", "Others"].map((dept) => (
+                    <option key={dept} value={dept}>{dept}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-row">
+                <label>User Type</label>
+                <select
+                  value={editedData.user_type || ""}
+                  onChange={(e) => setEditedData({ ...editedData, user_type: e.target.value })}
+                >
+                  <option value="" disabled hidden>Select User Type</option>
+                  {["Student", "Faculty", "Staff"].map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-actions">
+                <button type="submit" className="update-btn">Save Changes</button>
+                <button type="button" className="delete-btn" onClick={() => setEditUser(null)}>Cancel</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+    )}
+
 
     </div>
+    
   );
 }

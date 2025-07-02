@@ -130,7 +130,7 @@ form{
     justify-content: center;
 }
   
-.reportbox .sell-button:hover, .reportbox .cancel-button:hover{
+.reportbox .submit-report:hover, .reportbox .cancel-button:hover{
     color: yellow;
 }
 

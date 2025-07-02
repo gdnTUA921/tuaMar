@@ -25,8 +25,8 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
       filesArray = [selectedFiles];
     }
 
-    if (images.length + filesArray.length > 3) {
-      alert("You can only upload up to 3 images.");
+    if (images.length + filesArray.length > 5) {
+      alert("You can only upload up to 5 images.");
       return;
     }
 
@@ -58,7 +58,7 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
 
 
   return (
-    <div>
+    <div className="drag-n-drop-container">
       <div className="preview-container">
         {images.length === 0 ? (
           <div className="blank-upload-container">
@@ -97,14 +97,17 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
 
         )}
       </div>
-      <FileUploader handleChange={handleChange} name="files" types={fileTypes} multiple>
-        <div className="custom-dropzone">
-          <i id="iconPic" className="bi bi-image-fill"></i>
-          <p>
-            Drag & Drop your Pictures Here or <span>Browse</span>
-          </p>
-        </div>
-      </FileUploader>
+      <div className="dropzone-wrapper">
+        <FileUploader handleChange={handleChange} name="files" types={fileTypes} multiple>
+          <div className="custom-dropzone">
+            <i id="iconPic" className="bi bi-image-fill"></i>
+            <p>
+              Drag & Drop your Pictures Here or <span>Browse</span>
+            </p>
+          </div>
+        </FileUploader>
+      </div>
+
     </div>
   );
 }

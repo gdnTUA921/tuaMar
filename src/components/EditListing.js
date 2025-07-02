@@ -141,8 +141,6 @@ function EditListing() {
           });
         }
         
-        //alert("Server Response: " + data.message);
-        
       })
       .catch((error) => console.error("Error:", error));
   };

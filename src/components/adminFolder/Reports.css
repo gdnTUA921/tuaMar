@@ -1,74 +1,99 @@
 .reports-container {
-    background-color: #d9d9d9;
-    padding: 20px;
-    padding-right: 1000px;
-    border-radius: 10px;
-  }
-  
+  background-color: #d9d9d9;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.reports-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.reports-header label {
+  font-weight: bold;
+}
+
+.search-bar {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  flex: 1 1 200px;
+}
+
+.sort-dropdown {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  min-width: 150px;
+}
+
+.reports-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-x: auto; /* allows scroll on small screens */
+}
+
+.reports-table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+}
+
+.reports-table th,
+.reports-table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+  border: 1px solid #ccc;
+  white-space: nowrap;
+}
+
+.view-btn {
+  background-color: gray;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.resolved {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.pending {
+  background-color: #FFEB3B;
+  color: black;
+}
+
+.dismissed {
+  background-color: #F44336;
+  color: white;
+}
+
+
+@media (max-width: 768px) {
   .reports-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    flex-direction: column;
+    align-items: stretch;
   }
-  .reports-header label {
-    margin-left: 100px;
-    margin-right: 20px;
+
+  .search-bar, .sort-dropdown {
+    width: 100%;
   }
-  
-  .search-bar {
-    margin-left: 10px;
-    padding: 10px;
-    padding-right: 30px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-  }
-  
-  .sort-dropdown {
-    padding: 10px;
-    border-radius: 10px;
-    padding-right: 40px;
-    border: 1px solid #ccc;
-  }
-  
-  .reports-content {
-    background: white;
-    padding: 30px;
-    padding-right: 385px;
-    border-radius: 10px;
-  }
-  
-  .reports-table {
-    width: 140%;
-    height: 370px;
-    border-collapse: collapse;
-  }
-  
-  .reports-table th, .reports-table td {
-    text-align: center;
-    vertical-align: middle;
-    padding: 10px;
-    border: 1px solid #ccc;
-  }
-  
-  .view-btn {
-    background-color: gray;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .status {
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    align-items: center;
-  }
-  
-  .resolved { background-color: green; color: white; }
-  .pending { background-color: yellow; color: black; }
-  .dismissed { background-color: red; color: white; }
-  
+}

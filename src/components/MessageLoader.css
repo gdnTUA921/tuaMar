@@ -1,0 +1,47 @@
+.message-loader-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.message-loader-circle {
+  width: 4rem;
+  height: 4rem;
+  background-color: #d1d5db; /* Tailwind's gray-300 */
+  border-radius: 9999px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.message-loader-texts {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  margin-top: 5px;
+  gap: 0.5rem;
+}
+
+.message-loader-line {
+  height: 1.25rem;
+  background-color: #d1d5db;
+  border-radius: 9999px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.message-loader-line.short {
+  width: 8rem; /* 28 in Tailwind = 7rem */
+  height: 0.8rem;
+}
+
+.message-loader-line.long {
+  width: 11rem; /* 36 in Tailwind = 9rem */
+  height: 0.8rem;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}

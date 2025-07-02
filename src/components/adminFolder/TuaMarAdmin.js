@@ -11,6 +11,8 @@ import Members from "./Members.js";
 import PendingListing from "./PendingListing.js";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import UsersByCollegeChart from './UsersByCollegeChart';
+import ItemsByCategoryChart from './ItemsByCategoryChart';
 
 
 export default function Admin() {
@@ -116,6 +118,8 @@ export default function Admin() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [collegeData, setCollegeData] = useState([]);
+  const [itemCategoryData, setItemCategoryData] = useState([]);
 
   const handleTypeUserChange = (event) => setTypeUser(event.target.value);
   const handleFirstNameChange = (event) => setFirstName(event.target.value);
@@ -245,7 +249,19 @@ export default function Admin() {
       });
   }, [ip]);
 
+  useEffect(() => {
+    fetch(`${ip}/tua_marketplace/getCollegeStats.php`)
+      .then(res => res.json())
+      .then(data => setCollegeData(data))
+      .catch(err => console.error('Failed to fetch college data:', err));
+  }, []);
 
+  useEffect(() => {
+  fetch(`${ip}/tua_marketplace/getItemCategoryStats.php`)
+    .then(res => res.json())
+    .then(data => setItemCategoryData(data))
+    .catch(err => console.error('Failed to fetch item category data:', err));
+  }, []);
 
 
   return (
@@ -331,11 +347,6 @@ export default function Admin() {
                 <h1>Dashboard</h1>
                 <div className="filter-container">
                   <label></label>
-                  <select>
-                    <option>Last 30 Days</option>
-                    <option>Last 60 Days</option>
-                    <option>Last 90 Days</option>
-                  </select>
                 </div>
                 <div className="stats-section">
                   <div className="stat-box">
@@ -357,7 +368,9 @@ export default function Admin() {
                 </div>
                 <div className="chart-container">
                   <h3>Users by College</h3>
-                  <div className="chart-placeholder">[Graph Placeholder]</div>
+                  <UsersByCollegeChart data={collegeData} />
+                  <h3>Items by Category</h3>
+                  <ItemsByCategoryChart data={itemCategoryData} />
                 </div>
               </div>
             ) : showRegistration ? (

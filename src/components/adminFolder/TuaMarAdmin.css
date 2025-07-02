@@ -406,15 +406,7 @@
   .dashboard-container .chart-container h3 {
     margin-left: 10px;
   }
-  
-  .dashboard-container .chart-placeholder {
-    height: 300px;
-    background: #e0e0e0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #888;
-  }
+
   
   /* ================================================================================================================================================================ */
   /* REGISTRATION */
@@ -500,7 +492,7 @@
   
   /* Submit Button Styling */
   .registration-container .registration-form .submit-btn {
-    background: #2e7d32;
+    background: #4CAF50;
     color: white;
     border: none;
     padding: 10px 25px;
@@ -525,42 +517,6 @@
   .registration-form .submit-btn:hover {
     background: #1b5e20;
   }
-  /* ================================================================================================================================================================ */
-  /* HINDI KO ALAM BAKIT DITO GUMAGANA YUN FORMATTING SABI NI CHATGPT DITO, BASTA MEDYO MAAYOS NA YUN RESPONSIVENESS  CHANGE LATER */
-  /* REPORTS CONTAINER*/
-  /* ================================================================================================================================================================ */
-  .reports-container {
-    background-color: #d9d9d9; 
-    padding: 150px;
-    padding-right: 1000px;
-    padding-top: 10px;
-    border-radius: 10px;
-    min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-  }
-  
-  .reports-container h1 {
-    margin-top: 0;
-    padding-top: 0;
-    
-    
-  }
-  
-  .reports-content {
-    background: white;
-    padding: 150px;
-    padding-right: 400px;
-    margin-bottom: 200px; 
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    min-height: 200px;
-    align-items: flex-start;
-  }
-
 /* ================================================================================================================================================================ */
 /* responsiveness */
 /* ================================================================================================================================================================ */

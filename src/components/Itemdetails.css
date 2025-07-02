@@ -48,10 +48,12 @@
 
 .smallImgSlots{
    display: flex;
-   margin: auto;   
    margin-bottom: 30px;
    margin-top: 20px;
-   gap: 12px;
+   gap: 10px;
+   width: 350px;
+   overflow: hidden;
+   overflow-x: auto;
 }
 
 .smallPics{
@@ -62,14 +64,33 @@
     box-sizing: border-box;
     padding: 0;
     object-fit: cover;
-
+    flex-shrink: 0;
 }
 
 .itemContents1{
     display: flex;
     flex-direction: column;
     padding: 35px;
+    align-items: center;
 }
+
+.messageLink {
+    text-decoration: none;
+}
+
+button{
+    background-color: #247327;
+    padding: 20px 30px;
+    color: white;
+    font-size: 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    width: 200px;
+}
+
+button:hover{
+    color: yellow;
+} 
 
 .contactbutton {
     width: 350px;
@@ -190,7 +211,7 @@
     position: relative;
 }
 
-.sellerSection h1{
+.sellerSection h1, .recommendation-container h1{
     font-size: 25px;
 }
 
@@ -268,6 +289,32 @@
     color: green;
 }
 
+.itemDeets-loader-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    background: rgb(34,108,44);
+    background: linear-gradient(135deg, #9bb69e, #7fa47f, #7f9a7f);
+}
+
+.detailsbar-loader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    background-color: white;
+    margin: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 85%;
+    border-radius: 10px;
+}
+
+.itemsRecommended{
+    padding: 0px 15px;
+}
+
 
 @media (max-width: 1000px) {
 
@@ -298,6 +345,15 @@
         margin-left: 0;
     }
 
+    .itemContents1{
+        width: 100%;
+        align-items: center;
+    }
+
+    .smallImgSlots{
+        width: 260px;
+    }
+
     .itemtitle {
         margin-top: -60px;
         font-size: 18px;
@@ -315,7 +371,7 @@
         height: 250px;
     }
 
-    .sellerSection h1{
+    .sellerSection h1 .recommendation-container h1{
         font-size: 20px;
         margin-left: 12px;
     }

@@ -1,28 +1,40 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import LogIn from "./components/LogIn";
-import Home from "./components/Home";
-import Sell from "./components/Sell";
-import MyProfile from "./components/MyProfile";
-import BrowseItems from "./components/BrowseItems";
-import Itemdetails from "./components/Itemdetails";
-import Reportitem from "./components/Reportitem";
-import Message from "./components/Message";
-import EditListing from "./components/EditListing";
-// import Reviewmod from "./components/Reviewmod";
 import ScrollToTop from './ScrollToTop';
-import UserProfile from "./components/UserProfile";
-import Admin  from "./components/adminFolder/TuaMarAdmin";
+import Loader from "./components/Loader";
+import LoaderPart from "./components/LoaderPart";
+import MessageLoader from "./components/MessageLoader";
+
+
+const LogIn = React.lazy(() => import ('./components/LogIn'));
+const Home = React.lazy(() => import ('./components/Home'));
+const Sell = React.lazy(() => import ('./components/Sell'));
+const MyProfile = React.lazy(() => import ('./components/MyProfile'));
+const BrowseItems = React.lazy(() => import ('./components/BrowseItems'));
+const Itemdetails = React.lazy(() => import ('./components/Itemdetails'));
+const Reportitem = React.lazy(() => import ('./components/Reportitem'));
+const Message = React.lazy(() => import ('./components/Message'));
+const EditListing = React.lazy(() => import ('./components/EditListing'));
+const ReportUser = React.lazy(() => import ('./components/Reportuser'));
+const Reviewmod = React.lazy(() => import ('./components/Reviewmod'));
+const UserProfile = React.lazy(() => import ('./components/UserProfile'));
+const Admin = React.lazy(() => import ('./components/adminFolder/TuaMarAdmin'));
+
 
 function App() {
   return (
     <div>
       <ScrollToTop />
+      <Suspense fallback={<Loader />}>
       <Routes>
         {/* Public Route */}
         <Route path="/" element={<LogIn />} />
+        <Route path="/loader" element={<Loader />} />
+        <Route path="/loaderpart" element={<LoaderPart />} />
+        <Route path="/messageLoader" element={<MessageLoader />} />
+        
 
         {/* Admin Route - uses Layout2 (no header/footer)*/}
         <Route path="/admin" element={<Layout2 />}>
@@ -40,8 +52,12 @@ function App() {
           <Route path="/reportitem" element={<Reportitem />} />
           <Route path="/userProfile/:userId" element={<UserProfile />} />
           <Route path="/editListing" element={<EditListing />} />
+          <Route path="/reportUser" element={<ReportUser />} />
+          <Route path="/reviewmod" element={<Reviewmod />} />
+          <Route path="/loader" element={<Loader />} />
         </Route>
       </Routes>
+      </Suspense>
     </div>
   );
 }

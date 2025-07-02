@@ -1,19 +1,44 @@
+.drag-n-drop-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+}
+
+.dropzone-wrapper {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+label[for="files"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  margin-top: 12px;
+}
+
+
 .custom-dropzone {
     border: 2px dashed #28a745;
     padding: 20px;
     border-radius: 10px;
     text-align: center;
     background-color: #f0fdf4;
-    width: 100%;
-    max-width: 552px;
     color: #155724;
     font-weight: bold;
     transition: background-color 0.3s;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin-top: 10px !important;
     margin-bottom: 20px !important;
     position: relative;
+    gap: 25px;
+    flex: 1; 
   }
   
   .custom-dropzone:hover {
@@ -28,25 +53,23 @@
   
   #iconPic {
     position:static;
-    translate: 0px 15px;
     font-size: 45px;
   }
   
-  .preview-container {
+.preview-container {
     display: flex;
     flex-wrap: nowrap;
     overflow-x: auto; /* Enables horizontal scrolling */
     overflow-y: hidden; /* Prevents vertical overflow */
-    max-width: 100%;
-    width: 600px;
-    gap: 66px;
-    padding: 7.5px;
+    width: 100%;
+    flex: 1;
+    margin-left: 15px;
+    gap: 50px;
   }
 
   .preview-box {
     position: relative;
     display: inline-block;
-    margin: -5px;
     margin-right: 10px;
     margin-top: 10px;
   }
@@ -68,9 +91,9 @@
     flex-wrap: nowrap;
     overflow-x: auto; /* Enables horizontal scrolling */
     overflow-y: hidden; /* Prevents vertical overflow */
-    max-width: 100%;
-    justify-content: center;
-    gap: 62px;
+    width: 100%;
+    justify-content: space-between;
+    flex: 1;
   }
   
   .blank-upload-box {
@@ -111,15 +134,21 @@
 
   
   @media (max-width: 1200px) {
+
+    .drag-n-drop-container {
+       justify-content: center;
+       align-items: center;
+    }
+
     .custom-dropzone {
       width: 100%;
       max-width: 450px;
-      margin-left: 50px;
     }
   
     .preview-container {
       max-width: 100%;
       gap: 16px;
+      justify-content: flex-start;
     }
   
     .blank-upload-container {
@@ -127,8 +156,7 @@
     }
   
     .blank-upload-box {
-      font-size: 8px;
-      height: 85px;
+      font-size: 12px;
     }
 
     .preview-box {
@@ -150,6 +178,10 @@
       top: 0px;
       right: -18px;
     }
+
+    #iconPic {
+      margin-left: 10px;
+    }
   }
   
   @media (max-width: 800px) {
@@ -165,6 +197,11 @@
       width: 75%;
       max-width: 230px;
       margin: auto;
+    }
+
+    .blank-upload-box {
+      width: 100px;
+      height: 100px;
     }
   }
   

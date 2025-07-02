@@ -133,7 +133,21 @@
 }
 
 
-@media (max-width: 1200px){
+@media (max-width: 1200px) {
+
+  .sell-button {
+      margin: auto;
+      margin-top: 25px;
+  }
+
+  .cancel-button {
+      margin: auto;
+  }
+
+}
+
+
+@media (max-width: 1000px){
 
     .sell-box {
       display: block;
@@ -143,23 +157,13 @@
       width: 60%;
     }
 
-    .sell-button {
-        margin: auto;
-        margin-top: 25px;
-    }
-
     .sell-title, .sell-subtitle {
         margin-left: 0;
     }
 
-    .cancel-button {
-      margin: auto;
-  }
-
     .buttonsDisplay{
       display: flex;
       flex-direction: column;
-      gap: 25px;
     }
 
     .sell-input,

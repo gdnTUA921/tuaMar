@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation} from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import { Heart, Flag, SquarePen, Trash2 } from "lucide-react";
 import "./MyProfile.css";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'; 
+import LoaderPart from "./LoaderPart";
 
 function MyProfile() {
-  const MySwal = withReactContent(Swal);
+
+  const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
+
+  const [loading, setLoading] = useState(true); //For loading state
+
+  const MySwal = withReactContent(Swal); //For alerts / sweet alert
 
   const [userId, setUserId] = useState("");
   const [activeTab, setActiveTab] = useState("myListings");
@@ -14,87 +20,92 @@ function MyProfile() {
   const [myListings, setMyListings] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
 
-  /* (For change password in case implemented)
-  const [oldPasswordType, setOldPasswordType] = useState("password");
-  const [newPasswordType, setNewPasswordType] = useState("password");
-  const [confirmPasswordType, setConfirmPasswordType] = useState("password");
-
-  const [oldPassView, setOldPassView] = useState("bi bi-eye-fill");
-  const [newPassView, setNewPassView] = useState("bi bi-eye-fill");
-  const [confirmPassView, setConfirmPassView] = useState("bi bi-eye-fill");*/
-
   const [userData, setUserData] = useState([]);
+
+  const [userReviewData, setUserReviewData] = useState([]);
 
   const navigate = useNavigate();
   const myListingsArray = Array.isArray(myListings) ? myListings : [];
   const likedItemsArray = Array.isArray(likedItems) ? likedItems : [];
 
 
+  //fetching items owned and the number of likes per item
+  const [numLikes, setNumLikes] = useState({})
 
 
-  const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
   useEffect(() => {
-    //Checking if logged in, if not redirected to log-in
-    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!data.user_id) {
-          navigate("/"); // Redirect to login if not authenticated
+    const fetchAllData = async () => {
+      try {
+        // Step 1: Check session
+        const sessionRes = await fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const sessionData = await sessionRes.json();
+
+        if (!sessionData.user_id) {
+          navigate("/");
+          return;
         }
-        setUserId(data.user_id);
-      })
-      .catch((error) => {
-        console.error("Error fetching session data:", error);
-      });
+
+        setUserId(sessionData.user_id);
+
+        // Step 2: Fetch user profile details and liked items concurrently
+        const [profileRes, likedRes] = await Promise.all([
+          fetch(`${ip}/tua_marketplace/fetchMyProfileDeets.php`, {
+            method: "GET",
+            credentials: "include",
+          }),
+          fetch(`${ip}/tua_marketplace/fetchLikedItems.php`, {
+            method: "GET",
+            credentials: "include",
+          }),
+        ]);
+
+        const profileData = await profileRes.json();
+        const likedItems = await likedRes.json();
+
+        setUserData(profileData);
+        setLikedItems(likedItems);
+
+        // Step 3: Fetch user's own listings
+        const listingsRes = await fetch(`${ip}/tua_marketplace/fetchMyProfileItems.php`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const myListingsData = await listingsRes.json();
+        setMyListings(myListingsData);
+
+        // Step 4: Fetch like counts for user's listings
+        const likeCountRes = await fetch(`${ip}/tua_marketplace/fetchLikeCount.php`, {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify({ myListings: myListingsData }),
+        });
+
+        const likeCounts = await likeCountRes.json();
+        setNumLikes(likeCounts);
+
+        //Step 5: Fetch user review data
+        const reviewDataRes = await fetch(`${ip}/tua_marketplace/fetchUserReviewData.php`, {
+          method: "POST",
+          body: JSON.stringify({user_id: sessionData.user_id}),
+        });
+
+        const reviewData = await reviewDataRes.json();
+        setUserReviewData(reviewData);
 
 
-    //fetching account owner details
-    fetch(`${ip}/tua_marketplace/fetchMyProfileDeets.php`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setUserData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching session data:", error);
-      });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    //fetching account owner's liked items
-    fetch(`${ip}/tua_marketplace/fetchLikedItems.php?`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setLikedItems(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching liked items:", error);
-      });
+    fetchAllData();
   }, [activeTab]);
-  
-
-  /* (For change password in case implemented)
-  const togglePassword = (field) => {
-    if (field === "oldPassword") {
-      setOldPasswordType(oldPasswordType === "password" ? "text" : "password");
-      setOldPassView(oldPassView === "bi bi-eye-fill" ? "bi bi-eye-slash-fill" : "bi bi-eye-fill");
-    } 
-    else if (field === "newPassword") {
-      setNewPasswordType(newPasswordType === "password" ? "text" : "password");
-      setNewPassView(newPassView === "bi bi-eye-fill" ? "bi bi-eye-slash-fill" : "bi bi-eye-fill");
-    } 
-    else if (field === "confirmPassword") {
-      setConfirmPasswordType(confirmPasswordType === "password" ? "text" : "password");
-      setConfirmPassView(confirmPassView === "bi bi-eye-fill" ? "bi bi-eye-slash-fill" : "bi bi-eye-fill");
-    }
-  };*/
-
 
 
 
@@ -214,54 +225,12 @@ function MyProfile() {
             });
           })
           .catch((error) => {
-            console.error("Error fetching liked items:", error);
+            console.error("Error deleting item:", error);
           });
       }
     });
-  }
+  }   
 
-  //fetching items owned and the number of likes per item
-  const [numLikes, setNumLikes] = useState({})
-  useEffect(() => {
-
-    const fetchMyProfileItems = async () => {
-    
-      try{
-        //fetching items owned by account owner
-        const res1 = await fetch(`${ip}/tua_marketplace/fetchMyProfileItems.php`, {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await res1.json();
-        setMyListings(data);
-
-        //fetching number of likes from the items owned by account owner
-        const res2 = await fetch(`${ip}/tua_marketplace/fetchLikeCount.php`, {
-          credentials: "include",
-          method: "POST",
-          body: JSON.stringify({myListings: data}),
-        });
-        const likeCounts = await res2.json();
-        console.log(likeCounts);
-        setNumLikes(likeCounts);
-      }
-      
-      catch (error) {
-        console.error("Error:", error);
-      }
-
-    };
-    
-    if (userId){
-      fetchMyProfileItems();
-    }
-    
-  }, [userId, activeTab]);
-
-   
-
-
-  const [item, setItem] = useState([]);
 
   // Filter items based on search input
   let filteredItems = [];
@@ -282,8 +251,9 @@ function MyProfile() {
 
 
 
-   //this section is for liked items
-   // for setting likes
+   /* -- this section is for liked items -- */
+
+   // for fetching likes
   const [liked, setLiked] = useState({});
   useEffect(() => {
     if (userId) {
@@ -305,7 +275,7 @@ function MyProfile() {
   }, [userId]);
   
   
-  
+     // for setting or toggling likes
     const toggleLike = (item) => {
     const isLiked = !liked[item.item_id]; // Toggle like
   
@@ -339,9 +309,17 @@ function MyProfile() {
     });
   };
 
- 
 
-  return (
+  if (loading) {
+    return (
+      <div className="profile-loader-container">
+        <LoaderPart />
+      </div>
+    );
+  }
+
+ else{
+    return (
     <>
       <main>
         {/* PROFILE */}
@@ -349,7 +327,7 @@ function MyProfile() {
           <div className="profile-nameBox">
             <div className="profile-coverBG"></div>
             <div className="profile-pic">
-              <img src={userData.profile_pic} alt="Profile Photo" />
+              <img src={userData.profile_pic || "/tuamar-profile-icon.jpg"} alt="Profile Photo" />
              
             </div>
             <div className="profile-name">
@@ -359,7 +337,7 @@ function MyProfile() {
                 <span id="starReview">
                   <i className="bi bi-star-fill"></i>
                 </span>
-                <p className="rating-score">{"0.0"}</p>
+                <p className="rating-score">{userData.ratingAvg || 0}</p>
               </div>
             </div>
            
@@ -411,8 +389,9 @@ function MyProfile() {
                         IN REVIEW
                       </div>
                       <Link
-                        to={`/itemdetails/${item.item_id}/${item.item_name}`}
-                        className="item-details-link"> 
+                        to={`/itemdetails/${item.item_id}/${encodeURIComponent(item.item_name)}`}
+                        className="item-details-link"
+                      >
                         <img
                           src={item.preview_pic}
                           style={{
@@ -428,7 +407,7 @@ function MyProfile() {
                       </Link> 
                       <div className="itemDeets">
                         <Link
-                            to={`/itemdetails/${item.item_id}/${item.item_name}`}
+                            to={`/itemdetails/${item.item_id}/${encodeURIComponent(item.item_name)}`}
                             className="item-details-link">  
                           <div className="itemTitle">
                             <h3>{item.item_name}</h3>
@@ -463,53 +442,38 @@ function MyProfile() {
           {/* Reviews Tab */}
           <div className="reviews" style={{ display: activeTab === "reviews" ? "block" : "none" }}>
               <h2>Reviews</h2>
-              <div className='reviewCard'>
-                <div className="profile-reviews">
-                  <img src="https://lh3.googleusercontent.com/a/ACg8ocL0ay37DbsBCGDn_jmSQ2eFz3NJoFRlmcAc0gNp0llDGfPAYaY=s1000-p-k-rw-no" alt="Profile Photo" />
-                  <p>{"Giancarlo Nonato"}</p>
-                  <p>&#x2022;&nbsp;Review from {"buyer"}</p>
-                  <p>{"10/30/2025"}</p>
-                </div>
 
-                <div className="stars">
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                  <i class="bi bi-star-fill"></i>
-                </div>
+              {userReviewData.length > 0 ? (userReviewData.map((rev) => (
+                  <div className='reviewCard' key={rev.reviewer_id}>
+                    <div className="profile-reviews">
+                      <Link to={`/userProfile/${rev.reviewer_id}`} className="sellerLink"><img src={rev.profile_pic || "/tuamar-profile-icon.jpg"} alt="Profile Photo" /></Link>
+                      <p><Link to={`/userProfile/${rev.reviewer_id}`} className="sellerLink">{rev.userName}</Link></p>
+                      <p>&#x2022;&nbsp;Review from {rev.reviewer_status}</p>
+                      <p>{new Date(rev.time_stamp).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                    </div>
 
-                <div className="review-description">
-                  <p>Seller is very friendly and easy to deal with. Hope we can do more transactions again soon.</p>
-                </div>
+                    <div className="stars">
+                      {[1,2,3,4,5].map ((star) => (
+                          <i class={rev.rating >= star ? "bi bi-star-fill" : "bi bi-star"}></i>
+                      ))}
+                    </div>
 
-                <hr/>
-              </div>
+                    <div className="review-description">
+                      <p>{rev.reviewText}</p>
+                    </div>
 
-              <div className='reviewCard'>
-                <div className="profile-reviews">
-                <img src="https://lh3.googleusercontent.com/a-/ALV-UjUWuYwvrpzPj7i5lL5Zcz99CCVQl1zzI9B2cbu2kx1fdjKWSKw=s1000-p-k-rw-no" alt="Profile Photo" />
-                <p>{"Jandrik Lana"}</p>
-                <p>&#x2022;&nbsp;Review from {"seller"}</p>
-                <p>{"09/21/2025"}</p>
-                </div>
+                  {rev.images && rev.images.length > 0 ? (rev.images.map((img, index) => (
+                    <div className="review-images">
+                      <img key={index} src={img || "/tuamar.png"} className="review-image" />
+                    </div>
+                  ))) : ("")}
 
-                <div className="stars">
-                  <i className="bi bi-star-fill"></i>
-                  <i className="bi bi-star-fill"></i>
-                  <i className="bi bi-star-fill"></i>
-                  <i className="bi bi-star-fill"></i>
-                  <i className="bi bi-star"></i>
-                </div>
-
-                <div className="review-description">
-                  <p>Buyer is very friendly and easy to deal with. To more deals to come.</p>
-                </div>
-
-                <hr/>
-              </div>
-                 
+                    <hr/>
+                  </div>
+                ))
+              ) : (<div className="no-reviews">No reviews for&nbsp;<span className="spanName">{userData.first_name + " " + userData.last_name}.</span>&nbsp;</div>)}
           </div>
+
 
           {/* Settings Tab */}
           <div className="settings" style={{ display: activeTab === "details" ? "block" : "none" }}>
@@ -651,6 +615,7 @@ function MyProfile() {
       </main>
     </>
   );
+ }
 }
 
 export default MyProfile;

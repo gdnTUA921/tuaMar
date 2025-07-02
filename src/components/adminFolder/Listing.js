@@ -1,5 +1,6 @@
 import React, { useState, useEffect} from "react";
 import "./Listing.css";
+import "../MyProfile.css"; 
 
 function MyProfile() {
   const [activeTab, setActiveTab] = useState("myListings");
@@ -10,7 +11,7 @@ function MyProfile() {
   useEffect(() => {
   
     //fetching items posted in the marketplace
-    fetch(`${ip}/tua_marketplace/browseItems.php`)
+    fetch(`${ip}/tua_marketplace/itemlistingsadmin.php`)
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched data:', data); // Log the data to see the structure
@@ -64,8 +65,16 @@ const handleDelete = async (itemId) => {
     alert("An error occurred while deleting the listing.");
   }
 };
+  const [selectedItem, setSelectedItem] = useState(null); // for popup
 
+  const handleViewDetails = (item) => {
+    setSelectedItem(item);
+  };
 
+  const closePopup = () => {
+    setSelectedItem(null);
+  };
+  
 
   return (
     <>
@@ -109,7 +118,8 @@ const handleDelete = async (itemId) => {
                         <i className="bi bi-heart-fill heart"></i>
                         <p><b>0</b></p>
                         <p>&#x2022; {item.item_condition}</p>
-                        <button className="editListButton" onClick={() => handleDelete(item.item_id)}> DELETE LISTING </button>
+                        <button className="listButton" onClick={() => handleDelete(item.item_id)}> DELETE LISTING </button>
+                        <button className="listButton" onClick={() => handleViewDetails(item)}> VIEW DETAILS</button>
                       </div>
                     </div>
                   ))
@@ -122,6 +132,71 @@ const handleDelete = async (itemId) => {
         </div>
     </main>
     </div>
+
+      {selectedItem && (
+      <div className="popup-overlay" onClick={closePopup}>
+        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+          <button className="close-btn" onClick={closePopup}>
+            &times;
+          </button>
+
+          <h3>Item Details</h3>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "1rem" }}>
+            <img
+              src={
+                selectedItem.preview_pic ||
+                (selectedItem.images?.[0] ?? "/default-image.jpg")
+              }
+              alt="Preview"
+              onError={(e) => (e.target.src = "/default-image.jpg")}
+              style={{ width: 80, height: 80, borderRadius: 8, objectFit: "cover" }}
+            />
+            <div>
+              <strong>{selectedItem.item_name}</strong>
+              <br />
+              <span style={{ fontSize: "14px", color: "#666" }}>
+                {selectedItem.category} • {selectedItem.item_condition}
+              </span>
+              <br />
+              <span style={{ fontWeight: "bold", color: "#4CAF50" }}>
+                ₱{selectedItem.price}
+              </span>
+            </div>
+          </div>
+
+          <p><strong>Status:</strong> {selectedItem.status}</p>
+          <p><strong>Listed On:</strong> {new Date(selectedItem.listing_date).toLocaleString()}</p>
+          <p><strong>Description:</strong><br />{selectedItem.description || "No description provided."}</p>
+
+          {selectedItem.images?.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                overflowX: "auto",
+                padding: "10px 0",
+              }}
+            >
+              {selectedItem.images.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt={`img-${i}`}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    objectFit: "cover",
+                    borderRadius: 6,
+                    flexShrink: 0,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    )}
 </>
   );
 }

@@ -1,134 +1,280 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect} from 'react';
 import "./Itemdetails.css";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { Heart } from "lucide-react"; {/* Library for icons*/}
-
+import { Heart, Flag } from "lucide-react"; 
+import LoaderPart from "./LoaderPart";
+import Recommendation from './ItemdetailsRecomm';
 
 const Itemdetails = () => {
-  const { itemId, itemName } = useParams();
-  const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true); //for loading state
 
-  let num = 0;
+  const { itemId, itemName } = useParams(); 
+  
+  const navigate = useNavigate(); 
 
+  const [numLikes, setNumLikes] = useState(0); //for setting number of likes
 
+  //for setting item's details such as pictures, descriptions, etc.
   const [pics, setPics] = useState([]);
   const [itemDeets, setItemDeets] = useState([]);
   const [userID, setUserID] = useState("");
-  const [picsDisplay, setPicsDisplay] = useState("");
+  const [picsDisplay, setPicsDisplay] = useState({});
+
+  const ip = process.env.REACT_APP_LAPTOP_IP; //ip address
 
 
-  const ip = process.env.REACT_APP_LAPTOP_IP;
+useEffect(() => {
+  const fetchAndLog = async () => {
+    let userId;
+
+    try {
+
+      // Fetch session
+      const sessionRes = await fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const sessionData = await sessionRes.json();
+
+      if (!sessionData.user_id) {
+        navigate("/");
+        return;
+      } else {
+        console.log(sessionData.user_id);
+        userId = sessionData.user_id;
+        setUserID(sessionData.user_id);
+      }
 
 
-  useEffect(() => {
-    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!data.user_id) {
-          navigate("/");
-        } else {
-          setUserID(data.user_id);
-        }
-      })
-      .catch((error) => console.error("Error fetching session data:", error));
+      // Fetch item pictures
+      const picsRes = await fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
+        method: "POST",
+        body: JSON.stringify({ item_id: itemId }),
+      });
+      const pics = await picsRes.json();
+      const picsWithIds = pics.map((pic, idx) => ({
+        ...pic,
+        uid: `${pic.image}_${idx}_${Date.now()}`,
+      }));
+      console.log(picsWithIds);
+      setPics(picsWithIds);
+      setPicsDisplay(picsWithIds[0]);
+
+
+      // Fetch item details
+      const itemRes = await fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
+        method: "POST",
+        body: JSON.stringify({ item_id: itemId, item_name: itemName }),
+      });
+      const itemData = await itemRes.json();
+
+      console.log(userId);
+      if (itemData.user_id !== userId && itemData.status === "IN REVIEW") {
+        navigate("/home");
+        return;
+      }
+      setItemDeets(itemData);
+
+
+      // Log view history if viewer is not the item's owner
+      if (itemData.user_id && itemData.user_id !== userId && !sessionStorage.getItem(`viewed_${itemId}`) && itemData.status === "AVAILABLE") {
+        const logRes = await fetch(`${ip}/tua_marketplace/itemViewLog.php`, {
+          method: "POST",
+          body: JSON.stringify({
+            item_id: itemId,
+            item_name: itemData.itemName,
+            item_description: itemData.description,
+            item_category: itemData.category,
+          }),
+          credentials: "include",
+        });
+        const logData = await logRes.json();
+        console.log(logData.message);
+        
+        // Mark as viewed for this session
+        sessionStorage.setItem(`viewed_${itemId}`, "true");
+      }
+
+    } catch (error) {
+      console.error("Error in combined fetch and log:", error);
+    } finally {
+      setLoading(false); // Hide loader after all data is fetched
+    }
+  };
+
+  fetchAndLog();
+}, [itemId, itemName]);
 
 
 
 
-    //fetching item pictures
-    fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
-      method: "POST",
-      body: JSON.stringify({ item_id: itemId }),
-    })
-      .then((response) => response.json())
-      .then((pics) => {
-        setPics(pics);
-        setPicsDisplay(pics[0].image);
+  //the following codes below is for liked items:
+
+  // for setting likes
+    const [liked, setLiked] = useState({});
+    useEffect(() => {
+      if (userID) {
+        fetch(`${ip}/tua_marketplace/fetchLikedSpecific.php`, {
+          credentials: "include",
+          method: "POST",
+          body: JSON.stringify({ item_id: itemId })
         })
-      .catch((error) => console.error("Error fetching pics:", error));
+          .then((res) => res.json())
+          .then((item) => {
+            const likedMap = {};
+            if (item && item.item_id){
+              likedMap[item.item_id] = true;
+              setLiked(likedMap);
+              console.log(likedMap);
+            }
+            else{
+              likedMap[item.item_id] = false;
+              setLiked(likedMap);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching liked items:", error);
+          });
+      }
+    }, [userID]);
+
+
+    //fetching item like count
+    const [likeChanged, setLikeChanged] = useState(false);
+    useEffect(() => {
+      fetch(`${ip}/tua_marketplace/fetchLikeCountSpecific.php`, {
+        method: "POST",
+        body: JSON.stringify({ item_id: itemId })
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setNumLikes(data.like_count);
+        })
+        .catch((error) => {
+          console.error("Error fetching liked items:", error);
+        });
+    }, [itemId, likeChanged]); // Re-fetch when like status changes
 
 
 
+      //when liked is toggled
+      const toggleLike = (item) => {
+      const isLiked = !liked[itemId]; // Toggle like
+    
+      // Update local state immediately
+      setLiked((prevLiked) => ({
+        ...prevLiked,
+        [itemId]: isLiked,
+      }));
 
-    //fetching item details
-    fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
-      method: "POST",
-      body: JSON.stringify({ item_id: itemId, item_name: itemName }),
-    })
-      .then((response) => response.json())
-      .then((data) => setItemDeets(data))
-      .catch((error) => console.error("Error fetching item details:", error));
-  }, [itemId]);
+      setNumLikes(isLiked ? numLikes+1 : numLikes-1)
+    
+      // Send like/unlike to the backend
+      fetch(`${ip}/tua_marketplace/InsertLikeditems.php`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: userID,
+          item_id: itemId,
+          item_name: item.item_name,
+          description: item.description,
+          category: item.category,
+          preview_pic: pics[0].image,
+          liked: isLiked,
+        }),
+        credentials: "include",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Fetched data:", data);
+          setLikeChanged(prev => !prev); // trigger re-fetch
+          // Optionally refresh liked items
+      });
+    };
 
 
+  if (loading) {
+    return (
+      <div className="itemDeets-loader-container">
+        <div className='detailsbar-loader'>
+          <LoaderPart />
+        </div>
+      </div>
+    );
+  }
 
-
-  return (
+  else {
+    return (
     <div className='itemcontainer'>
         <div className='detailsbar'>
             <div className="itemDeetails">
                 <div className="itemContents1">
                     <img className='itemimage'
-                    src={picsDisplay}
+                    src={picsDisplay.image || "/tuamar-profile-icon.jpg"}
                     alt={itemDeets.itemName}
                     />
-                   
-                    <div className="smallImgSlots">
+                    
+                    <div className="smallImgSlots" style={{justifyContent: pics.length > 3 ? "flex-start" : "center"}}>
                         {Array.isArray(pics) && pics.length > 0 ? (
-                            pics.map((pics, index) => (
+                            pics.map((pics) => (
                             <img
-                                key={index}
+                                key={pics.uid}
                                 src={pics.image}
                                 className="smallPics"
-                                style={{opacity: pics.image==picsDisplay ? "" : "0.5"}}
-                                onClick={() => setPicsDisplay(pics.image)}
+                                style={{opacity: pics.uid==picsDisplay.uid ? "" : "0.5"}}
+                                onClick={() => setPicsDisplay(pics)}
                             />
                         ))): (
                             <p>No additional images.</p>
                         )}
                     </div>
-                     
-                    <Link to="/messages" state={{passedUserID: itemDeets.fb_uid, passedItemID: itemId}}><button className = 'contactbutton' style={{ display: userID == itemDeets.user_id ? "none" : "block"}}>Contact Seller</button></Link>
+
+                    <Link to="/messages" state={{passedUserID: itemDeets.fb_uid, passedUserIDSender: userID, passedUserIDReceiver: itemDeets.user_id, passedItemID: itemId, passedItemStatus: itemDeets.status}} className='messageLink'><button className = 'contactbutton' style={{ display: userID == itemDeets.user_id || itemDeets.status == "IN REVIEW" ? "none" : "block"}} disabled={itemDeets.status == "SOLD" || itemDeets.status == "RESERVED"}>{itemDeets.status == "SOLD" ? "SOLD" : itemDeets.status == "RESERVED" ? "RESERVED" : "Contact Seller"}</button></Link>
                     <div className='numLikes'>
-                        <Heart size={40} className='hearticon'/> {/*style={{ fill: '#547B3E', stroke: '#547B3E' }} - to be used later */}
-                        <p>{num} Likes</p>
+                        <Heart size={40} className='hearticon' onClick={itemDeets.status == "IN REVIEW" ? () => {} : () => toggleLike(itemDeets)} fill= {liked[itemId] ?'green' : 'none'} color= {liked[itemId] ?'green' : 'black'}/>
+                        <p>{numLikes}{numLikes == 1 ? " Like" : " Likes"}</p>
                     </div>
+
+                    <Link to="/reportitem" className="reportLink" state={{ passedID: itemId, previewPic: picsDisplay.image, itemName: itemDeets.itemName }} style={{display: userID == itemDeets.user_id ? "none" : "block"}}>
+                    <div className='reportItem'>
+                        <Flag size={30} /><p>Report Item</p>
+                    </div>
+                    </Link>
+
+
                 </div>
-           
+            
                 <div className="itemContents2">
-                    <div className='itemtitle'>
+                    <div className='itemtitle'> 
                         <h2>
                             {itemDeets.itemName} {/* Sample Passing */}
                         </h2>
                     </div>
-           
+            
                     <div className='price'>
                     <h2 >
                         &#8369;{itemDeets.price}
                     </h2>
                     </div>
 
-
                     <div className='itemdetails'>
                         <div className="itemDeetsRow">
-                            <h3 className='condition'>Condition: </h3>
+                            <h3 className='condition'>Condition: </h3> 
                             <h3 className='deetsLabel'>{itemDeets.item_condition}</h3>
                         </div>
-                       
+                        
                         <div className="itemDeetsRow">
-                            <h3 className='category'>Category: </h3>
+                            <h3 className='category'>Category: </h3> 
                             <h3 className='deetsLabel'>{itemDeets.category}</h3>
                         </div>
-                       
-                           
+                        
+                            
                         <h3 className='descriptions'>
-                            Description:
+                            Description: 
                         </h3>
-
 
                         <p className='itemDesc'>
                         {itemDeets.description}
@@ -139,32 +285,33 @@ const Itemdetails = () => {
             <hr/>
             <div className="sellerSection">
                 <h1>Meet The Seller</h1>
-               
+                
                   <div className="seller-profile-pic">
                     <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.user_id }`} className="sellerLink">
                       <img src={itemDeets.profilePic} alt="Profile Photo" />
                     </Link>
                   </div>
-               
-               
-                <div className="seller-profile-name">  
+                
+                
+                <div className="seller-profile-name">   
                     <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.user_id}`} className="sellerLink"><h1>{itemDeets.firstName + " " + itemDeets.lastName}</h1></Link>
                     <p>{itemDeets.email}</p>
                     <div className="seller-rating-container">
                         <i id="seller-starReview" className="bi bi-star-fill"></i>
-                        <p className="seller-rating-score">{"0.0"}</p>
+                        <p className="seller-rating-score">{itemDeets.ratingAvg || "0.0"}</p>
                     </div>
                 </div>
+            </div>
+            <hr/>
+            <div className='itemsRecommended'>
+             <Recommendation itemName={itemDeets.itemName} userId={userID}/>
+             
+            </div>
         </div>
-        <hr/>
     </div>
-</div>
-
-
-
-
-  )
+    )
+  }
 }
 
-
 export default Itemdetails
+

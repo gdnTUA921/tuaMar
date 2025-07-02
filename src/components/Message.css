@@ -52,15 +52,15 @@
 }
 
 
-.search-icon {
-   position: absolute;
-   translate: 10px 5px;
-   stroke-width: 3px;
-   width: 20px;
+.search-icon-messaging {
+    position: absolute;
+    translate: 10px 5px;
+    stroke-width: 3px;
+    width: 20px;
 }
 
 
-.search-icon:hover{
+.search-icon-messaging:hover{
    cursor: pointer;
    color: #547B3E;
 }
@@ -73,11 +73,11 @@
 }
 
 
-.listChats{
-   display: flex;
-   align-items: center;
-   margin-top: 10px;
-   padding: 5px 15px;
+.listChats {
+  display: flex;
+  align-items: center;
+  padding: 5px 15px;
+  position: relative;
 }
 
 
@@ -99,7 +99,7 @@
 .nameMessage{
    margin-top: -15px;
    margin-left: 15px;
-   width: 72%;
+   width: 60%;
 }
 
 
@@ -177,6 +177,7 @@
     height: 6vh;
     position: relative;
     padding: 15px;
+    padding-bottom: 12px;
     padding-left: 30px;
     border-radius: 10px;
     align-items: center;
@@ -187,7 +188,7 @@
 .profile {
     display: flex;
     color: white;
-    gap: 25px;
+    gap: 15px;
     align-items: center;
     font-weight: bold;
     font-size: 15px;
@@ -198,6 +199,16 @@
     display: none;
     width: 30px;
     height: 30px;
+}
+
+.messageSellerLink{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.messageSellerLink:hover{
+    color: yellow;
 }
 
 .right-con-pfp{
@@ -226,29 +237,41 @@
 
 .itemInquired {
     display: flex;
-    padding: 12px;
     background-color: lightgray;
-    height: 6vh;
-    gap: 25px;
-    align-items: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
     position: relative;
     border-left: 3px solid white;
     border-right: 3px solid white;
     border-bottom: 3px solid white;
+    gap: 5px;
+    padding-left: 5px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-bottom: 18px;
+    padding-top: 5px;
+    height: auto;
 }
 
 .itemInquiredDetails{
-   display: flex;
+    display: flex;
     padding: 12px;
     background-color: lightgray;
     height: 6vh;
     gap: 25px;
     align-items: center;
-    padding-top: 15px;
+    padding-top: 12px;
     padding-bottom: 15px;
     position: relative;
+}
+
+.item-details-link{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.item-details-link:hover{
+    color: green;
 }
 
 .itemInquiredDeets p{
@@ -272,24 +295,26 @@
 
 .item-buttons{
     display: flex;
-    position: absolute;
+    position: relative;
     gap: 15px;
-    right: 35px;
+    left: 35px;
+    top: 5px;
 }
 
 .review-button, .view-button {
   background: #989393;
+  color: white;
   border-color: #547B3E;
-  padding: 12px;
   display: inline-block;
-  font-size: 12px;
   font-weight: 600;
   width: 120px;
   text-transform: uppercase;
   cursor: pointer;
   transform: skew(-0deg);
-  width: 135px;
   border-radius: 8px;
+  width: 120px;
+  padding: 8px;
+  font-size: 12px;
 }
 
 
@@ -342,56 +367,67 @@
     overflow: hidden ;
 }
 
+
 .messageholder.time-stamp:hover {
     color: black;
     cursor: pointer;        
 }
 
-
-
 .adjust-holder {
     height: 100%;
+    padding-left: 15px;
     padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     overflow-y: auto;
     background-color: white;
-    width: 100%;
     flex: 1;
     position: relative;
 }
 
-
-.specific-messages{
+.specific-messages {
     background-color: #dcf8c6;
-    padding: 10px;
+    padding: 12px 15px;
     border-radius: 10px;
-    max-width: 50%;
+    max-width: 60%;
+    white-space: normal;
     text-align: left;
+    position: relative;
+    white-space: normal;
 }
 
-.received-message{
-    background-color: lightgray;
-}
-
-.specific-messages .time-stamp {
+.time-stamp {
   display: none;
-   
+  font-size: 10px;
+  color: gray;
+  margin-top: 2px;
+  margin-right: 8px;
+  text-align: right;
+  width: auto;
+}
+
+.received-message {
+    background-color: lightgray;
+    position: relative;
 }
 
 
-.specific-messages:hover .time-stamp {
-  display: inline;
-  position: absolute;
-   margin-left: 20px;
- 
-}
-.sent-message:hover .time-stamp {
-    display: inline;
-    position: absolute;
-    margin-right: 230px;
-    right: 0;
+/* Hide timestamp by default */
+.specific-messages .time-stamp {
+    display: none;
+    font-size: 10px;
+    color: gray;
+    margin-top: 6px;
+    margin-left: 0;
+    width: 100%;
+    text-align: right;
 }
 
-
+/* Show timestamp inline on hover for both sent and received messages */
+.specific-messages:hover + .time-stamp {
+  display: block;
+  margin-left: 5px;
+}
 
 
 .send-container{
@@ -415,7 +451,6 @@
   font-size: 14px;
   width: 100%;
   font-family: Arial, Helvetica, sans-serif;
-  text-align: justify;
 }
  
                                            
@@ -444,16 +479,40 @@
     cursor: pointer;
 }
 
-
-.time-stamp {
-    font-size: 10px;
-    color: gray;
-    margin-top: 5px;
-    text-align: right;
-    margin-right: 10px;
-    font-style: bold    ;
-   
+.reportLink{
+    color: white;
+    margin: auto;
+    margin-top: 35px;
+    margin-bottom: 30px;
+    text-decoration: none;
 }
+
+.reportLink :hover{
+   color: red;
+   fill: red;
+}
+
+.latest-message-bold {
+  font-weight: bold;
+  color: black;
+  /*color: #2d7a2d;  or any color you want */
+}
+
+.unread-indicator {
+  color: green;
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.listChats-loader{
+    padding: 10px;
+    display: flex;
+    padding-left: 25px;
+    align-items: center;
+
+}
+
 
 
 
@@ -505,6 +564,13 @@
         width: 100px;
         padding: 8px;
         font-size: 10px;
+    }
+
+    .unread-indicator {
+        color: green;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 10px;
     }
     
 
@@ -559,7 +625,7 @@
         flex-direction: column;
         align-items: flex-start;
         height: auto;
-        padding-bottom: 12px;
+        padding-bottom: 15px;
         padding-top: 5px;
     }
 
@@ -591,9 +657,20 @@
         padding: 8px;
         font-size: 10px;
     }
+
+    .unread-indicator {
+        color: green;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 20px;
+    }
 }
 
 @media (max-width: 550px) {
+
+    .itemInquiredDetails{
+        padding-bottom: 5px;
+    }
 
     .item-buttons{
         gap: 10px;
@@ -615,8 +692,19 @@
 
 @media (max-width: 375px) {
 
-    .messagebox{
+    .messagebox {
+        padding-right: 20px;
         height: 90vh;
+    }
+
+    .itemInquired {
+        gap: 15px;
+    }
+
+    .messagesList{
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 75%;
     }
 
     .messageRightCon{
@@ -625,7 +713,7 @@
 
     .itemInquiredDetails {
         padding-top: 15px;
-        padding-bottom: 15px;
+        padding-bottom: 8px;
     }
 
     .item-buttons{
@@ -639,9 +727,16 @@
     }
 
     .view-button{
-        width: 85px;
+        width: 75px;
         padding: 8px;
         font-size: 8px;
+    }
+
+    .unread-indicator {
+        color: green;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 5px;
     }
     
 }

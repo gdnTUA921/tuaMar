@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'; 
 
 function Sell() {
+  
   const navigate = useNavigate();
 
   //sweet-alerts
@@ -75,19 +76,37 @@ function Sell() {
     })
       .then((res) => res.json())
       .then((data) => {
-        MySwal.fire({
-          title: "Item Posted!",
-          html: data.message + " <br><br><b>Pending for Admin Review.</b>",
-          icon: "success",
-          confirmButtonColor: "#547B3E",
-        }).then((result) => {
-            if (result.isConfirmed){
-            navigate("/home");
-            }
-        });
+
+        if (data.status == "Success"){
+            MySwal.fire({
+            title: "Item Posted!",
+            html: data.message + " <br><br><b>Pending for Admin Review.</b>",
+            icon: "success",
+            confirmButtonColor: "#547B3E",
+          }).then((result) => {
+              if (result.isConfirmed){
+              navigate("/home");
+              }
+          });
+        }
+
+        else {
+          MySwal.fire({
+            title: "Failed to Post Item!",
+            html: data.message,
+            icon: "error",
+            confirmButtonColor: "#547B3E",
+          }).then((result) => {
+              if (result.isConfirmed){
+              navigate("/home");
+              }
+          });
+        }
+
       })
       .catch((error) => console.error("Error:", error));
   };
+
 
   return (
     <>
@@ -114,12 +133,18 @@ function Sell() {
               <label htmlFor="category">Category:</label>
               <select id="category" className="sell-select" name="category" onChange={handleCategoryChange} required>
                 <option value="" disabled selected hidden>Select a Category</option>
-                <option value="Textbooks">Textbooks</option>
+                <option value="Books & Study Materials">Books & Study Materials</option>
                 <option value="Electronics">Electronics</option>
-                <option value="Uniforms">Uniforms</option>
-                <option value="School Supplies">School Supplies</option>
-                <option value="Foods">Foods</option>
-                <option value="Collectibles">Collectibles</option>
+                <option value="Furniture & Home Essentials">Furniture & Home Essentials</option>
+                <option value="Clothing & Accessories">Clothing & Accessories</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Food & Drinks">Food & Drinks</option>
+                <option value="Services & Gigs">Services & Gigs</option>
+                <option value="Tickets & Events">Tickets & Events</option>
+                <option value="Hobbies & Toys">Hobbies & Toys</option>
+                <option value="Housing & Rentals">Housing & Rentals</option>
+                <option value="Health & Beauty">Health & Beauty</option>
+                <option value="Announcements">Announcements</option>
                 <option value="Others">Others</option>
               </select>
 
