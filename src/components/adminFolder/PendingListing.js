@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./Listing.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { database } from '../../firebaseConfig';
+import { ref, onValue, push, set, get, update} from 'firebase/database';
 
 function MyProfile() {
   const [activeTab, setActiveTab] = useState("myListings");
@@ -9,63 +13,160 @@ function MyProfile() {
 
   const ip = process.env.REACT_APP_LAPTOP_IP;
 
+  const MySwal = withReactContent(Swal); // For Alert
+
+  const [numLikes, setNumLikes] = useState([]);
+
   useEffect(() => {
-    fetch(`${ip}/tua_marketplace/pendingitemfetch.php`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setItems(data);
-        } else {
+      const fetchData = async () => {
+        try {
+          // Fetch item listings
+          const itemRes = await fetch(`${ip}/tua_marketplace/pendingitemfetch.php`);
+          const itemData = await itemRes.json();
+  
+          if (Array.isArray(itemData)) {
+            setItems(itemData);
+          } else {
+            console.error('Fetched data is not an array:', itemData);
+            setItems([]);
+          }
+  
+          // Fetch like count (add handling logic as needed)
+          const likeCountRes = await fetch(`${ip}/tua_marketplace/fetchLikeCount.php`, {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify({ myListings: itemData }),
+          });
+  
+          const likeCounts = await likeCountRes.json();
+          setNumLikes(likeCounts);
+  
+        } catch (error) {
+          console.error("Error fetching data:", error);
           setItems([]);
         }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setItems([]);
-      });
-  }, []);
+      };
+  
+      fetchData(); // Call the async function
+  }, [ip]); // Include `ip` in dependencies if it’s a dynamic variable
+
 
   const filteredItems = items.filter((item) =>
     item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleApprove = async (itemId) => {
-    if (!window.confirm(`Approve this listing (ID: ${itemId})?`)) return;
+    const confirmResult = await MySwal.fire({
+      title: `Approve this listing (ID: ${itemId})?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, approve it!',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#547B3E",
+      cancelButtonColor: "#d33",
+    });
+
+    if (!confirmResult.isConfirmed) return;
+
     try {
       const res = await fetch(`${ip}/tua_marketplace/approveItem.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ item_id: itemId }),
       });
+
       const result = await res.json();
+
       if (result.success) {
-        alert("Listing approved.");
+        const chatListRef = ref(database, 'chatsList');
+        const snapshot = await get(chatListRef);
+
+        if (snapshot.exists()) {
+          const updates = {};
+
+          snapshot.forEach(childSnapshot => {
+            const chatKey = childSnapshot.key;
+            const chatData = childSnapshot.val();
+
+            if (String(chatData.item_id) === String(itemId)) {
+              updates[`/chatsList/${chatKey}/item_status`] = "AVAILABLE";
+            }
+          });
+
+          if (Object.keys(updates).length > 0) {
+            await update(ref(database), updates);
+          }
+        }
+
+        await MySwal.fire({
+          icon: 'success',
+          title: 'Listing Approved',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
         setItems((prev) => prev.filter((i) => i.item_id !== itemId));
       } else {
-        alert("Failed to approve: " + result.message);
+        await MySwal.fire({
+          icon: 'error',
+          title: 'Failed to approve listing',
+          text: result.message || 'Unknown error occurred.',
+        });
       }
     } catch (e) {
-      alert("Error approving listing.");
+      await MySwal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while approving the listing.',
+      });
     }
   };
 
+
   const handleDelete = async (itemId) => {
-    if (!window.confirm(`Delete listing (ID: ${itemId})?`)) return;
+    const confirmResult = await MySwal.fire({
+      title: `Delete this listing (ID: ${itemId})?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#547B3E",
+      cancelButtonColor: "#d33",
+    });
+
+    if (!confirmResult.isConfirmed) return;
+
     try {
       const res = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ item_id: itemId }),
       });
+
       const result = await res.json();
+
       if (result.success) {
-        alert("Deleted.");
+        await MySwal.fire({
+          icon: 'success',
+          title: 'Deleted',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
         setItems((prev) => prev.filter((i) => i.item_id !== itemId));
       } else {
-        alert("Failed to delete: " + result.message);
+        await MySwal.fire({
+          icon: 'error',
+          title: 'Failed to delete listing',
+          text: result.message || 'Unknown error occurred.',
+        });
       }
     } catch (e) {
-      alert("Error deleting listing.");
+      await MySwal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while deleting the listing.',
+      });
     }
   };
 
@@ -104,6 +205,15 @@ function MyProfile() {
                   {filteredItems.length > 0 ? (
                     filteredItems.map((item) => (
                       <div className="itemCard" key={item.item_id}>
+                        <div className="soldBanner" style={{display: item.status == "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
+                          SOLD
+                        </div>
+                        <div className="reservedBanner" style={{display: item.status == "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
+                          RESERVED
+                        </div>
+                        <div className="reviewBanner" style={{display: item.status == "IN REVIEW" ? "block" : "none"}}> {/*set this up if item is considered UNDER REVIEW*/}
+                          IN REVIEW
+                        </div>
                         <img
                           src={item.preview_pic}
                           style={{
@@ -122,7 +232,7 @@ function MyProfile() {
                           <p>&#8369;{item.price}</p>
                           <i className="bi bi-heart-fill heart"></i>
                           <p>
-                            <b>0</b>
+                            <b>{numLikes[item.item_id]}</b>
                           </p>
                           <p>&#x2022; {item.item_condition}</p>
                           <button className="listButton" onClick={() => handleApprove(item.item_id)}>APPROVE LISTING</button>

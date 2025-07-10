@@ -2,17 +2,16 @@
     background-color: black;
       display: flex;
       color: white;
-      padding: 30px;
-      padding-top: 15px;
-      padding-bottom: 5px;
+      padding: 25px;
+      align-items: center;
+      justify-content: center;
+      gap: 350px;
 }
 
 .footerCard1{
-    display: block;
-    float: left;
-    margin-right: -15px;
-    margin-left: 100px;
-    justify-items: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .footerCard1 h2{
@@ -20,15 +19,13 @@
 }
 
 .footerCard1 h3{
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .conDetails{
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 22px;
-    margin-top: -10px;
 }
 
 .conDetails img{
@@ -36,7 +33,6 @@
 }
 
 .conDetails a {
-    font-size: 18px;
     font-weight: bold;
     text-decoration: none;
     color: white;
@@ -49,33 +45,37 @@
 
 .footerCard2{
     display: flex;
-    float: left;
-    margin: 35px 10px 50px 300px;
     align-items: center;
     justify-content: center;
+    gap: 15px;
 }
 
 .footerCard2 img{
-    margin-right: 30px;
-    margin-top: 12px;
-    width: 120px;
-    height: 120px;
+    width: 15vh;
+    height: 15vh;
+    padding-left: 0;
 }
 
 .footerCard2 h2{
-    font-size: 35px;
+    font-size: 2rem;
     font-family: Arial;
     text-align: center;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
 .footerCard2 p{
-    font-size: 18px;
+    font-size: 1rem;
     font-family: Arial;
     text-align: center;
+    margin-bottom: 0;
+    margin-top: 0;
 }
 
-.footerCard2 div{
-    margin-top: 12px;
+.footerTitle{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .phone, .envelope, .location{
@@ -83,45 +83,37 @@
     margin-right: 28px;
 }
 
-@media (max-width: 1250px){
-    .Footer{
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding-bottom: 35px;
+@media (max-width: 1100px) {
+  .Footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 50px;
+  }
+
+  .footerCard1 {
+    align-items: flex-start;
+  }
+
+  .footerCard1 {
+    max-width: 100%;
+  }
+
+  .footerCard2 {
+    flex-direction: column;
+  }
+
+  .conDetails {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 375px){
+    .footerCard1 h3{
+        font-size: 0.8rem;
     }
 
-    .footerCard1{
-        margin-left: -5px;
-    }
-
-    .conDetails {
-        margin-bottom: 10px;
-        justify-content: left;
-    }
-
-    .conDetails a{
-        font-size: 12px;
-        margin-left: -12px;
-    }
-
-    .footerCard2{
-        margin: 35px 20px 0px 0px;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .footerCard2 h2 {
-        font-size: 30px;
-    }
-
-    .footerCard2 p{
-        font-size: 15px;
-        margin-top: -10px;
-    }
-
-    .footerCard2 img{
-        width: 100px;
-        height: 100px;
+    .footerCard2 h2{
+        font-size: 1.8rem;
     }
 }

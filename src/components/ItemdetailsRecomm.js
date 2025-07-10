@@ -107,7 +107,7 @@
     else{
       return (
         <div className="recommendation-container">
-          <h1>Similar Listings</h1>
+          <h1>You May Also Like</h1>
                 <div className="listingCard">
                   <div className="items">
                     {recommendations.length > 0 ? (
@@ -154,7 +154,7 @@
                           </div>
                         </div>
 
-                        <Link to={userId == item.user_id ? "/myProfile" : `/userProfile/${item.user_id}`} className="sellerLink">
+                        <Link to={userId == item.user_id ? "/myProfile" : `/userProfile/${item.first_name + " " + item.last_name}`} className="sellerLink">
                           <div className="itemSeller">
                             <img src={item.profile_pic || "/tuamar-profile-icon.jpg"} />
                             <p>

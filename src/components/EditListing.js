@@ -4,200 +4,219 @@ import './Sell.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'; 
-
+import { database, storage } from '../firebaseConfig';
+import { ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
+import { ref, onValue, push, set, get, update} from 'firebase/database';
 
 function EditListing() {
-
-  const MySwal = withReactContent(Swal); // For Alert
-
+  const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
   const location = useLocation();
-
   const { passedID, passedName } = location.state || {};
   const itemId = passedID;
   const listingName = passedName;
 
+  const ip = process.env.REACT_APP_LAPTOP_IP; //ip address
 
+  //initial loaded pics from db and firebase storage
   const [listingPics, setListingPics] = useState([]);
 
-  // Form state
+  //for setting updated details
   const [itemName, setItemName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
   const [description, setDescription] = useState("");
-  const [images, setImages] = useState([]); // Base64 images
+  const [images, setImages] = useState([]);
 
-  const handleItemNameChange = (event) => setItemName(event.target.value);
-  const handlePriceChange = (event) => setPrice(event.target.value);
-  const handleCategoryChange = (event) => setCategory(event.target.value);
-  const handleConditionChange = (event) => setCondition(event.target.value);
-  const handleDescChange = (event) => setDescription(event.target.value);
+  const handleItemNameChange = (e) => setItemName(e.target.value);
+  const handlePriceChange = (e) => setPrice(e.target.value);
+  const handleCategoryChange = (e) => setCategory(e.target.value);
+  const handleConditionChange = (e) => setCondition(e.target.value);
+  const handleDescChange = (e) => setDescription(e.target.value);
 
-  // Receive images from DragNdrop
-  const handleImagesFromChild = (imageData) => {
-    setImages(imageData);
-  };
-
-  const goBack = () => {
-    navigate("/myProfile");
-  };
-
-  const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
-
+  const handleImagesFromChild = (imageData) => setImages(imageData);
+  const goBack = () => navigate("/myProfile");
 
   useEffect(() => {
-    //Checking if logged in, if not redirected to log-in
-      fetch(`${ip}/tua_marketplace/fetchSession.php`, {
-        method: "GET",
-        credentials: "include",
+    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data.user_id) navigate("/");
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (!data.user_id) {
-            navigate("/"); // Redirect to login if not authenticated
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching session data:", error);
-        });
-    }, [ip, navigate]);
+      .catch((error) => console.error("Session error:", error));
+  }, [ip, navigate]);
 
+  useEffect(() => {
+    fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
+      method: "POST",
+      body: JSON.stringify({ item_id: itemId }),
+    })
+      .then((res) => res.json())
+      .then((pics) => setListingPics(pics.map((p) => p.image)))
+      .catch((err) => console.error("Pics fetch error:", err));
 
-
-    useEffect(() => {
-      console.log (itemId);
-
-      //fetching item pictures
-      fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
-        method: "POST",
-        body: JSON.stringify({ item_id: itemId }),
-      })
-        .then((response) => response.json())
-        .then((pics) => {
-          setListingPics(pics.map((pic) => pic.image));
-          })
-        .catch((error) => console.error("Error fetching pics:", error));
-
-      //fetching item details
-      fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
-        method: "POST",
-        body: JSON.stringify({ item_id: itemId, item_name: listingName }), 
-      })
-      .then((response) => response.json())
-      .then((data)=>{
+    fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
+      method: "POST",
+      body: JSON.stringify({ item_id: itemId, item_name: listingName }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
         setItemName(data.itemName);
         setPrice(data.price);
         setCategory(data.category);
         setCondition(data.item_condition);
         setDescription(data.description);
       })
-      .catch((error) => console.error("Error fetching item details:", error));
+      .catch((err) => console.error("Item fetch error:", err));
+  }, [itemId]);
 
-    }, [itemId])
+  const deleteImageByUrl = async (url) => {
+    try {
+      const decodedUrl = decodeURIComponent(url);
+      const startIndex = decodedUrl.indexOf("/o/") + 3;
+      const endIndex = decodedUrl.indexOf("?");
+      const fullPath = decodedUrl.substring(startIndex, endIndex);
+      const imageRef = storageRef(storage, fullPath);
+      await deleteObject(imageRef);
+      console.log("Deleted:", fullPath);
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
+    try {
+      for (let oldUrl of listingPics) {
+        await deleteImageByUrl(oldUrl);
+      }
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+      const uploadedUrls = [];
+      for (let file of images) {
+        const imageRef = storageRef(storage, `posted-item-images/${uuidv4()}`);
+        await uploadBytes(imageRef, file);
+        const url = await getDownloadURL(imageRef);
+        uploadedUrls.push(url);
+      }
 
-    fetch(`${ip}/tua_marketplace/updateListing.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        itemId,
-        itemName,
-        price,
-        category,
-        condition,
-        description,
-        images, // Base64 strings included here
-      }),
-      credentials: 'include'
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.message == "Item updated successfully!"){
-          MySwal.fire({
-              title: "UPDATED!",
-              text: data.message,
-              icon: "success",
-              confirmButtonColor: "#547B3E",
-          }).then((result) => {
-              if (result.isConfirmed){
-                navigate("/myProfile");
-              }
+      const res = await fetch(`${ip}/tua_marketplace/updateListing.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          itemId,
+          itemName,
+          price,
+          category,
+          condition,
+          description,
+          images: uploadedUrls,
+        }),
+        credentials: 'include',
+      });
+
+      const result = await res.json();
+
+      if (result.message === "Item updated successfully!") {
+        const chatListRef = ref(database, 'chatsList');
+        const snapshot = await get(chatListRef);
+        if (snapshot.exists()) {
+          const updates = {};
+          snapshot.forEach(childSnapshot => {
+            const key = childSnapshot.key;
+            const val = childSnapshot.val();
+            if (String(val.item_id) === String(itemId)) {
+              updates[`/chatsList/${key}/item_name`] = itemName;
+              updates[`/chatsList/${key}/item_price`] = Number(price).toFixed(2);
+              updates[`/chatsList/${key}/item_pic`] = uploadedUrls[0];
+              updates[`/chatsList/${key}/item_status`] = "IN REVIEW";
+            }
           });
+          await update(ref(database), updates);
         }
 
-        else{
-          MySwal.fire({
-              title: "Error!",
-              text: data.message,
-              icon: "error",
-              confirmButtonColor: "#547B3E",
-          });
-        }
-        
-      })
-      .catch((error) => console.error("Error:", error));
+        await MySwal.fire({
+          title: "UPDATED!",
+          text: result.message,
+          icon: "success",
+          confirmButtonColor: "#547B3E",
+        });
+        navigate("/myProfile");
+      } else {
+        MySwal.fire({
+          title: "Error!",
+          text: result.message,
+          icon: "error",
+          confirmButtonColor: "#547B3E",
+        });
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+      MySwal.fire({
+        title: "Error!",
+        text: "Something went wrong while updating.",
+        icon: "error",
+        confirmButtonColor: "#547B3E",
+      });
+    }
   };
 
   return (
-    <>
-      <div className="sell-container">
-        <div className="sell-box">
-            <h2 className="sell-title">Edit Your Listing</h2>
-            <h3 className="sell-subtitle">
-              Edit your listing if there are necessary changes need to be made.
-            </h3>
+    <div className="sell-container">
+      <div className="sell-box">
+        <h2 className="sell-title">Edit Your Listing</h2>
+        <h3 className="sell-subtitle">Edit your listing if there are necessary changes need to be made.</h3>
+        <DragNdrop onImagesChange={handleImagesFromChild} initialImages={listingPics} />
+        <br />
+        <form className="sell-form" onSubmit={handleSubmit}>
+          <label htmlFor="itemName">Item Name:</label>
+          <input type="text" id="itemName" className="sell-input" name="itemName" onChange={handleItemNameChange} value={itemName} required />
 
-            {/* Drag and Drop Image Upload */}
-            <DragNdrop onImagesChange={handleImagesFromChild} initialImages={listingPics} />
-            <br />
+          <label htmlFor="price">Price:</label>
+          <div className="currencySign">&#8369;</div>
+          <input type="number" id="price" className="sell-input no-arrows" name="price" min="0" step="0.01" onChange={handlePriceChange} value={price} required />
 
-            {/* Form */}
-            <form className="sell-form" onSubmit={handleSubmit}>
-              <label htmlFor="itemName">Item Name:</label>
-              <input type="text" id="itemName" className="sell-input" name="itemName" placeholder="Enter Item Name" onChange={handleItemNameChange} value={itemName} required/>
+          <label htmlFor="category">Category:</label>
+          <select id="category" className="sell-select" onChange={handleCategoryChange} required>
+            <option value="" disabled selected hidden>Select a Category</option>
+            <option value="Books & Study Materials">Books & Study Materials</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Furniture & Home Essentials">Furniture & Home Essentials</option>
+            <option value="Clothing & Accessories">Clothing & Accessories</option>
+            <option value="Transportation">Transportation</option>
+            <option value="Food & Drinks">Food & Drinks</option>
+            <option value="Services & Gigs">Services & Gigs</option>
+            <option value="Tickets & Events">Tickets & Events</option>
+            <option value="Hobbies & Toys">Hobbies & Toys</option>
+            <option value="Housing & Rentals">Housing & Rentals</option>
+            <option value="Health & Beauty">Health & Beauty</option>
+            <option value="Announcements">Announcements</option>
+            <option value="Others">Others</option>
+          </select>
 
-              <label htmlFor="price">Price:</label>
-              <div className="currencySign">&#8369;</div>
-              <input type="number" id="price" className="sell-input no-arrows" name="price" min="0" step="0.01" placeholder="Enter price" onChange={handlePriceChange} value={price} required/>
+          <label htmlFor="condition">Condition:</label>
+          <select id="condition" className="sell-select" name="condition" onChange={handleConditionChange} value={condition} required>
+            <option value="" disabled hidden>Select Condition</option>
+            <option value="New">New</option>
+            <option value="Like New">Like New</option>
+            <option value="Good">Good</option>
+          </select>
 
-              <label htmlFor="category">Category:</label>
-              <select id="category" className="sell-select" name="category" onChange={handleCategoryChange} value={category} required>
-                <option value="" disabled selected hidden>Select a Category</option>
-                <option value="Textbooks">Textbooks</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Uniforms">Uniforms</option>
-                <option value="School Supplies">School Supplies</option>
-                <option value="Foods">Foods</option>
-                <option value="Collectibles">Collectibles</option>
-                <option value="Others">Others</option>
-              </select>
+          <label htmlFor="description">Description:</label>
+          <textarea id="description" className="sell-description" name="description" onChange={handleDescChange} value={description} required />
 
-              <label htmlFor="condition">Condition:</label>
-              <select id="condition" className="sell-select" name="condition" onChange={handleConditionChange} value={condition} required>
-                <option value="" disabled selected hidden>Select Condition</option>
-                <option value="New">New</option>
-                <option value="Like New">Like New</option>
-                <option value="Good">Good</option>
-              </select>
-
-              <label htmlFor="description">Description:</label>
-              <textarea id="description" className="sell-description" name="description" placeholder="Describe what you are selling and include any details a buyer might be interested in." onChange={handleDescChange} value={description} required></textarea>
-
-              <div className="buttonsDisplay">
-                <button type="submit" className="sell-button"><b>Submit</b></button>
-                <button className="cancel-button" onClick={(e) => {e.preventDefault(); goBack();}}><b>Cancel</b></button>
-              </div>
-            </form>
-        </div>
+          <div className="buttonsDisplay">
+            <button type="submit" className="sell-button"><b>Submit</b></button>
+            <button className="cancel-button" onClick={(e) => {e.preventDefault(); goBack();}}><b>Cancel</b></button>
+          </div>
+        </form>
       </div>
-    </>
+    </div>
   );
 }
 

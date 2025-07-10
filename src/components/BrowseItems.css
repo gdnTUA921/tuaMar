@@ -1,172 +1,214 @@
-button{
-    background-color: #247327;
-    padding: 20px 30px;
-    color: white;
-    font-size: 18px;
-    border-radius: 12px;
-    font-weight: bold;
-    width: 200px;
-}
-
-button:hover{
-    color: yellow;
-} 
-
 .browsecontainer {
     background-color: #D9D9D9;
-    height: auto;
-    min-height: 150vh;
-    display: flex; 
-    margin: 0;
-    padding-bottom: 50px;
-    overflow: hidden;
-}
-
-.browsediv{
-   display: flex;
-   flex-direction: column;
-}
-
-.itemFileContainer{
+    min-height: 100vh;
     display: flex;
- }
+    margin: 0;
+    padding: 20px;
+    overflow-x: hidden;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
 
- .filecontainer{
-    margin-top: 208px;
-    margin-left: 75px;
+.browsecontainer .browsediv {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+}
+
+.browsecontainer .search-container-browse {
+    display: flex;
+    width: 100%;
+    max-width: 500px;
+    margin: 30px auto 0px;
+    position: relative;
+    z-index: 100;
+}
+
+.browsecontainer .search-container-browse input {
+    width: 100%;
+    padding: 12px 45px 12px 45px;
+    font-size: 16px;
+    border: 2px solid #ccc;
     border-radius: 8px;
-    height: auto;
+    outline: none;
+}
+
+.browsecontainer .search-icon {
     position: absolute;
-    z-Index: 10;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    stroke-width: 2px;
+    width: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+.browsecontainer .search-icon:hover {
+    color: #547B3E;
+}
+
+.itemFileContainer {
+    display: flex;
+    width: 100%;
+    position: relative;
+    min-height: 500px;
+}
+
+.browsecontainer .filecontainer {
+    position: fixed;
     top: 0;
     left: 0;
+    height: 100vh;
     background-color: white;
-    overflow-x: hidden;
- }
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 60px; /* give space for bottom buttons */
+    z-index: 1000;
+}
 
- .menuBurger{
-    font-size: 50px;
+.browsecontainer .filecontainer-inside {
+    height: 90vh;
+    overflow-y: auto;
+}
+
+.browsecontainer .filecontainer-inside::-webkit-scrollbar {
+    display: none;
+}
+
+.browsecontainer .menuBurger {
+    font-size: 30px;
     cursor: pointer;
-    margin-left: 75px;
-    margin-right: 15px;
-    margin-top: 31px;
     background-color: white;
     height: 50px;
-    padding: 5px;
-    padding-top: 0px;
+    width: 50px;
     border-radius: 8px;
     color: green;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative; /* Keep relative positioning to avoid covering header */
+    top: 30px; /* Reasonable default top position */
+    left: 40px; /* Maintain original left positioning */
+    z-index: 999;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; /* Added smooth transitions */
 }
 
-.xButton{
-    width: 35px;
-    height: 35px;
-    align-items: center;
-    margin-left: 200px;
-    margin-top: -10px;
+.browsecontainer .menuBurger:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.filter h2{
-    margin-top: 0px;
+.browsecontainer .menuBurger:active {
+    transform: scale(0.95);
 }
 
-.priceText{
+.browsecontainer .xButton {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    color: #666;
+}
+
+.browsecontainer .xButton:hover {
+    color: #000;
+}
+
+.browsecontainer .filter h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.browsecontainer .filter label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.browsecontainer .filter input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.browsecontainer .priceText {
     width: 35%;
     height: 25px;
     text-align: center;
     margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
 }
-  
-.no-arrows2::-webkit-inner-spin-button,
-.no-arrows2::-webkit-outer-spin-button {
+
+.browsecontainer .no-arrows2::-webkit-inner-spin-button,
+.browsecontainer .no-arrows2::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.select-filter {
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-top: 5px;
-  width: 75%;
-  background-color: #f9f9f9;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.select-filter:focus {
-  outline: none;
-  border-color: #547B3E;
-  box-shadow: 0 0 0 2px rgba(84, 123, 62, 0.2);
-}
-
-
-.applyFilter{
-    margin-top: 20px;
-    padding: 10px;
-    font-size: 15px;
-    border-radius: 8px;
-}
-
-.resetFilter{
-    margin-top: 15px;
-    padding: 10px;
-    font-size: 15px;
-    border-radius: 8px;
-    background-color: grey;
-}
-
-.search-container-browse {
-    display: flex;  /* Aligns the input and any icons inside */
-    width: 500px;
-    margin: auto;
-    margin-top: 35px;
-    margin-left: 75px;
-}
-
-.search-container-browse input {
+.browsecontainer .select-filter {
     width: 100%;
-    padding: 8px 12px;
-    padding-left: 45px;
-    font-size: 16px;
-    border: 2px solid black;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.browsecontainer .applyFilter, .resetFilter {
+    margin: 10px 5px;
+    padding: 10px 20px;
+    font-size: 15px;
     border-radius: 8px;
-    outline: none;
-}
-
-.search-icon {
-    position: absolute;
-    translate: 15px 7px;
-    stroke-width: 3px;
-    width: 20px;
-}
-
-.search-icon:hover{
+    border: none;
     cursor: pointer;
-    color: #547B3E;
+    width: 45%;
+
 }
 
-.items-browse {
+.browsecontainer .applyFilter {
+    background-color: #547B3E;
+    color: white;
+    font-weight: bold;
+}
+
+.browsecontainer .resetFilter {
+    background-color: #666;
+    color: white;
+    font-weight: bold;
+}
+
+.browsecontainer .resetFilter:hover, .browsecontainer .applyFilter:hover {
+    color: yellow;
+}
+
+.browsecontainer .items-browse {
     display: flex;
     flex-wrap: wrap;
-    margin: auto;
-    padding: 15px;
-    gap: 25px;
-  }
-  
+    gap: 20px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    align-items: stretch;
+    margin: 0 auto;
+    padding: 20px;
+    transition: margin-left 0.5s ease;
+}
 
-.itemCard-browse{
+.browsecontainer .itemCard-browse {
     display: block;
     border-radius: 7px;
     border: 1px solid #ddd;
-    margin: 30px 10px 10px 0px;
+    margin: 30px 10px 10px 10px;
     padding: 30px;
-    padding-bottom: 16px;
+    padding-bottom: 25px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
     height: auto;
     font-family: Arial;
@@ -176,77 +218,96 @@ button:hover{
     width: auto;
 }
 
-.itemTitle{
+.browsecontainer .itemCard-browse:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.browsecontainer .itemCard-browse img {
+    width: 180px;
+    height: 180px;
+    border: 3px solid green;
+    border-radius: 12px;
+    object-fit: cover;
+    padding: 0;
+}
+
+.browsecontainer .itemTitle{
     width: 140px;
     padding: 0;
 }
 
-.itemCard-browse h3{
-    /* Check My Profile.css for the other settings of this h3 specifically under .itemTitle h3 className */
-    margin-top: 22px;
-    margin-left: 6px;
-    font-size: 15px !important;
+.browsecontainer .itemTitle h3 {
+    margin: 0;
+    font-size: 15px;
+    color: #333;
+    line-height: 1.3;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 2;
-    line-clamp: 2; /* optional for future compatibility */
-    max-height: 3em; /* approximate height for 2 lines, depending on font-size/line-height */
+    line-clamp: 2;
+    max-height: 3em;
+    width: 125px;
 }
 
-.itemCard-browse:hover{
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.7);
+.browsecontainer .itemTitle h3:hover {
+    color: green;
 }
 
-.itemDeets-browse{
+.browsecontainer .itemDeets-browse {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
+    gap: 25px;
+    margin-top: 20px;
 }
 
-
-.listButtons{
+.browsecontainer .listButtons{
     position: absolute;
     display: flex;
     gap: 100px;
-    margin-top: 40px;
-    margin-left: 100px;  
+    margin-top: 18px;
+    margin-left: 92px;  
 }
 
-.listButtons .heart{
+.browsecontainer .listButtons .heart{
     width: 23px;
     height: 23px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
     position: absolute;
     translate: 48px -17px;
-    color: #547B3E;
 }
 
-.listButtons .heart:hover{
-    cursor: pointer;
+.browsecontainer .listButtons .heart:hover {
+    transform: scale(1.1);
 }
 
-.listButtons .browse-flag{
+.browsecontainer .listButtons .browse-flag{
     margin-left: 75px;
     margin-top: -16px;
     text-decoration: none;
     color: black;
+    transition: color 0.2s ease;
 }
 
-.listButtons .browse-flag:hover{
+.browsecontainer .listButtons .browse-flag:hover{
     color: red;
-    fill: red;
 }
 
-.browse-price-condition{
-    position: relative;
+.browsecontainer .browse-price-condition {
     display: flex;
-    margin-top: 0px;
-    margin-left: 6px;
-    gap: 42px;
+    align-items: center;
+    gap: 60px;
+    color: #333;
 }
 
-.itemSeller{
+.browsecontainer .browse-price-condition p {
+    margin: 0;
+}
+
+.browsecontainer .itemSeller {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
@@ -256,316 +317,385 @@ button:hover{
     margin-left: 5px;
 }
 
-.itemSeller img{
+.browsecontainer .itemSeller img {
     border-radius: 50%;
     border: 2px solid grey;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     object-fit: cover;
-    padding: 0;
-    
 }
 
-.itemSeller p{
-    font-size: 15px;
+.browsecontainer .itemSeller p {
+    font-size: 14px;
     font-weight: bold;
+    margin: 0;
+    line-height: 1.2;
 }
 
-.noItems{
-    font-weight: bold;
-    font-size: 22px;
-    padding: 35px;
-    margin-top: 30px;
-    margin-left: 300px;
-    width: 350px;
-}
-
-.item-details-link{
-    text-decoration: none;
-    color: black;
-}
-
-.item-details-link:hover{
-    color: green;
-}
-
-.sellerLink{
-    text-decoration: none;
-    color: black;
-}
-
-.sellerLink:hover{
-    color: green;
-}
-
-.loader-container {
-    position: relative;  /* Changed to fixed to ensure it's truly centered on the screen */
+.browsecontainer .noItems {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 80vh;
-    background-color: #D9D9D9; /* Optional: background color for the loader container */
+    width: 100%;
+    min-height: 200px;
+    grid-column: 1 / -1;
+    gap: 20px;
+}
+
+.browsecontainer .noItems p {
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 0;
+}
+
+.browsecontainer .noItems .sadFace{
+    font-size: 80px;
+}
+
+.browsecontainer .item-details-link, .sellerLink {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.browsecontainer .item-details-link:hover, .sellerLink:hover {
+    color: #547B3E;
+}
+
+.btnTop {
+    background: linear-gradient(135deg, #8ec0ec, #1f8229);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btnTop:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.btnTopPopup {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    z-index: 998 !important;
+}
+
+/* Popup container styles - Enhanced specificity */
+.popup-content-browse {
+    background: white !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+    max-width: 400px !important;
+    max-height: 400px !important;
+    overflow-y: auto !important;
+    border: 1px solid #e0e0e0 !important;
+    z-index: 9999 !important;
+    position: fixed !important;
+    bottom: 80px !important;
+    right: 20px !important;
+    min-width: 300px !important;
+    transform: none !important; /* Override any transform from the popup library */
+}
+
+/* Popup overlay with enhanced specificity */
+.browsecontainer .popup-overlay {
+    background: rgba(0, 0, 0, 0.1) !important;
+    z-index: 9998 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+}
+
+/* Content inside popup */
+.popup-content-browse h2 {
+    margin: 0 0 20px 0 !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    color: #333 !important;
+    text-align: center !important;
+    border-bottom: 2px solid #547B3E !important;
+    padding-bottom: 10px !important;
+}
+
+/* Scrollbar styling */
+.popup-content-browse::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+.popup-content-browse::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 3px !important;
+}
+
+.popup-content-browse::-webkit-scrollbar-thumb {
+    background: #547B3E !important;
+    border-radius: 3px !important;
+}
+
+.popup-content-browse::-webkit-scrollbar-thumb:hover {
+    background: #3d5b2e !important;
+}
+
+/* Top sellers container */
+.top-sellers-container {
+    display: flex !important;
+    align-items: center !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+/* Improve the rated-topbox styling */
+.rated-topbox {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 0; /* Remove margin since we're using gap */
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 250px;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.rated-topbox:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border-color: #547B3E;
+    transform: scale(1.05);
+}
+
+.rated-topbox:first-child {
+    border: 2px solid #ffd700;
+    background: linear-gradient(135deg, #fff9e6, #ffffff);
+}
+
+.rated-topbox:first-child::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg, #ffd700, #ffed4a);
+    border-radius: 14px;
+    z-index: -1;
+}
+
+.topseller-list {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.topseller-list .sellerLink{
+    display: flex;
+    flex-direction: column;
+}
+
+.topseller-list .rating-block{
+    display: flex;
+}
+
+.img-rating {
+    width: 35px;  /* Reduced from 35px */
+    height: 35px; /* Reduced from 35px */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #547B3E;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    padding-left: 0;
+}
+
+.img-rating:hover {
+    transform: scale(1.1);
+    border-color: #3d5b2e;
+}
+
+.rated-username {
+    font-size: 14px; 
+    font-weight: bold;
+    color: #333;
+    transition: color 0.3s ease;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.rated-topbox:hover .rated-username {
+    color: #547B3E;
+}
+
+.seller-info {
+    font-size: 18px;  /* Reduced from 20px */
+    margin-left: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    flex-shrink: 0;  /* Prevent shrinking */
+}
+
+.rating-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+    display: inline;
+    margin-right: 8px;
+}
+
+.rating {
+    color: green;
+    font-size: 16px;
+    font-weight: bold;
+    display: inline;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.department-rating {
+    font-size: 16px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    padding: 0;
+    font-weight: bold;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/* Loading styles */
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #D9D9D9;
 }
 
 
-@media (max-width: 1240px) {
-
-    .filecontainer{
-       margin-top: 640px;
-       margin-left: 75px;
-       overflow: hidden;
-       padding-bottom: 40px !important;
-       height: auto;
-       min-height: 300px;
-    }
-}
-
+/* Tablet and small desktop adjustments */
 @media (max-width: 1024px) {
-
-    .browsecontainer{
-        padding: 10px;
-    }
-
-    .filecontainer{
-       margin-top: 73%;
-       margin-left: 55px;
-       overflow: hidden;
-       padding-bottom: 40px !important;
-       height: auto;
-       min-height: 300px;
-    }
-
-    .search-container-browse{
-        width: 500px;
-        margin-left: 245px;
-        margin-top: 50px !important;
-        
-    }
-
-    .items-browse{
-       margin: auto;
-       margin-top: 90px;
-       margin-left: 16px !important;
-       gap: 25px !important;
-       padding: 30px;
-    }
-
-    .menuBurger{
-        margin-left: 45px;
-        margin-right: 0px;
-        position: absolute;
-    }
-
-    .noItems{
-        margin-left: 235px !important;
+    .browsecontainer .menuBurger {
+        top: 18px;
+        left: 30px;
+        font-size: 28px;
+        height: 48px;
+        width: 48px;
     }
 }
 
-@media (max-width: 1000px) {
-
-    .browsecontainer{
-        padding: 50px;
-    }
-
-    .filecontainer{
-       margin-top: 700px;
-       margin-left: 100px;
-       overflow: hidden;
-       padding-bottom: 40px !important;
-       height: auto;
-       min-height: 300px;
-    }
-
-    .search-container-browse{
-        width: 400px;
-        margin-left: 50px;
-        margin-top: 25px !important;
-    }
-
-    .items-browse{
-       margin: auto;
-       margin-top: 90px;
-       margin-left: 35px !important;
-       gap: 25px !important;
-       padding: 30px;
-    }
-
-    .menuBurger{
-        margin-left: 50px;
-        margin-right: 0px;
-        margin-top: 50px;
-        position: absolute;
-    }
-
-    .noItems{
-        margin-left: 75px !important;
-    }
-}
-
-@media (max-width: 912px) {
-
-    .filecontainer{
-       margin-top: 84%;
-       margin-left: 100px;
-       overflow: hidden;
-       height: auto;
-       min-height: 300px;
-    }
-}
-
-@media (max-width: 820px) {
-
-    .filecontainer{
-       margin-top: 92%;
-       margin-left: 100px;
-       overflow: hidden;
-       height: auto;
-       min-height: 300px;
-    }
-}
-
+/* Mobile landscape and medium phones */
 @media (max-width: 768px) {
-
-    .browsecontainer{
-        padding: 7px;
-    }
-
-    .filecontainer{
-       margin-top: 88%;
-       margin-left: 56px;
-       overflow: hidden;
-       height: auto;
-       min-height: 300px;
-    }
-
-    .itemFileContainer{
-        display: flex;
-        flex-direction: column;
-     }
-
-    .search-container-browse{
-        width: 285px;
-        margin-left: 45px;
-        margin-top: 50px !important;
-    }
-
-    .items-browse{
-       margin: auto;
-       margin-top: 90px;
-       margin-left: 35px !important;
-       gap: 25px !important;
-       padding: 30px;
-    }
-
-    .noItems{
-        margin-left: 100px !important;
+    .browsecontainer .menuBurger {
+        position: fixed;
+        top: 25px;
+        left: 35px;
+        font-size: 26px;
+        height: 45px;
+        width: 45px;
     }
 }
 
-@media (max-width: 540px) {
-
-    .filecontainer{
-        margin-top: 610px;
-        margin-left: 56px;
-        overflow: hidden;
-        height: auto;
-        min-height: 300px;
-     }
-
-    .items-browse{
-        margin: auto;
-        margin-top: 90px;
-        margin-left: 80px !important;
-        gap: 25px !important;
-        padding: 30px;
-     }
-
-     .noItems{
-        margin-left: -72px !important;
+/* Mobile portrait and smaller screens */
+@media (max-width: 480px) {
+    .browsecontainer .menuBurger {
+        top: 25px;
+        left: 35px;
+        font-size: 24px;
+        height: 42px;
+        width: 42px;
+        position: fixed;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 1);
     }
-
+    
+    .browsecontainer .search-container-browse {
+        max-width: 90%; /* Make search bar more responsive */
+    }
 }
 
-@media (max-width: 450px) {
-
-    .filecontainer{
-        margin-top: 575px;
-        margin-left: 55px;
-        overflow: hidden;
-        height: auto;
-        min-height: 300px;
-     }
-
-     .search-container-browse{
-        width: 285px;
-        margin: auto;
-        margin-left: 60px;
-        margin-top: 50px !important;
+/* Very small screens (like iPhone SE) */
+@media (max-width: 375px) {
+    .browsecontainer .menuBurger {
+        top: 20px;
+        left: 25px;
+        font-size: 22px;
+        height: 38px;
+        width: 38px;
     }
-
-    .items-browse{
-        margin: auto !important;
-        margin-left: 35px !important;
-        margin-top: 100px !important;
-        gap: 25px !important;
-        padding: 30px;
-     }
-
-     .noItems{
-        margin-left: -72px !important;
+    
+    .browsecontainer .search-container-browse {
+        max-width: 95%;
+        margin-left: auto;
+        margin-right: auto;
     }
-
 }
 
-
-@media (max-width: 390px) {
-
-    .browseDiv{
-        margin-left: 16px !important;
-        margin-right: 10px !important;
+/* Extra small screens */
+@media (max-width: 320px) {
+    .browsecontainer .menuBurger {
+        top: 20px;
+        left: 25px;
+        font-size: 20px;
+        height: 35px;
+        width: 35px;
     }
-
-    .browsecontainer{
-        padding: 10px;
-        overflow: hidden;
+    
+    .browsecontainer .search-container-browse {
+        max-width: 98%;
     }
+}
 
-    .filecontainer{
-       margin-top: 565px !important;
-       margin-left: 50px;
-       overflow: hidden;
-       height: auto;
-       min-height: 300px;
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 500px) {
+    .browsecontainer .menuBurger {
+        top: 5px;
+        left: 20px;
+        height: 35px;
+        width: 35px;
+        font-size: 18px;
     }
+}
 
-    .itemFileContainer{
-        display: flex;
-        flex-direction: column;
-     }
-
-    .xButton{
-        margin-top: 0px;
-        margin-left: 195px;
-    }
-
-    .search-container-browse{
-        width: 260px;
-        margin-left: 30px;
-    }
-
-    .items-browse{
-       margin-left: 0px !important;
-    }
-
-    .menuBurger{
-        margin-left: 30px;
-        margin-right: 0px;
-        position: absolute;
-    }
-
-    .noItems{
-        margin-left: -70px;
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .browsecontainer .menuBurger {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
 }
 
 
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .browsecontainer .menuBurger {
+        transition: none;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .browsecontainer .menuBurger {
+        height: 45px; /* Larger touch target */
+        width: 45px;
+    }
+    
+    .browsecontainer .menuBurger:hover {
+        transform: none; /* Remove hover effects on touch devices */
+    }
+}

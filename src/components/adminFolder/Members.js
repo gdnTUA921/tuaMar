@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./Members.css"; // Don't forget the CSS!
 import UserListingsPopup from "./UserListingsPopup.js";
+import { database } from '../../firebaseConfig';
+import { ref, onValue, push, set, get, update} from 'firebase/database';
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 export default function Members() {
   const ip = process.env.REACT_APP_LAPTOP_IP; // IP address (see env file for set up);
   const [activeTab, setActiveTab] = useState("All Users"); // State to manage active tab
+
+  const MySwal = withReactContent(Swal); //for alerts
   
   // State to manage search term
   // This will be used to filter users based on their ID or name
@@ -142,8 +148,9 @@ export default function Members() {
         </div>
 
         {/* User Table */}
-        <div className="user-table">
-          <table>
+        <div className="user-table-card">
+          <div className="user-table-scroll-wrapper">
+            <table className="user-table">
             <thead>
               <tr>
                 <th></th>
@@ -208,6 +215,7 @@ export default function Members() {
           </table>
         </div>
       </div>
+    </div>
     
 
     {showListingsPopup && (
@@ -225,34 +233,76 @@ export default function Members() {
               className="edit-user-form"
               onSubmit={async (e) => {
                 e.preventDefault();
-                const res = await fetch(`${ip}/tua_marketplace/updateUser.php`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    user_id: editUser.id,
-                    first_name: editedData.first_name?.trim() || "",
-                    last_name: editedData.last_name?.trim() || "",
-                    email: editedData.email?.trim() || "",
-                    id_number: editedData.id_number || "",
-                    department: editedData.department?.trim() || "",
-                    user_type: editedData.user_type?.trim() || "",
-                  }),
-                });
 
-                const result = await res.json();
-                if (result.success) {
-                  alert("Changes have been saved successfully.");
+                try {
+                  // 1. Update MySQL backend
+                  const res = await fetch(`${ip}/tua_marketplace/updateUser.php`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      user_id: editUser.id,
+                      first_name: editedData.first_name?.trim() || "",
+                      last_name: editedData.last_name?.trim() || "",
+                      email: editedData.email?.trim() || "",
+                      id_number: editedData.id_number || "",
+                      department: editedData.department?.trim() || "",
+                      user_type: editedData.user_type?.trim() || "",
+                    }),
+                  });
+
+                  const result = await res.json();
+
+                  if (!result.success) {
+                    alert("Update failed: " + result.message);
+                    return;
+                  }
+
+                  // 2. Refresh user list
                   setEditUser(null);
+                  const userRes = await fetch(`${ip}/tua_marketplace/fetchListUsers.php`);
+                  const userData = await userRes.json();
+                  if (Array.isArray(userData)) {
+                    setUsers(userData);
+                  }
 
-                  fetch(`${ip}/tua_marketplace/fetchListUsers.php`)
-                    .then((response) => response.json())
-                    .then((data) => {
-                      if (Array.isArray(data)) {
-                        setUsers(data);
-                      }
+                  // 3. Firebase update (optional — if item update needed for chatsList)
+                  const originalFullName = `${editUser.first_name} ${editUser.last_name}`.trim();
+                  const updatedFullName = `${editedData.first_name} ${editedData.last_name}`.trim();
+
+                  const chatListRef = ref(database, 'chatsList');
+                  const snapshot = await get(chatListRef);
+
+                  if (snapshot.exists()) {
+                    const updates = {};
+
+                    snapshot.forEach(childSnapshot => {
+                      const chatKey = childSnapshot.key;
+                      const chatData = childSnapshot.val();
+
+                      // Match by either seller name or buyer name (adjust as needed)
+                        if (String(chatData.buyer_name) === String(originalFullName)){
+                            updates[`/chatsList/${chatKey}/buyer_name`] = updatedFullName;
+                        }
+                        if (String(chatData.seller_name) === String(originalFullName)){
+                            updates[`/chatsList/${chatKey}/seller_name`] = updatedFullName;
+                        }
                     });
-                } else {
-                  alert("Update failed: " + result.message);
+
+                    if (Object.keys(updates).length > 0) {
+                      await update(ref(database), updates);
+                    }
+                  }
+
+                  await MySwal.fire({
+                    title: "UPDATED!",
+                    text: "Changes have been saved successfully.",
+                    icon: "success",
+                    confirmButtonColor: "#547B3E",
+                  });
+
+                } catch (error) {
+                  console.error("Update error:", error);
+                  alert("An error occurred during update. Please try again.");
                 }
               }}
             >

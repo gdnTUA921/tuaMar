@@ -21,6 +21,7 @@ const ReportUser = React.lazy(() => import ('./components/Reportuser'));
 const Reviewmod = React.lazy(() => import ('./components/Reviewmod'));
 const UserProfile = React.lazy(() => import ('./components/UserProfile'));
 const Admin = React.lazy(() => import ('./components/adminFolder/TuaMarAdmin'));
+const Error = React.lazy(() => import ('./components/Error'));
 
 
 function App() {
@@ -50,12 +51,15 @@ function App() {
           <Route path="/myProfile" element={<MyProfile />} />
           <Route path="/itemdetails/:itemId/:itemName" element={<Itemdetails />} />
           <Route path="/reportitem" element={<Reportitem />} />
-          <Route path="/userProfile/:userId" element={<UserProfile />} />
+          <Route path="/userProfile/:userName" element={<UserProfile />} />
           <Route path="/editListing" element={<EditListing />} />
           <Route path="/reportUser" element={<ReportUser />} />
           <Route path="/reviewmod" element={<Reviewmod />} />
           <Route path="/loader" element={<Loader />} />
         </Route>
+
+        <Route path="/error404" element={<Error />} />
+        <Route path="*" element={<Error />} />
       </Routes>
       </Suspense>
     </div>

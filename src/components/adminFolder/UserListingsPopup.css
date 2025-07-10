@@ -11,7 +11,7 @@
   z-index: 999;
 }
 
-.popup-content {
+.popup-overlay .popup-content {
   background: white;
   border-radius: 12px;
   padding: 20px;

@@ -23,6 +23,11 @@ const Itemdetails = () => {
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //ip address
 
+  
+  //New state for large image viewing modal
+  const [showEnlargeImg, setShowEnlargeImg] = useState(false);
+  const [enlargedImg, setEnlargeImg] = useState("");
+
 
 useEffect(() => {
   const fetchAndLog = async () => {
@@ -69,9 +74,16 @@ useEffect(() => {
       });
       const itemData = await itemRes.json();
 
+      console.log(itemData);
+
       console.log(userId);
       if (itemData.user_id !== userId && itemData.status === "IN REVIEW") {
         navigate("/home");
+        return;
+      }
+
+      if (itemData.itemName == null && itemData.user_id == null){
+        navigate("/error");
         return;
       }
       setItemDeets(itemData);
@@ -215,6 +227,7 @@ useEffect(() => {
                     <img className='itemimage'
                     src={picsDisplay.image || "/tuamar-profile-icon.jpg"}
                     alt={itemDeets.itemName}
+                    onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(picsDisplay.image)}}
                     />
                     
                     <div className="smallImgSlots" style={{justifyContent: pics.length > 3 ? "flex-start" : "center"}}>
@@ -294,7 +307,7 @@ useEffect(() => {
                 
                 
                 <div className="seller-profile-name">   
-                    <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.user_id}`} className="sellerLink"><h1>{itemDeets.firstName + " " + itemDeets.lastName}</h1></Link>
+                    <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.firstName + " " + itemDeets.lastName}`} className="sellerLink"><h1>{itemDeets.firstName + " " + itemDeets.lastName}</h1></Link>
                     <p>{itemDeets.email}</p>
                     <div className="seller-rating-container">
                         <i id="seller-starReview" className="bi bi-star-fill"></i>
@@ -304,9 +317,26 @@ useEffect(() => {
             </div>
             <hr/>
             <div className='itemsRecommended'>
-             <Recommendation itemName={itemDeets.itemName} userId={userID}/>
-             
+             <Recommendation itemName={itemDeets.itemName} userId={userID}/> 
             </div>
+
+          {/* View Image Modal */}
+          {showEnlargeImg && (
+            <div className="image-preview-overlay">
+              <div className="image-preview-container">
+                <div className="image-preview-header">
+                  <h3></h3>
+                  <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
+                    ×
+                  </button>
+                </div>
+                <div className="image-preview-content">
+                  <img src={enlargedImg} alt="Preview" className="popup-preview-image" />
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
     </div>
     )

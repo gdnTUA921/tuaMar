@@ -28,6 +28,11 @@ function MyProfile() {
   const myListingsArray = Array.isArray(myListings) ? myListings : [];
   const likedItemsArray = Array.isArray(likedItems) ? likedItems : [];
 
+  
+  //New state for large image viewing modal
+  const [showEnlargeImg, setShowEnlargeImg] = useState(false);
+  const [enlargedImg, setEnlargeImg] = useState("");
+
 
   //fetching items owned and the number of likes per item
   const [numLikes, setNumLikes] = useState({})
@@ -443,18 +448,18 @@ function MyProfile() {
           <div className="reviews" style={{ display: activeTab === "reviews" ? "block" : "none" }}>
               <h2>Reviews</h2>
 
-              {userReviewData.length > 0 ? (userReviewData.map((rev) => (
-                  <div className='reviewCard' key={rev.reviewer_id}>
+              {userReviewData.length > 0 ? (userReviewData.map((rev, index) => (
+                  <div className='reviewCard' key={index}>
                     <div className="profile-reviews">
-                      <Link to={`/userProfile/${rev.reviewer_id}`} className="sellerLink"><img src={rev.profile_pic || "/tuamar-profile-icon.jpg"} alt="Profile Photo" /></Link>
-                      <p><Link to={`/userProfile/${rev.reviewer_id}`} className="sellerLink">{rev.userName}</Link></p>
+                      <Link to={`/userProfile/${rev.userName}`} className="sellerLink"><img src={rev.profile_pic || "tua-mar-profile-icon.jpg"} alt="Profile Photo" /></Link>
+                      <p><Link to={`/userProfile/${rev.userName}`} className="sellerLink">{rev.userName}</Link></p>
                       <p>&#x2022;&nbsp;Review from {rev.reviewer_status}</p>
                       <p>{new Date(rev.time_stamp).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                     </div>
 
                     <div className="stars">
-                      {[1,2,3,4,5].map ((star) => (
-                          <i class={rev.rating >= star ? "bi bi-star-fill" : "bi bi-star"}></i>
+                      {[1,2,3,4,5].map ((star, index) => (
+                          <i key={index} className={rev.rating >= star ? "bi bi-star-fill" : "bi bi-star"}></i>
                       ))}
                     </div>
 
@@ -462,17 +467,35 @@ function MyProfile() {
                       <p>{rev.reviewText}</p>
                     </div>
 
-                  {rev.images && rev.images.length > 0 ? (rev.images.map((img, index) => (
                     <div className="review-images">
-                      <img key={index} src={img || "/tuamar.png"} className="review-image" />
+                      {rev.images && rev.images.length > 0 ? (rev.images.map((img, index) => (       
+                          <img key={index} src={img} className="review-image" onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(img)}}/>
+                      ))) : ("")}
                     </div>
-                  ))) : ("")}
+                  
 
                     <hr/>
                   </div>
                 ))
               ) : (<div className="no-reviews">No reviews for&nbsp;<span className="spanName">{userData.first_name + " " + userData.last_name}.</span>&nbsp;</div>)}
           </div>
+
+          {/* View Image Modal For Review Pics*/}
+          {showEnlargeImg && (
+            <div className="image-preview-overlay">
+              <div className="image-preview-container">
+                <div className="image-preview-header">
+                  <h3></h3>
+                  <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
+                    ×
+                  </button>
+                </div>
+                <div className="image-preview-content">
+                  <img src={enlargedImg} alt="Preview" className="popup-preview-image" />
+                </div>
+              </div>
+            </div>
+          )}
 
 
           {/* Settings Tab */}
@@ -591,7 +614,7 @@ function MyProfile() {
                           <p>&#x2022; {item.item_condition}</p>
                         </div>
 
-                      <Link to={userId == item.user_id ? "/myProfile" : `/userProfile/${item.user_id}`} className="sellerLink">
+                      <Link to={userId == item.user_id ? "/myProfile" : `/userProfile/${item.first_name + " " + item.last_name}`} className="sellerLink">
                       <div className="itemSeller">
                         <img src={item.profile_pic} />
                         <p></p>

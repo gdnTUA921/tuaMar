@@ -1,65 +1,68 @@
+/* Main Container */
 .userscontainer .members-container {
-    width: 100%;
-    min-height: calc(100vh - 80px);
-    background-color: #D9D9D9;
-    padding: 40px 20px;
-    border-radius: 12px;
-    flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: flex;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  background-color: #D9D9D9;
+  padding: 40px 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .userscontainer h2 {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
 }
 
+/* User Counters */
 .userscontainer .counters {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
-.userscontainer .counter-card {
-    background: white;
-    padding: 15px;
-    flex: 1;
-    min-width: 120px;
-    border-radius: 10px;
-    color: black;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.counter-card {
+  background: white;
+  padding: 15px;
+  flex: 1;
+  min-width: 120px;
+  border-radius: 10px;
+  text-align: center;
+  color: black;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.userscontainer .counter-card p {
-    font-size: 16px;
-    margin-bottom: 6px;
+.counter-card p {
+  font-size: 16px;
+  margin-bottom: 6px;
 }
 
-.userscontainer .counter-card h3 {
-    font-size: 24px;
-    margin: 0;
+.counter-card h3 {
+  font-size: 24px;
+  margin: 0;
 }
 
-.userscontainer .tabs-search {
+/* Tabs & Search */
+.tabs-search {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 15px;
   justify-content: space-between;
+  gap: 15px;
 }
 
-.userscontainer .tabs {
+.tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.userscontainer .tabs button {
+.tabs button {
   background: #e0e0e0;
   border: none;
   font-size: 14px;
@@ -69,39 +72,34 @@
   transition: all 0.3s ease;
 }
 
-
-.userscontainer .tabs button.active {
-    background: #4CAF50;
-    color: white;
-    font-weight: bold;
+.tabs button.active {
+  background: #4CAF50;
+  color: white;
+  font-weight: bold;
 }
 
-.userscontainer .search-bar {
+.search-bar {
   display: flex;
   align-items: center;
   position: relative;
   width: 100%;
   max-width: 280px;
   background: white;
-  border-radius: 20px;
   border: 1px solid #ccc;
-  padding: 0;
-  box-sizing: border-box;
+  border-radius: 20px;
 }
 
-
-.userscontainer .search-bar input {
+.search-bar input {
   flex: 1;
   padding: 10px 35px 10px 15px;
   border: none;
   border-radius: 20px;
-  outline: none;
-  background: transparent;
   font-size: 14px;
+  background: transparent;
+  outline: none;
 }
 
-
-.userscontainer .search-icon {
+.search-bar .search-icon {
   position: absolute;
   right: 15px;
   top: 35%;
@@ -110,75 +108,76 @@
   color: #666;
 }
 
-
-.userscontainer .user-table {
-    background: white;
-    border-radius: 10px;
-    overflow-x: auto;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+/* User Table */
+.user-table-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-top: 20px;
 }
 
-.userscontainer .user-table table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 600px;
+.user-table-scroll-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+  border-radius: 10px;
+  background: white;
 }
 
-.userscontainer .user-table thead th {
-    background-color: #f1f1f1;
-    text-align: center;
-    padding: 12px;
-    border-bottom: 2px solid #ddd;
-    font-size: 14px;
-    font-weight: 600;
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
 }
 
-.userscontainer .user-table tbody tr {
-    transition: background-color 0.2s;
+.user-table thead th {
+  position: sticky;
+  top: 0;
+  background: #f1f1f1;
+  z-index: 2;
+  padding: 12px 16px;
+  border-bottom: 2px solid #ddd;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
 }
 
-.userscontainer .user-table tbody tr:hover {
-    background-color: #f9f9f9;
+.user-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  text-align: center;
 }
 
-.userscontainer .user-table td {
-    text-align: center;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
+.user-table tbody tr:hover {
+  background-color: #f9f9f9;
 }
 
-.userscontainer .view-btn {
-    background: #607d8b;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 13px;
+/* Buttons */
+.view-btn,
+.update-btn,
+.delete-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  color: white;
 }
 
-.userscontainer .update-btn {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 13px;
+.view-btn {
+  background: #607d8b;
 }
 
-.userscontainer .delete-btn {
-    background: #f44336;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 13px;
+.update-btn {
+  background: #4CAF50;
 }
 
-/* Form Styles */
+.delete-btn {
+  background: #f44336;
+}
+
+/* Edit Form */
 .edit-user-form {
   display: flex;
   flex-direction: column;
@@ -206,9 +205,9 @@
 
 .edit-user-form input:focus,
 .edit-user-form select:focus {
-  outline: none;
   border-color: #4CAF50;
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+  outline: none;
 }
 
 .form-actions {
@@ -226,60 +225,73 @@
   padding-bottom: 8px;
 }
 
+/* Scrollbar Customization */
+.user-table-scroll-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
 
-/* Responsive Design */
+.user-table-scroll-wrapper::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
+}
+
+.user-table-scroll-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Responsive Styles */
 @media (max-width: 768px) {
-    .userscontainer .members-container {
-        padding: 20px 10px;
-    }
+  .members-container {
+    padding: 20px 10px;
+  }
 
-    .userscontainer .counters,
-    .userscontainer .tabs-search {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  .counters,
+  .tabs-search {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    .userscontainer .user-table table,
-    .userscontainer .user-table thead,
-    .userscontainer .user-table tbody,
-    .userscontainer .user-table tr,
-    .userscontainer .user-table td,
-    .userscontainer .user-table th {
-        display: block;
-        width: 100%;
-    }
+  .user-table,
+  .user-table thead,
+  .user-table tbody,
+  .user-table tr,
+  .user-table td,
+  .user-table th {
+    display: block;
+    width: 100%;
+  }
 
-    .userscontainer .user-table thead {
-        display: none;
-    }
+  .user-table thead {
+    display: none;
+  }
 
-    .userscontainer .user-table tr {
-        margin-bottom: 15px; 
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 10px;
-        background-color: white;
-    }
+  .user-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: white;
+  }
 
-    .userscontainer .user-table td {
-        text-align: left;
-        padding: 8px 0;
-        border: none;
-        position: relative;
-    }
+  .user-table td {
+    text-align: left;
+    padding: 8px 0;
+    position: relative;
+    border: none;
+  }
 
-    .userscontainer .user-table td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-        color: #555;
-    }
+  .user-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+  }
 
-    .userscontainer .view-btn,
-    .userscontainer .update-btn,
-    .userscontainer .delete-btn {
-        width: 100%;
-        margin: 4px 0;
-    }
+  .view-btn,
+  .update-btn,
+  .delete-btn {
+    width: 100%;
+    margin: 4px 0;
+  }
 }

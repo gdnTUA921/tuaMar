@@ -17,14 +17,21 @@ function UserProfile() {
   const [userReviewData, setUserReviewData] = useState([]);
 
   const navigate = useNavigate();
-  const { userId: sellerId } = useParams();
+  const { userName: userName } = useParams();
 
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
 
+  
+  //New state for large image viewing modal
+  const [showEnlargeImg, setShowEnlargeImg] = useState(false);
+  const [enlargedImg, setEnlargeImg] = useState("");
+
 
   useEffect(() => {
   const fetchData = async () => {
+
+    console.log(userName);
 
     try {
       // Fetching session
@@ -39,7 +46,7 @@ function UserProfile() {
         return;
       }
 
-      if (sellerId == sessionData.user_id) {
+      if (userName == sessionData.full_name) {
         navigate("/myProfile");
         return;
       }
@@ -51,27 +58,31 @@ function UserProfile() {
         fetch(`${ip}/tua_marketplace/fetchUserProfileDeets.php`, {
           method: "POST",
           credentials: "include",
-          body: JSON.stringify({ user_id: sellerId }),
+          body: JSON.stringify({ user_name: userName }),
         }),
         fetch(`${ip}/tua_marketplace/fetchUserProfileItems.php`, {
           method: "POST",
           credentials: "include",
-          body: JSON.stringify({ user_id: sellerId }),
+          body: JSON.stringify({ user_name: userName }),
         }),
       ]);
 
       const profileData = await profileRes.json();
       const itemsData = await itemsRes.json();
 
-  
-      setUserData(profileData);
-      setItem(itemsData);
-
+      if (profileData.user_id == null){
+       navigate("/error404", {replace: true});
+      }
+      else{
+        setUserData(profileData);
+        setItem(itemsData);
+      }
+      
 
       //Step 5: Fetch user review data
       const reviewDataRes = await fetch(`${ip}/tua_marketplace/fetchUserReviewData.php`, {
         method: "POST",
-        body: JSON.stringify({user_id: sellerId}),
+        body: JSON.stringify({user_id: profileData.user_id}),
       });
 
       const reviewData = await reviewDataRes.json();
@@ -86,7 +97,7 @@ function UserProfile() {
   };
 
   fetchData();
-}, [sellerId, activeTab]);
+}, [userName, activeTab]);
 
   
 
@@ -279,8 +290,8 @@ else{
               {userReviewData.length > 0 ? (userReviewData.map((rev) => (
                   <div className='reviewCard' key={rev.reviewer_id}>
                     <div className="profile-reviews">
-                      <Link to={`/userProfile/${rev.reviewer_id}`} className="sellerLink"><img src={rev.profile_pic || "tua-mar-profile-icon.jpg"} alt="Profile Photo" /></Link>
-                      <p><Link to={`/userProfile/${rev.reviewer_id}`} className="sellerLink">{rev.userName}</Link></p>
+                      <Link to={`/userProfile/${rev.userName}`} className="sellerLink"><img src={rev.profile_pic || "tua-mar-profile-icon.jpg"} alt="Profile Photo" /></Link>
+                      <p><Link to={`/userProfile/${rev.userName}`} className="sellerLink">{rev.userName}</Link></p>
                       <p>&#x2022;&nbsp;Review from {rev.reviewer_status}</p>
                       <p>{new Date(rev.time_stamp).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</p>
                     </div>
@@ -297,7 +308,7 @@ else{
 
                     <div className="review-images">
                       {rev.images && rev.images.length > 0 ? (rev.images.map((img, index) => (       
-                          <img key={index} src={img} className="review-image" />
+                          <img key={index} src={img} className="review-image" onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(img)}}/>
                       ))) : ("")}
                     </div>
                   
@@ -307,6 +318,24 @@ else{
                 ))
               ) : (<div className="no-reviews">No reviews for&nbsp;<span className="spanName">{userData.first_name + " " + userData.last_name}.</span>&nbsp;</div>)}
           </div>
+
+          
+          {/* View Image Modal For Review Pics*/}
+          {showEnlargeImg && (
+            <div className="image-preview-overlay">
+              <div className="image-preview-container">
+                <div className="image-preview-header">
+                  <h3></h3>
+                  <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
+                    ×
+                  </button>
+                </div>
+                <div className="image-preview-content">
+                  <img src={enlargedImg} alt="Preview" className="popup-preview-image" />
+                </div>
+              </div>
+            </div>
+          )}
 
 
             {/* Settings Tab */}

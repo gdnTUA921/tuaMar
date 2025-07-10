@@ -8,25 +8,43 @@ function MyProfile() {
   const [items, setItems] = useState([]);
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
-  useEffect(() => {
   
-    //fetching items posted in the marketplace
-    fetch(`${ip}/tua_marketplace/itemlistingsadmin.php`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Fetched data:', data); // Log the data to see the structure
-        if (Array.isArray(data)) {
-          setItems(data);
+  const [numLikes, setNumLikes] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch item listings
+        const itemRes = await fetch(`${ip}/tua_marketplace/itemlistingsadmin.php`);
+        const itemData = await itemRes.json();
+
+        if (Array.isArray(itemData)) {
+          setItems(itemData);
+          console.log(itemData);
         } else {
-          console.error('Fetched data is not an array:', data);
+          console.error('Fetched data is not an array:', itemData);
           setItems([]);
         }
-      })
-      .catch((error) => {
+
+        // Fetch like count (add handling logic as needed)
+        const likeCountRes = await fetch(`${ip}/tua_marketplace/fetchLikeCount.php`, {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify({ myListings: itemData }),
+        });
+
+        const likeCounts = await likeCountRes.json();
+        setNumLikes(likeCounts);
+
+      } catch (error) {
         console.error("Error fetching data:", error);
-        setItems([]); // Fallback to an empty array
-      });
-    }, []);
+        setItems([]);
+      }
+    };
+
+    fetchData(); // Call the async function
+  }, [ip]); // Include `ip` in dependencies if it’s a dynamic variable
+
 
   // Filter items based on search input
   const filteredItems = items.filter((item) =>
@@ -99,6 +117,15 @@ const handleDelete = async (itemId) => {
                 {filteredItems.length > 0 ? (
                   filteredItems.map((item) => (
                     <div className="itemCard" key={item.id}>
+                      <div className="soldBanner" style={{display: item.status == "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
+                        SOLD
+                      </div>
+                       <div className="reservedBanner" style={{display: item.status == "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
+                        RESERVED
+                      </div>
+                       <div className="reviewBanner" style={{display: item.status == "IN REVIEW" ? "block" : "none"}}> {/*set this up if item is considered UNDER REVIEW*/}
+                        IN REVIEW
+                      </div>
                       <img
                         src={item.preview_pic}
                         style={{
@@ -116,7 +143,7 @@ const handleDelete = async (itemId) => {
                         </div>
                         <p>&#8369;{item.price}</p>
                         <i className="bi bi-heart-fill heart"></i>
-                        <p><b>0</b></p>
+                        <p><b>{numLikes[item.item_id]}</b></p>
                         <p>&#x2022; {item.item_condition}</p>
                         <button className="listButton" onClick={() => handleDelete(item.item_id)}> DELETE LISTING </button>
                         <button className="listButton" onClick={() => handleViewDetails(item)}> VIEW DETAILS</button>
@@ -150,7 +177,7 @@ const handleDelete = async (itemId) => {
               }
               alt="Preview"
               onError={(e) => (e.target.src = "/default-image.jpg")}
-              style={{ width: 80, height: 80, borderRadius: 8, objectFit: "cover" }}
+              style={{ width: 80, height: 80, borderRadius: 8, objectFit: "cover", padding: 0}}
             />
             <div>
               <strong>{selectedItem.item_name}</strong>
@@ -189,6 +216,7 @@ const handleDelete = async (itemId) => {
                     objectFit: "cover",
                     borderRadius: 6,
                     flexShrink: 0,
+                    padding: 0
                   }}
                 />
               ))}

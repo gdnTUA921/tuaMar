@@ -1,0 +1,253 @@
+.recommend-container{
+    overflow: hidden;
+}
+
+.recomm-flexcon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.recommend-container h1{
+    padding-left: 10px;
+    font-size: 25px;
+}
+
+.recomm-listingCard{
+    position: relative;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.recomm-listingCard::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.recomm-items{
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    height: auto;
+}
+
+.recomm-itemCard{
+    display: block;
+    border-radius: 7px;
+    border: 1px solid #ddd;
+    margin: 20px 5px 25px 15px;
+    padding: 30px;
+    padding-top: 30px;
+    padding-bottom: 25px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+    height: auto;
+    font-family: Arial;
+    font-size: 16px;
+    background-color: white;
+}
+
+.recomm-itemCard img{
+    object-fit: cover;
+    padding: 0;
+}
+
+.recomm-itemCard h3{
+    margin-top: 25px;
+}
+
+.recomm-itemCard:hover{
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.7);
+}
+
+.recomm-itemDeets{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.recomm-itemDeets h3{
+    font-size: 15px;
+}
+
+.recomm-price-condition{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.recomm-itemDeets p:nth-of-type(1){
+    position: absolute;
+    translate: 200px 7px;
+    font-size: 18px;
+}
+
+.recomm-price-condition{
+    position: relative;
+    display: flex;
+    gap: 50px;
+}
+
+
+.recomm-itemTitle{
+    width: 140px;
+    padding: 0;
+}
+
+.recomm-itemTitle h3{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    line-clamp: 2; /* optional for future compatibility */
+    max-height: 3em; /* approximate height for 2 lines, depending on font-size/line-height */
+}
+
+.recomm-item-details-link{
+    text-decoration: none;
+    color: black;
+}
+
+.recomm-item-details-link:hover{
+    color: green;
+}
+
+.recomm-listButtons{
+    position: absolute;
+    display: flex;
+    gap: 100px;
+    margin-top: 40px;
+    margin-left: 100px;  
+}
+
+.recomm-listButtons .recomm-heart{
+    width: 23px;
+    height: 23px;
+    position: absolute;
+    translate: 48px -17px;
+    color: #547B3E;
+}
+
+.recomm-heart:hover{
+    cursor: pointer;
+}
+
+.recomm-listButtons .recomm-browse-flag{
+    margin-left: 75px;
+    margin-top: -16px;
+    text-decoration: none;
+    color: black;
+}
+
+.recomm-listButtons .recomm-browse-flag:hover{
+    color: red;
+    fill: red;
+}
+
+.recomm-itemSeller{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    justify-content: left;
+    margin-top: 15px;
+    margin-left: 5px;
+}
+
+.recomm-itemSeller img{
+    border-radius: 50%;
+    border: 2px solid grey;
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    padding: 0;
+    
+}
+
+.recomm-itemSeller p{
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.recomm-sellerLink{
+    text-decoration: none;
+    color: black;
+}
+
+.recomm-sellerLink:hover{
+    color: green;
+}
+
+
+.recomm-scroll-controls {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin: 5px;
+  z-index: 1;
+}
+
+.scroll-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: green;
+  border: none;
+  padding: 12px;
+  width: 50px;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.scroll-button:hover {
+  background-color: #ccc;
+}
+
+.scroll-button.left {
+  margin-right: auto;
+}
+
+.scroll-button.right {
+  margin-left: auto;
+}
+
+.recommend-title{
+   display: flex;
+}
+
+.pointing-hand {
+  display: inline-block;
+  margin-left: -20px;
+  margin-top: 10px;
+  animation: slide-left-right 1s ease-in-out infinite;
+}
+
+
+@keyframes slide-left-right {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-13px); /* Moves to the left */
+  }
+}
+
+
+@media (max-width: 768px){
+
+    .recomm-flexcon{
+        gap: 5px;
+    }
+
+    .scroll-button{
+        font-size: 12px;
+        width: 40px;
+    }
+
+    .recomm-itemCard{
+        margin-left: 0;
+        margin-right: 20px;
+    }
+}

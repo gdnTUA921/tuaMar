@@ -53,6 +53,7 @@
     height: auto;
     font-family: Arial;
     font-size: 16px;
+    position: relative;
     
 }
 
@@ -149,4 +150,106 @@
     font-size: 14px;
     width: 100%;
     border-radius: 8px;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4); /* dimmed background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+
+.popup-overlay .popup-content {
+  position: relative; /* required for .close-btn positioning */
+  padding: 20px;
+  padding-top: 40px; /* extra space for the close button */
+  background: #fff;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.popup-overlay .close-btn {
+  position: absolute;
+  top: 20px;
+  width: 32px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-overlay .close-btn:hover {
+  color: yellow;
+}
+
+
+.admin-listing-wrapper .soldBanner{
+    background-color: green;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 10px;
+    height: 18px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    font-weight: bold;
+    color: white;
+    width: 162px;
+    translate: 2px 156px;
+    position: absolute;
+    font-size: 14px;
+}
+
+.admin-listing-wrapper .reservedBanner{
+    background-color: purple;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 5px;
+    padding-left: 10px;
+    height: 18px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: 1px solid green;
+    border-right: 1px solid green;
+    border-bottom: 1px solid green;
+    font-weight: bold;
+    color: white;
+    width: 165px;
+    translate: 2px 154px;
+    position: absolute;
+    font-size: 14px;
+}
+
+.admin-listing-wrapper .reviewBanner{
+    background-color: #FFDB58;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding: 5px 5px;
+    padding-left: 10px;
+    height: 18px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left: 1px solid green;
+    border-right: 1px solid green;
+    border-bottom: 1px solid green;
+    font-weight: bold;
+    color: black;
+    width: 165px;
+    translate: 2px 154.5px;
+    position: absolute;
+    font-size: 14px;
 }

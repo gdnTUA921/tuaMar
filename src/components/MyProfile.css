@@ -436,10 +436,12 @@ button:hover{
     position: absolute;
     translate: 48px -17px;
     color: #547B3E;
+    transition: transform 0.2s ease;
 }
 
 .listButtons .heart:hover{
     cursor: pointer;
+    transform: scale(1.1);
 }
 
 .listButtons .browse-flag{
@@ -711,6 +713,105 @@ button:hover{
 
 .sellerLink:hover{
     color: green;
+}
+
+
+/* Overlay Background */
+.image-preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+/* Modal Container */
+.image-preview-container {
+  background-color: white;
+  border-radius: 15px;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 750px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header of Modal */
+.image-preview-header {
+  background-color: #547B3E;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image-preview-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Close Button */
+.close-preview-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.close-preview-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Content */
+.image-preview-content {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa;
+  flex: 1;
+  height: 90vh;
+}
+
+/* Image Display */
+.popup-preview-image {
+  width: 100%;
+  max-width: 90vh;
+  max-height: 75vh;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+  padding-left: 0;
+}
+
+/* Optional Actions Section (not in your JSX yet) */
+.image-preview-actions {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
 }
 
 
@@ -1065,6 +1166,20 @@ button:hover{
 
     .settingsCard td:first-child {
         width: 120px; /* Adjust as needed */
+    }
+
+    .image-preview-container {
+        width: 98vw;
+        max-height: 90vh;
+    }
+
+    .popup-preview-image {
+        max-height: 250px;
+    }
+
+    .image-preview-actions {
+        flex-direction: column;
+        gap: 8px;
     }
 
 }

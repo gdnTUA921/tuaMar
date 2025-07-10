@@ -69,7 +69,7 @@ export default function UserListingsPopup({ listings, onClose }) {
             <img
               src={first.profile_pic}
               alt="Profile"
-              style={{ width: 50, height: 50, borderRadius: '50%', marginRight: 10 }}
+              style={{ width: 50, height: 50, borderRadius: '50%', marginRight: 10, padding: 0}}
             />
             <span style={{ fontWeight: 'bold' }}>
               {first.first_name} {first.last_name}
@@ -103,7 +103,7 @@ export default function UserListingsPopup({ listings, onClose }) {
                   <img
                     src={item.images[0]}
                     alt="Item"
-                    style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 6 }}
+                    style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 6, padding: 0}}
                   />
                   <div>
                     <strong>{item.item_name}</strong><br />
@@ -135,7 +135,8 @@ export default function UserListingsPopup({ listings, onClose }) {
                               height: 100,
                               objectFit: 'cover',
                               borderRadius: 6,
-                              flexShrink: 0
+                              flexShrink: 0, 
+                              padding: 0
                             }}
                           />
                         ))}

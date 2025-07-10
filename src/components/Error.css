@@ -1,0 +1,101 @@
+.error-container {
+  box-sizing: border-box;
+  position: relative; /* Needed for ::before background */
+  padding: 35px;
+  color: #333;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Prevent scrollbars if content goes outside */
+}
+
+.error-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0; 
+  width: 100%; 
+  height: 100%;  
+  background-image: url(https://www.tua.edu.ph/wp-content/uploads/2017/12/1-845x650.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5;
+  filter: brightness(50%) contrast(120%);
+  z-index: -1;
+}
+
+.error-container-inside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  background-color: white;
+  padding: 35px;
+  border-radius: 12px;
+  width: 50%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.error-image {
+  width: 150px;
+  height: 150px;
+}
+
+.error-heading-1 {
+  font-size: 3.5rem;
+  margin: 25px 0 0;
+}
+
+.error-heading-2 {
+  font-size: 2rem;
+  margin: 0 0 20px;
+}
+
+.error-message {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.error-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.error-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #247327;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+  width: 150px;
+}
+
+.error-button:hover {
+  background-color: #039408;
+  color: yellow;
+}
+
+@media (max-width: 850px){
+
+    .error-image{
+        width: 120px;
+        height: 120px;
+    }
+
+    .error-buttons{
+        flex-direction: column;
+    }
+
+    .error-button{
+        width: 100%;
+    }
+}

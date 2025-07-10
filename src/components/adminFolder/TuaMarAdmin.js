@@ -178,6 +178,11 @@ export default function Admin() {
 
 
     const handlePasswordUpdate = () => {
+
+      console.log(email)
+      console.log(oldPassword);
+      console.log(newPassword);
+
       if (newPassword !== confirmPassword) {
         Swal.fire("Error", "New passwords do not match", "error");
         return;

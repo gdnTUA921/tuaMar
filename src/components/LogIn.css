@@ -79,9 +79,25 @@ body {
 
 .logInTitle {
     padding-left: 0;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid black;
+    animation: typing 4s steps(20, end) infinite, blink 0.7s step-end infinite;
+    font-family: monospace;
     margin-top: 5px;
     text-align: center;
     font-size: 3vh;
+  
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 28ch; } 
+}
+
+@keyframes blink {
+  50% { border-color: green; }
 }
 
 .logInForm {
@@ -331,7 +347,7 @@ body {
     }
 
     .logInTitle{
-        font-size: 3.5vh;
+        font-size: 3vh;
         text-align: center;
     }
 
@@ -412,7 +428,7 @@ body {
     }
 
     .logInTitle {
-        font-size: 3vh !important;
+        font-size: 2.2vh !important;
         text-align: center;
     }
 
@@ -451,10 +467,6 @@ body {
     .logInLogo {
         width: 120px;
         height: 120px;
-    }
-
-    .logInTitle {
-       font-size: 2.5vh !important;
     }
 
     .googleLogIn, .adminLogIn {
