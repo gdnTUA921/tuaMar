@@ -1,13 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import "./Reports.css";
+
+const PrintableContent = React.forwardRef(({ report }, ref) => (
+  <div ref={ref} className="printable-content">
+    <h2>Report Description</h2>
+    <p>{report.description}</p>
+  </div>
+));
 
 export default function Reports() {
   const [reports, setReports] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [editingId, setEditingId] = useState(null);
-  const [popupContent, setPopupContent] = useState("");
+  const [popupContent, setPopupContent] = useState({});
   const [showPopup, setShowPopup] = useState(false);
+
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    documentTitle: `Report_${popupContent.id}`,
+  });
 
   useEffect(() => {
     fetch("http://localhost/tua_marketplace/fetch_reports.php")
@@ -34,26 +48,16 @@ export default function Reports() {
 
     fetch("http://localhost/tua_marketplace/update_report_status.php", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        report_id: id,
-        status: newStatus,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ report_id: id, status: newStatus }),
     })
       .then((res) => res.json())
-      .then((data) => {
-        console.log("Server response:", data);
-        // ✅ Show confirmation
-        alert(`Remarks updated to "${newStatus}"`);
-      })
+      .then((data) => alert(`Remarks updated to "${newStatus}"`))
       .catch((err) => {
         console.error("Update failed:", err);
         alert("Failed to update remarks. Please try again.");
       });
   };
-
 
   const sortedReports = [...reports].sort((a, b) => {
     if (sortBy === "date") return new Date(a.date) - new Date(b.date);
@@ -62,11 +66,10 @@ export default function Reports() {
     return 0;
   });
 
- const filteredReports = sortedReports.filter((report) =>
-  report.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  report.id.toString().includes(searchTerm)
-);
-
+  const filteredReports = sortedReports.filter((report) =>
+    report.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    report.id.toString().includes(searchTerm)
+  );
 
   return (
     <div className="reports-container">
@@ -80,7 +83,7 @@ export default function Reports() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <label> SORT BY: </label>
+        <label>SORT BY:</label>
         <select
           onChange={(e) => setSortBy(e.target.value)}
           className="sort-dropdown"
@@ -113,7 +116,7 @@ export default function Reports() {
                   <button
                     className="view-btn"
                     onClick={() => {
-                      setPopupContent(report.description);
+                      setPopupContent(report);
                       setShowPopup(true);
                     }}
                   >
@@ -124,16 +127,14 @@ export default function Reports() {
                   {editingId === report.id ? (
                     <select
                       value={report.status}
-                      onChange={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleStatusChange(report.id, e.target.value);
-                      }}
+                      onChange={(e) =>
+                        handleStatusChange(report.id, e.target.value)
+                      }
                       onBlur={() => setEditingId(null)}
                     >
-                      <option value="RESOLVED">RESOLVED</option>
-                      <option value="PENDING">PENDING</option>
-                      <option value="DISMISSED">DISMISSED</option>
+                      <option value="Resolved">Resolved</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Dismissed">Dismissed</option>
                     </select>
                   ) : (
                     <span
@@ -150,18 +151,21 @@ export default function Reports() {
         </table>
       </div>
 
-      {/* Popup Modal */}
+      {/* Printable content always in DOM */}
+      <PrintableContent ref={componentRef} report={popupContent} />
+
       {showPopup && (
         <div className="popup-overlay" onClick={() => setShowPopup(false)}>
-          <div
-            className="popup-modal"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="popup-modal" onClick={(e) => e.stopPropagation()}>
             <span className="popup-close" onClick={() => setShowPopup(false)}>
               &times;
             </span>
             <h2>Report Details</h2>
-            <p>{popupContent}</p>
+            <p>{popupContent.description}</p>
+
+            <button className="popup-button" onClick={() => window.print()}>
+              🖨️ Print
+            </button>
             <button className="popup-button" onClick={() => setShowPopup(false)}>
               Close
             </button>

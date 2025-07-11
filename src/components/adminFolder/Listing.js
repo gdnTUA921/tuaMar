@@ -112,7 +112,7 @@ const handleDelete = async (itemId) => {
                   placeholder="Search items..."
                 />
               </div>
-
+              
               <div className="items">
                 {filteredItems.length > 0 ? (
                   filteredItems.map((item) => (
@@ -141,10 +141,16 @@ const handleDelete = async (itemId) => {
                         <div className="itemTitle">
                           <h3>{item.item_name}</h3>
                         </div>
-                        <p>&#8369;{item.price}</p>
-                        <i className="bi bi-heart-fill heart"></i>
-                        <p><b>{numLikes[item.item_id]}</b></p>
-                        <p>&#x2022; {item.item_condition}</p>
+
+                        <i className="bi bi-heart-fill heart1"></i>
+                        <p className="heartCount1">{numLikes[item.item_id]}</p>
+                        
+                        <div className="price-condition">
+                          <p></p>
+                          <p>&#8369;{item.price}</p>
+                          <p>&#x2022; {item.item_condition}</p>
+                        </div>
+                        
                         <button className="listButton" onClick={() => handleDelete(item.item_id)}> DELETE LISTING </button>
                         <button className="listButton" onClick={() => handleViewDetails(item)}> VIEW DETAILS</button>
                       </div>

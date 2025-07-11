@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
-  FaTachometerAlt, FaUsers, FaChartBar, FaList,
-  FaUserPlus, FaCog, FaUser, FaChevronLeft, FaChevronRight, FaEye
-} from "react-icons/fa";
+  FaUsers, FaChartBar, FaList,
+  FaUserPlus, FaUser, FaChevronLeft, FaChevronRight, FaEye,
+  FaEyeSlash
+} from "react-icons/fa6";
+import { FaTachometerAlt, FaCog } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import "./TuaMarAdmin.css";
 import Reports from "./Reports.js";
@@ -50,7 +52,7 @@ export default function Admin() {
   // for Sidebar
   const [active, setActive] = useState("Dashboard");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [showDashboard, setShowdashboards] = useState(true);
   const [showRegistration, setShowRegistration] = useState(false);
@@ -65,7 +67,7 @@ export default function Admin() {
   { name: "Users", icon: <FaUsers /> },
   { name: "Reports", icon: <FaChartBar /> },
   { name: "Listings", icon: <FaList /> },
-  { name: "PendingListings", icon: <FaList /> },
+  { name: "Pending Listings", icon: <FaList /> },
   { name: "Settings", icon: <FaCog /> }
 ];
 
@@ -78,7 +80,7 @@ export default function Admin() {
     setShowReports(itemName === "Reports"); // Handle Reports UI visibility
     setShowlistings(itemName === "Listings");
     setShowMembers(itemName === "Users");
-    setShowPendingListings(itemName === "PendingListings");
+    setShowPendingListings(itemName === "Pending Listings");
     
   };
 
@@ -176,6 +178,10 @@ export default function Admin() {
 
   }
 
+  //For Password Update
+    const [showOldPass, setShowOldPass] = useState(false);
+    const [showNewPass, setShowNewPass] = useState(false);
+    const [showConfirmPass, setShowConfirmPass] = useState(false);
 
     const handlePasswordUpdate = () => {
 
@@ -269,6 +275,7 @@ export default function Admin() {
   }, []);
 
 
+
   return (
     <div>
       <header>
@@ -278,6 +285,7 @@ export default function Admin() {
                 alt="TUA Logo" 
                 />
         </div>
+        <div className="menuBurger-admin" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>&#9776;</div>
         <h1 className="headerTitle">TUA Marketplace</h1>
 
         <div className="brand-container">
@@ -318,41 +326,74 @@ export default function Admin() {
           </nav>
 
           <main className="content"> 
-            {showSettings ? (
-              <div className="backgroundsettingscontainer">
-                <div className="settings-container">
-                  <h1>ADMIN SETTINGS</h1>
-                  <div className="settings-box">
+          {showSettings ? (
+            <div className="backgroundsettingscontainer">
+              <div className="settings-container">
+                <h1>ADMIN SETTINGS</h1>
+                <div className="settings-box">
+                  <div className="email-display">
                     <p><strong>Email:</strong> {email || "Loading..."}</p>
-                    <h3>Change Password:</h3>
+                  </div>
+                  
+                  <div className="password-section">
+                    <h3>Change Password</h3>
+                    
                     <div className="password-field">
                       <label>Enter Old Password:</label>
                       <div className="input-group">
-                        <input type="password" placeholder="Enter Old Password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)}/>
+                        <input 
+                          type = {!showOldPass? "password" : "text"}
+                          placeholder="Enter Old Password" 
+                          value={oldPassword} 
+                          onChange={(e) => setOldPassword(e.target.value)}
+                        />
+                        <div className="eye-icon" onClick={() => {setShowOldPass(!showOldPass)}}>
+                          {!showOldPass ? <FaEye/> : <FaEyeSlash/>}
+                        </div>
                       </div>
                     </div>
+
                     <div className="password-field">
                       <label>Enter New Password:</label>
                       <div className="input-group">
-                        <input type="password" placeholder="Enter New Password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}/>
+                        <input 
+                          type = {!showNewPass? "password" : "text"}
+                          placeholder="Enter New Password" 
+                          value={newPassword} 
+                          onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                        <div className="eye-icon" onClick={() => {setShowNewPass(!showNewPass)}}>
+                          {!showNewPass ? <FaEye/> : <FaEyeSlash/>}
+                        </div>
                       </div>
                     </div>
+
                     <div className="password-field">
                       <label>Confirm New Password:</label>
                       <div className="input-group">
-                        <input type="password" placeholder="Confirm New Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                        <input 
+                          type = {!showConfirmPass? "password" : "text"}
+                          placeholder="Confirm New Password" 
+                          value={confirmPassword} 
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        <div className="eye-icon" onClick={() => {setShowConfirmPass(!showConfirmPass)}}>
+                          {!showConfirmPass ? <FaEye/> : <FaEyeSlash/>}
+                        </div>
                       </div>
                     </div>
-                    <button className="update-btn" onClick={handlePasswordUpdate}>UPDATE</button>
+
+                    <button className="update-btn" onClick={handlePasswordUpdate}>
+                      UPDATE PASSWORD
+                    </button>
                   </div>
                 </div>
               </div>
-            ) : showDashboard ? (
+            </div>
+          ) : showDashboard ? (
               <div className="dashboard-container">
                 <h1>Dashboard</h1>
-                <div className="filter-container">
-                  <label></label>
-                </div>
+
                 <div className="stats-section">
                   <div className="stat-box">
                     <FaUsers className="stat-icon" />
@@ -372,10 +413,14 @@ export default function Admin() {
                   </div>
                 </div>
                 <div className="chart-container">
-                  <h3>Users by College</h3>
-                  <UsersByCollegeChart data={collegeData} />
-                  <h3>Items by Category</h3>
-                  <ItemsByCategoryChart data={itemCategoryData} />
+                  <div class="usersChart">
+                    <h3 >Users by College</h3>
+                    <UsersByCollegeChart data={collegeData} />
+                  </div>
+                  <div class="categoryChart">
+                    <h3>Items by Category</h3>
+                    <ItemsByCategoryChart data={itemCategoryData} />
+                  </div>
                 </div>
               </div>
             ) : showRegistration ? (
