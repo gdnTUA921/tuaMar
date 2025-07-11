@@ -290,7 +290,7 @@ export default function Admin() {
 
         <div className="brand-container">
           <div className="admin-menu">
-          <button className="admin-button" onClick={() => setDropdownOpen(!dropdownOpen)}>
+          <button className="admin-button" onClick={() => {console.log("hello"); setDropdownOpen(!dropdownOpen);}}>
             <FaUser/>Admin
           </button>
           {dropdownOpen && (
