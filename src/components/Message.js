@@ -508,7 +508,7 @@ function Message() {
     })
     .then ((res) => res.json())
     .then ((data) => {
-      if (data.message == "No Reviews Yet"){
+      if (data.message === "No Reviews Yet"){
         navigate("/Reviewmod", {
           state: {
             passedID: itemId,

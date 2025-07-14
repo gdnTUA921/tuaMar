@@ -36,7 +36,11 @@ function EditListing() {
   const handleConditionChange = (e) => setCondition(e.target.value);
   const handleDescChange = (e) => setDescription(e.target.value);
 
-  const handleImagesFromChild = (imageData) => setImages(imageData);
+  const handleImagesFromChild = (imageData) => {
+    console.log('Images received from child:', imageData);
+    setImages(imageData);
+  };
+  
   const goBack = () => navigate("/myProfile");
 
   useEffect(() => {
@@ -52,12 +56,19 @@ function EditListing() {
   }, [ip, navigate]);
 
   useEffect(() => {
+    console.log('EditListing useEffect triggered. ItemId:', itemId);
+    
     fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
       method: "POST",
       body: JSON.stringify({ item_id: itemId }),
     })
       .then((res) => res.json())
-      .then((pics) => setListingPics(pics.map((p) => p.image)))
+      .then((pics) => {
+        console.log('Fetched pics from database:', pics);
+        const imageUrls = pics.map((p) => p.image);
+        console.log('Image URLs:', imageUrls);
+        setListingPics(imageUrls);
+      })
       .catch((err) => console.error("Pics fetch error:", err));
 
     fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
@@ -66,6 +77,7 @@ function EditListing() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log('Fetched item details:', data);
         setItemName(data.itemName);
         setPrice(data.price);
         setCategory(data.category);
@@ -73,7 +85,7 @@ function EditListing() {
         setDescription(data.description);
       })
       .catch((err) => console.error("Item fetch error:", err));
-  }, [itemId]);
+  }, [itemId, listingName, ip]);
 
   const deleteImageByUrl = async (url) => {
     try {
@@ -92,19 +104,57 @@ function EditListing() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate that we have at least one image
+    if (!images || images.length === 0) {
+      MySwal.fire({
+        title: "Error!",
+        text: "Please upload at least one image.",
+        icon: "error",
+        confirmButtonColor: "#547B3E",
+      });
+      return;
+    }
+
     try {
-      for (let oldUrl of listingPics) {
+      // Separate existing URLs from new File objects
+      const existingUrls = [];
+      const newFiles = [];
+
+      images.forEach(image => {
+        if (typeof image === 'string' && image.startsWith('http')) {
+          // This is an existing Firebase URL
+          existingUrls.push(image);
+        } else if (image instanceof File) {
+          // This is a new file to upload
+          newFiles.push(image);
+        }
+      });
+
+      console.log('Existing URLs:', existingUrls);
+      console.log('New files to upload:', newFiles);
+
+      // Delete old images that are no longer in the list
+      const urlsToDelete = listingPics.filter(oldUrl => !existingUrls.includes(oldUrl));
+      console.log('URLs to delete:', urlsToDelete);
+
+      for (let oldUrl of urlsToDelete) {
         await deleteImageByUrl(oldUrl);
       }
 
-      const uploadedUrls = [];
-      for (let file of images) {
+      // Upload new images to Firebase Storage
+      const newUploadedUrls = [];
+      for (let file of newFiles) {
         const imageRef = storageRef(storage, `posted-item-images/${uuidv4()}`);
         await uploadBytes(imageRef, file);
         const url = await getDownloadURL(imageRef);
-        uploadedUrls.push(url);
+        newUploadedUrls.push(url);
       }
 
+      // Combine existing URLs with newly uploaded URLs
+      const allImageUrls = [...existingUrls, ...newUploadedUrls];
+      console.log('Final image URLs:', allImageUrls);
+
+      // Update listing in database
       const res = await fetch(`${ip}/tua_marketplace/updateListing.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -115,7 +165,7 @@ function EditListing() {
           category,
           condition,
           description,
-          images: uploadedUrls,
+          images: allImageUrls,
         }),
         credentials: 'include',
       });
@@ -123,6 +173,7 @@ function EditListing() {
       const result = await res.json();
 
       if (result.message === "Item updated successfully!") {
+        // Update Firebase Realtime Database
         const chatListRef = ref(database, 'chatsList');
         const snapshot = await get(chatListRef);
         if (snapshot.exists()) {
@@ -133,7 +184,7 @@ function EditListing() {
             if (String(val.item_id) === String(itemId)) {
               updates[`/chatsList/${key}/item_name`] = itemName;
               updates[`/chatsList/${key}/item_price`] = Number(price).toFixed(2);
-              updates[`/chatsList/${key}/item_pic`] = uploadedUrls[0];
+              updates[`/chatsList/${key}/item_pic`] = allImageUrls[0];
               updates[`/chatsList/${key}/item_status`] = "IN REVIEW";
             }
           });
@@ -182,8 +233,8 @@ function EditListing() {
           <input type="number" id="price" className="sell-input no-arrows" name="price" min="0" step="0.01" onChange={handlePriceChange} value={price} required />
 
           <label htmlFor="category">Category:</label>
-          <select id="category" className="sell-select" onChange={handleCategoryChange} required>
-            <option value="" disabled selected hidden>Select a Category</option>
+          <select id="category" className="sell-select" onChange={handleCategoryChange} value={category} required>
+            <option value="" disabled hidden>Select a Category</option>
             <option value="Books & Study Materials">Books & Study Materials</option>
             <option value="Electronics">Electronics</option>
             <option value="Furniture & Home Essentials">Furniture & Home Essentials</option>

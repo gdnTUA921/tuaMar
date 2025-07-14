@@ -1,45 +1,75 @@
 import React, { useState } from "react";
 import "./UserListingsPopup.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 export default function UserListingsPopup({ listings, onClose }) {
   const [filterCategory, setFilterCategory] = useState("All");
   const [filterStatus, setFilterStatus] = useState("All");
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [currentListings, setCurrentListings] = useState(listings);
+  const [items, setItems] = useState([]);
+  const MySwal = withReactContent(Swal); // For Alert
 
   const ip = process.env.REACT_APP_LAPTOP_IP;
   const first = listings[0];
+  
 
   const handleDelete = async (itemId) => {
-    const confirmDelete = window.confirm(
-      `Do you really want to delete this listing (ID: ${itemId})?`
-    );
+    const confirmResult = await MySwal.fire({
+      title: `Delete this listing (ID: ${itemId})?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#547B3E",
+      cancelButtonColor: "#d33",
+    });
 
-    if (!confirmDelete) return;
+    if (!confirmResult.isConfirmed) return;
+    const { value: reason } = await MySwal.fire({
+      title: 'Reason for deletion',
+      input: 'text',
+      inputPlaceholder: 'Enter reason...',
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value.trim()) return 'You must provide a reason!';
+      }
+    });
+
+    if (!reason) return; // cancelled or blank
 
     try {
-      const response = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
+      const res = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ item_id: itemId }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item_id: itemId, reason: reason.trim() }),
       });
 
-      const text = await response.text();
-      console.log('Raw response:', text);
-
-      const result = JSON.parse(text);
+      const result = await res.json();
 
       if (result.success) {
-        alert("Listing deleted successfully.");
-        setCurrentListings(prev => prev.filter(item => item.item_id !== itemId));
+        await MySwal.fire({
+          icon: 'success',
+          title: 'Deleted',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        setItems((prev) => prev.filter((i) => i.item_id !== itemId));
       } else {
-        alert("Failed to delete listing: " + result.message);
+        await MySwal.fire({
+          icon: 'error',
+          title: 'Failed to delete listing',
+          text: result.message || 'Unknown error occurred.',
+        });
       }
-    } catch (error) {
-      console.error("Error deleting listing:", error);
-      alert("An error occurred while deleting the listing.");
+    } catch (e) {
+      await MySwal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while deleting the listing.',
+      });
     }
   };
 
@@ -101,7 +131,8 @@ export default function UserListingsPopup({ listings, onClose }) {
               <li key={index} className="listing-item" onClick={() => toggleExpand(index)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <img
-                    src={item.images[0]}
+                    src={item.preview_pic || "/default-image.png"}
+                    onError={(e) => (e.target.src = "/default-image.png")}
                     alt="Item"
                     style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 6, padding: 0}}
                   />
@@ -128,7 +159,8 @@ export default function UserListingsPopup({ listings, onClose }) {
                         {item.images.map((img, i) => (
                           <img
                             key={i}
-                            src={img}
+                            src={img || "/default-image.png"}
+                            onError={(e) => (e.target.src = "/default-image.png")}
                             alt={`preview-${i}`}
                             style={{
                               width: 100,

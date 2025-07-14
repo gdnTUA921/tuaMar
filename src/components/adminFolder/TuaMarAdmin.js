@@ -4,6 +4,7 @@ import {
   FaUserPlus, FaUser, FaChevronLeft, FaChevronRight, FaEye,
   FaEyeSlash
 } from "react-icons/fa6";
+import {FaArchive, FaOutdent} from "react-icons/fa";
 import { FaTachometerAlt, FaCog } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import "./TuaMarAdmin.css";
@@ -11,6 +12,7 @@ import Reports from "./Reports.js";
 import Listings from "./Listing.js";
 import Members from "./Members.js";
 import PendingListing from "./PendingListing.js";
+import ArchivedItems from "./ArchivedItems.js";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import UsersByCollegeChart from './UsersByCollegeChart';
@@ -56,10 +58,11 @@ export default function Admin() {
   const [showSettings, setShowSettings] = useState(false);
   const [showDashboard, setShowdashboards] = useState(true);
   const [showRegistration, setShowRegistration] = useState(false);
-  const [showReports, setShowReports] = useState(false); // New state for Reports UI
+  const [showReports, setShowReports] = useState(false);
   const [showListing, setShowlistings] = useState(false);
   const [showMembers, setShowMembers] = useState(false);
   const [showPendingListing, setShowPendingListings] = useState(false);
+  const [showArchivedItems, setShowArchivedItems] = useState(false);
 
   const menuItems = [
   { name: "Dashboard", icon: <FaTachometerAlt /> },
@@ -67,7 +70,8 @@ export default function Admin() {
   { name: "Users", icon: <FaUsers /> },
   { name: "Reports", icon: <FaChartBar /> },
   { name: "Listings", icon: <FaList /> },
-  { name: "Pending Listings", icon: <FaList /> },
+  { name: "Pending Listings", icon: <FaOutdent /> },
+  { name: "Archived Items", icon: <FaArchive /> },
   { name: "Settings", icon: <FaCog /> }
 ];
 
@@ -77,11 +81,11 @@ export default function Admin() {
     setShowSettings(itemName === "Settings");
     setShowdashboards(itemName === "Dashboard");
     setShowRegistration(itemName === "Registrations");
-    setShowReports(itemName === "Reports"); // Handle Reports UI visibility
+    setShowReports(itemName === "Reports");
     setShowlistings(itemName === "Listings");
     setShowMembers(itemName === "Users");
     setShowPendingListings(itemName === "Pending Listings");
-    
+    setShowArchivedItems(itemName === "Archived Items");
   };
 
 
@@ -290,7 +294,7 @@ export default function Admin() {
 
         <div className="brand-container">
           <div className="admin-menu">
-          <button className="admin-button" onClick={() => {console.log("hello"); setDropdownOpen(!dropdownOpen);}}>
+          <button className="admin-button" onClick={() => setDropdownOpen(!dropdownOpen)}>
             <FaUser/>Admin
           </button>
           {dropdownOpen && (
@@ -488,6 +492,9 @@ export default function Admin() {
           ) :
           showPendingListing ? (
             <PendingListing /> 
+          ) :
+          showArchivedItems ? (
+            <ArchivedItems/> 
           ) : (
             <h2 className="heading">{active}</h2>
           )}

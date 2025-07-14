@@ -482,8 +482,8 @@ button:hover{
 }
 
 .reviewCard > hr {
-    margin-top: 50px;
-    margin-bottom: 20px;
+    margin-top: 40px;
+    margin-bottom: 25px;
     border: none;
     border-top: 2px solid #ccc;
     width: 100%;
@@ -545,7 +545,7 @@ button:hover{
     font-size: 18px;
     margin-left: 50px;
     margin-top: 30px;
-    margin-bottom: 35px;
+    margin-bottom: 0;
 }
 
 .review-images{
@@ -555,6 +555,7 @@ button:hover{
     margin-left: 50px;
     gap: 35px;
     overflow-x: auto;
+    margin-top: 35px;
 }
 
 .review-image{
@@ -750,7 +751,7 @@ button:hover{
   color: white;
   padding: 15px 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
   align-items: center;
 }
 
@@ -1210,8 +1211,24 @@ button:hover{
 
     .profile-reviews p:nth-of-type(1), .profile-reviews p:nth-of-type(2), .profile-reviews p:nth-of-type(3){
         font-size: 16px;
+        margin-left: 90px;
     }
 
+    .profile-reviews{
+        margin-left: 0;
+    }
+
+}
+
+@media (max-width: 350px) {
+    .profile-reviews{
+        margin-left: 0;
+    }
+
+    .profile-reviews p:nth-of-type(1), .profile-reviews p:nth-of-type(2), .profile-reviews p:nth-of-type(3){
+        font-size: 16px;
+        margin-left: 80px;
+    }
 }
 
 @media only screen and (max-height: 375px) {

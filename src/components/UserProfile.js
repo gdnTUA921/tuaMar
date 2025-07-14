@@ -46,7 +46,7 @@ function UserProfile() {
         return;
       }
 
-      if (userName == sessionData.full_name) {
+      if (userName === sessionData.full_name) {
         navigate("/myProfile");
         return;
       }
@@ -228,10 +228,10 @@ else{
                   {filteredItems.length > 0 ? (
                     filteredItems.map((item) => (
                       <div className="itemCard" key={item.item_id}>
-                        <div className="soldBanner" style={{display: item.status == "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
+                        <div className="soldBanner" style={{display: item.status === "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
                           SOLD
                         </div>
-                        <div className="reservedBanner" style={{display: item.status == "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
+                        <div className="reservedBanner" style={{display: item.status === "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
                           RESERVED
                         </div>
                         <Link
@@ -239,7 +239,8 @@ else{
                           className="item-details-link"
                         >
                               <img
-                                  src={item.preview_pic}
+                                  src={item.preview_pic || "/default-image.png"}
+                                  onError={(e) => (e.target.src = "/default-image.png")}
                                   style={{
                                   width: "180px",
                                   height: "180px",
@@ -263,7 +264,7 @@ else{
 
                       <div className="listButtons">
                         <Heart className="heart" onClick={() => toggleLike(item)} fill= {liked[item.item_id] ?'green' : 'none'} color= {liked[item.item_id] ?'green' : 'black'}/>
-                        <Link to="/reportitem"  className="browse-flag" state={{ passedID: item.item_id, previewPic: item.preview_pic, itemName: item.item_name }} style={{display: userId == item.user_id ? "none" : "block"}} >
+                        <Link to="/reportitem"  className="browse-flag" state={{ passedID: item.item_id, previewPic: item.preview_pic, itemName: item.item_name }} style={{display: userId === item.user_id ? "none" : "block"}} >
                           <Flag size={20} />
                         </Link>
                       </div>
@@ -308,7 +309,7 @@ else{
 
                     <div className="review-images">
                       {rev.images && rev.images.length > 0 ? (rev.images.map((img, index) => (       
-                          <img key={index} src={img} className="review-image" onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(img)}}/>
+                          <img key={index} src={img || "/default-image.png"} onError={(e) => (e.target.src = "/default-image.png")} className="review-image" onClick={() => {setShowEnlargeImg(true); setEnlargeImg(img)}}/>
                       ))) : ("")}
                     </div>
                   
@@ -325,7 +326,6 @@ else{
             <div className="image-preview-overlay">
               <div className="image-preview-container">
                 <div className="image-preview-header">
-                  <h3></h3>
                   <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
                     ×
                   </button>

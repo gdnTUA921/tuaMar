@@ -144,7 +144,7 @@ function MyProfile() {
             updateStatus = data.updateStatus;
             message = data.message;
 
-            if (updateStatus == "success") {
+            if (updateStatus === "success") {
 
               if (itemStatus === "Sold"){
                 message = "Congratulations! This item is now marked Sold.";
@@ -384,13 +384,13 @@ function MyProfile() {
                 {filteredItems.length > 0 ? (
                   filteredItems.map((item) => (
                     <div className="itemCard" key={item.item_id}>
-                      <div className="soldBanner" style={{display: item.status == "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
+                      <div className="soldBanner" style={{display: item.status === "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
                         SOLD
                       </div>
-                       <div className="reservedBanner" style={{display: item.status == "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
+                       <div className="reservedBanner" style={{display: item.status === "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
                         RESERVED
                       </div>
-                       <div className="reviewBanner" style={{display: item.status == "IN REVIEW" ? "block" : "none"}}> {/*set this up if item is considered UNDER REVIEW*/}
+                       <div className="reviewBanner" style={{display: item.status === "IN REVIEW" ? "block" : "none"}}> {/*set this up if item is considered UNDER REVIEW*/}
                         IN REVIEW
                       </div>
                       <Link
@@ -398,7 +398,8 @@ function MyProfile() {
                         className="item-details-link"
                       >
                         <img
-                          src={item.preview_pic}
+                          src={item.preview_pic || '/default-image.png'}
+                          onError={(e) => (e.target.src = '/default-image.png')}
                           style={{
                             width: "180px",
                             height: "180px",
@@ -431,9 +432,9 @@ function MyProfile() {
                             <button className="editListButton" onClick={() => navigate("/editListing", {state: { passedID: item.item_id, passedName: item.item_name }})} ><SquarePen/>EDIT</button>
                             <button className="deleteListButton" onClick={() => handleDelete(item.item_id, item.item_name)}><Trash2 color="red"/>DELETE</button>
                         </div>
-                        <button className="reserveButton" onClick={() => handleItemStatus("Reserved", item.item_id)} style={{display: item.status == "AVAILABLE" || item.status == "IN REVIEW" ? "block" : "none"}} disabled={item.status === "IN REVIEW"}>MARK RESERVED</button>
-                        <button className="sold-or-availableButton" onClick={() => handleItemStatus("Sold", item.item_id)} disabled={item.status === "IN REVIEW" || item.status == "SOLD"}>MARK SOLD</button>
-                        <button className="sold-or-availableButton" onClick={() => handleItemStatus("Available", item.item_id)} style={{display: item.status == "SOLD" || item.status == "RESERVED" ? "block" : "none"}}>MARK AVAILABLE</button>
+                        <button className="reserveButton" onClick={() => handleItemStatus("Reserved", item.item_id)} style={{display: item.status === "AVAILABLE" || item.status === "IN REVIEW" ? "block" : "none"}} disabled={item.status === "IN REVIEW"}>MARK RESERVED</button>
+                        <button className="sold-or-availableButton" onClick={() => handleItemStatus("Sold", item.item_id)} disabled={item.status === "IN REVIEW" || item.status === "SOLD"}>MARK SOLD</button>
+                        <button className="sold-or-availableButton" onClick={() => handleItemStatus("Available", item.item_id)} style={{display: item.status === "SOLD" || item.status === "RESERVED" ? "block" : "none"}}>MARK AVAILABLE</button>
                       </div>
                     </div>
                   ))
@@ -467,11 +468,11 @@ function MyProfile() {
                       <p>{rev.reviewText}</p>
                     </div>
 
-                    <div className="review-images">
+                    {rev.images ? <div className="review-images">
                       {rev.images && rev.images.length > 0 ? (rev.images.map((img, index) => (       
-                          <img key={index} src={img} className="review-image" onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(img)}}/>
+                          <img key={index} src={img} className="review-image" onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(img)}} alt="review image"/>
                       ))) : ("")}
-                    </div>
+                    </div> : ""}
                   
 
                     <hr/>
@@ -485,7 +486,6 @@ function MyProfile() {
             <div className="image-preview-overlay">
               <div className="image-preview-container">
                 <div className="image-preview-header">
-                  <h3></h3>
                   <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
                     ×
                   </button>
@@ -603,7 +603,7 @@ function MyProfile() {
 
                       <div className="listButtons">
                         <Heart className="heart" onClick={() => toggleLike(item)} fill= {liked[item.item_id] ?'green' : 'none'} color= {liked[item.item_id] ?'green' : 'black'}/>
-                        <Link to="/reportitem" className="browse-flag" state={{ passedID: item.item_id, previewPic: item.preview_pic, itemName: item.item_name }} style={{display: userId == item.user_id ? "none" : "block"}} >
+                        <Link to="/reportitem" className="browse-flag" state={{ passedID: item.item_id, previewPic: item.preview_pic, itemName: item.item_name }} style={{display: userId === item.user_id ? "none" : "block"}} >
                           <Flag size={20} />
                         </Link>
                       </div>
@@ -614,9 +614,9 @@ function MyProfile() {
                           <p>&#x2022; {item.item_condition}</p>
                         </div>
 
-                      <Link to={userId == item.user_id ? "/myProfile" : `/userProfile/${item.first_name + " " + item.last_name}`} className="sellerLink">
+                      <Link to={userId === item.user_id ? "/myProfile" : `/userProfile/${item.first_name + " " + item.last_name}`} className="sellerLink">
                       <div className="itemSeller">
-                        <img src={item.profile_pic} />
+                        <img src={item.profile_pic} alt="profile pic"/>
                         <p></p>
                         <p>
                           {item.first_name}

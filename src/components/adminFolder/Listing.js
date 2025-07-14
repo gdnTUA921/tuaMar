@@ -1,6 +1,8 @@
 import React, { useState, useEffect} from "react";
 import "./Listing.css";
 import "../MyProfile.css"; 
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 function MyProfile() {
   const [activeTab, setActiveTab] = useState("myListings");
@@ -8,6 +10,8 @@ function MyProfile() {
   const [items, setItems] = useState([]);
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
+
+  const MySwal = withReactContent(Swal); // For Alert
   
   const [numLikes, setNumLikes] = useState([]);
 
@@ -51,38 +55,66 @@ function MyProfile() {
     item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+
 const handleDelete = async (itemId) => {
-  const confirmDelete = window.confirm(
-    `Do you really want to delete this listing (ID: ${itemId})?`
-  );
-
-  if (!confirmDelete) return;
-
-  try {
-    const response = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ item_id: itemId }),
+    const confirmResult = await MySwal.fire({
+      title: `Delete this listing (ID: ${itemId})?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#547B3E",
+      cancelButtonColor: "#d33",
     });
 
-    const text = await response.text();  // Read raw response as text
-    console.log('Raw response:', text);
+    if (!confirmResult.isConfirmed) return;
+    const { value: reason } = await MySwal.fire({
+      title: 'Reason for deletion',
+      input: 'text',
+      inputPlaceholder: 'Enter reason...',
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value.trim()) return 'You must provide a reason!';
+      }
+    });
 
-    const result = JSON.parse(text);      // Parse manually so we can catch errors
+    if (!reason) return; // cancelled or blank
 
-    if (result.success) {
-      alert("Listing deleted successfully.");
-      setItems((prevItems) => prevItems.filter((item) => item.item_id !== itemId));
-    } else {
-      alert("Failed to delete listing: " + result.message);
+    try {
+      const res = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item_id: itemId, reason: reason.trim() }),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        await MySwal.fire({
+          icon: 'success',
+          title: 'Deleted',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        setItems((prev) => prev.filter((i) => i.item_id !== itemId));
+      } else {
+        await MySwal.fire({
+          icon: 'error',
+          title: 'Failed to delete listing',
+          text: result.message || 'Unknown error occurred.',
+        });
+      }
+    } catch (e) {
+      await MySwal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'An error occurred while deleting the listing.',
+      });
     }
-  } catch (error) {
-    console.error("Error deleting listing:", error);
-    alert("An error occurred while deleting the listing.");
-  }
-};
+  };
+
+
   const [selectedItem, setSelectedItem] = useState(null); // for popup
 
   const handleViewDetails = (item) => {
@@ -127,13 +159,15 @@ const handleDelete = async (itemId) => {
                         IN REVIEW
                       </div>
                       <img
-                        src={item.preview_pic}
+                        src={item.preview_pic || "/default-image.png"}
+                        onError={(e) => (e.target.src = "/default-image.png")}
                         style={{
                           width: "180px",
                           height: "180px",
                           border: "3px solid green",
                           borderRadius: "12px",
                           alignItems: "center",
+                          objectFit: "cover",
                         }}
                         alt="Item"
                       />
@@ -179,10 +213,10 @@ const handleDelete = async (itemId) => {
             <img
               src={
                 selectedItem.preview_pic ||
-                (selectedItem.images?.[0] ?? "/default-image.jpg")
+                (selectedItem.images?.[0] ?? "/default-image.png")
               }
               alt="Preview"
-              onError={(e) => (e.target.src = "/default-image.jpg")}
+              onError={(e) => (e.target.src = "/default-image.png")}
               style={{ width: 80, height: 80, borderRadius: 8, objectFit: "cover", padding: 0}}
             />
             <div>
@@ -214,7 +248,8 @@ const handleDelete = async (itemId) => {
               {selectedItem.images.map((img, i) => (
                 <img
                   key={i}
-                  src={img}
+                  src={img || "/default-image.png"}
+                  onError={(e) => (e.target.src = "/default-image.png")}
                   alt={`img-${i}`}
                   style={{
                     width: 100,

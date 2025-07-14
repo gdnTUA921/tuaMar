@@ -9,11 +9,18 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
   const hasInitialized = useRef(false);
 
   useEffect(() => {
+    console.log('DragNdrop useEffect triggered. Initial images:', initialImages);
+    console.log('Has initialized:', hasInitialized.current);
+    
     if (initialImages.length > 0 && !hasInitialized.current) {
+      console.log('Setting initial images directly as URLs...');
+      
+      // Store URLs directly, we'll handle them differently in the parent component
       setFiles(initialImages);
+      onImagesChange(initialImages);
       hasInitialized.current = true;
     }
-  }, [initialImages]);
+  }, [initialImages, onImagesChange]);
 
   const handleChange = (selectedFiles) => {
     let filesArray = [];
@@ -42,6 +49,9 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
     onImagesChange(updatedFiles);
   };
 
+  const isFileObject = (item) => item instanceof File;
+  const isUrl = (item) => typeof item === 'string' && item.startsWith('http');
+
   return (
     <div className="drag-n-drop-container">
       <div className="preview-container">
@@ -55,8 +65,19 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
           </div>
         ) : (
           files.map((file, index) => {
-            const isFile = file instanceof File;
-            const previewSrc = isFile ? URL.createObjectURL(file) : file;
+            let previewSrc;
+            let title;
+
+            if (isFileObject(file)) {
+              previewSrc = URL.createObjectURL(file);
+              title = file.name;
+            } else if (isUrl(file)) {
+              previewSrc = file;
+              title = `Existing Image ${index + 1}`;
+            } else {
+              console.error('Unknown file type:', file);
+              return null;
+            }
 
             return (
               <div key={index} className="preview-box">
@@ -64,7 +85,7 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
                   src={previewSrc}
                   alt={`Preview ${index}`}
                   className="preview-image"
-                  title={isFile ? file.name : `Image ${index + 1}`}
+                  title={title}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

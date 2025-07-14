@@ -3,7 +3,6 @@
   import { Link, useNavigate } from "react-router-dom";
   import { Heart, Flag } from "lucide-react";
   import LoaderPart from './LoaderPart';
-  import { display } from '@mui/system';
 
 
   function Recommendation({itemName, userId}) {
@@ -118,17 +117,18 @@
                             className="item-details-link"
                           >
                                 <img
-                                    src={item.preview_pic}
+                                    src={item.preview_pic || "/default-image.png"}
+                                    onError={(e) => (e.target.src = "/default-image.png")}
                                     style={{
-                                    width: "180px",
-                                    height: "180px",
-                                    border: "3px solid green",
-                                    borderRadius: "12px",
-                                    alignItems: "center",
-                                    marginLeft: "5.5px"
+                                        width: "180px",
+                                        height: "180px",
+                                        border: "3px solid green",
+                                        borderRadius: "12px",
+                                        alignItems: "center",
+                                        objectFit: "cover",
                                     }}
-                                    alt="Item"
-                                />
+                                    alt={item.item_name}
+                                  />  
                             </Link>
 
                             <div className="itemDeets">

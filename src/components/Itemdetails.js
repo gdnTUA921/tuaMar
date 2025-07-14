@@ -225,7 +225,8 @@ useEffect(() => {
             <div className="itemDeetails">
                 <div className="itemContents1">
                     <img className='itemimage'
-                    src={picsDisplay.image || "/tuamar-profile-icon.jpg"}
+                    src={picsDisplay.image || "/default-image.png"}
+                    onError={(e) => (e.target.src = "/default-image.png")}
                     alt={itemDeets.itemName}
                     onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(picsDisplay.image)}}
                     />
@@ -235,7 +236,8 @@ useEffect(() => {
                             pics.map((pics) => (
                             <img
                                 key={pics.uid}
-                                src={pics.image}
+                                src={pics.image || "/default-image.png"}
+                                onError={(e) => (e.target.src = "/default-image.png")}
                                 className="smallPics"
                                 style={{opacity: pics.uid==picsDisplay.uid ? "" : "0.5"}}
                                 onClick={() => setPicsDisplay(pics)}
@@ -325,7 +327,6 @@ useEffect(() => {
             <div className="image-preview-overlay">
               <div className="image-preview-container">
                 <div className="image-preview-header">
-                  <h3></h3>
                   <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
                     ×
                   </button>

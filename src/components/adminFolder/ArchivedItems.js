@@ -21,7 +21,7 @@ function MyProfile() {
       const fetchData = async () => {
         try {
           // Fetch item listings
-          const itemRes = await fetch(`${ip}/tua_marketplace/pendingitemfetch.php`);
+          const itemRes = await fetch(`${ip}/tua_marketplace/fetchArchivedItems.php`);
           const itemData = await itemRes.json();
   
           if (Array.isArray(itemData)) {
@@ -55,21 +55,21 @@ function MyProfile() {
     item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleApprove = async (itemId) => {
-    const confirmResult = await MySwal.fire({
-      title: `Approve this listing (ID: ${itemId})?`,
+  const handleRestore = async (itemId) => {
+    const confirmRestore = await MySwal.fire({
+      title: `Restore this item?`,
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Yes, approve it!',
+      confirmButtonText: 'Yes, restore it!',
       cancelButtonText: 'Cancel',
       confirmButtonColor: "#547B3E",
       cancelButtonColor: "#d33",
     });
 
-    if (!confirmResult.isConfirmed) return;
+    if (!confirmRestore.isConfirmed) return;
 
     try {
-      const res = await fetch(`${ip}/tua_marketplace/approveItem.php`, {
+      const res = await fetch(`${ip}/tua_marketplace/restoreItem.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ item_id: itemId }),
@@ -78,105 +78,28 @@ function MyProfile() {
       const result = await res.json();
 
       if (result.success) {
-        const chatListRef = ref(database, 'chatsList');
-        const snapshot = await get(chatListRef);
-
-        if (snapshot.exists()) {
-          const updates = {};
-
-          snapshot.forEach(childSnapshot => {
-            const chatKey = childSnapshot.key;
-            const chatData = childSnapshot.val();
-
-            if (String(chatData.item_id) === String(itemId)) {
-              updates[`/chatsList/${chatKey}/item_status`] = "AVAILABLE";
-            }
-          });
-
-          if (Object.keys(updates).length > 0) {
-            await update(ref(database), updates);
-          }
-        }
-
         await MySwal.fire({
           icon: 'success',
-          title: 'Listing Approved',
-          showConfirmButton: false,
+          title: 'Item restored',
           timer: 1500,
+          showConfirmButton: false,
         });
 
-        setItems((prev) => prev.filter((i) => i.item_id !== itemId));
+        setItems((prev) => prev.filter((item) => item.item_id !== itemId));
+        setSelectedItem(null);
       } else {
         await MySwal.fire({
           icon: 'error',
-          title: 'Failed to approve listing',
-          text: result.message || 'Unknown error occurred.',
+          title: 'Failed to restore',
+          text: result.message || "Unknown error",
         });
       }
     } catch (e) {
+      console.error("Restore error:", e);
       await MySwal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'An error occurred while approving the listing.',
-      });
-    }
-  };
-
-
-  const handleDelete = async (itemId) => {
-    const confirmResult = await MySwal.fire({
-      title: `Delete this listing (ID: ${itemId})?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: "#547B3E",
-      cancelButtonColor: "#d33",
-    });
-
-    if (!confirmResult.isConfirmed) return;
-    const { value: reason } = await MySwal.fire({
-      title: 'Reason for deletion',
-      input: 'text',
-      inputPlaceholder: 'Enter reason...',
-      showCancelButton: true,
-      inputValidator: (value) => {
-        if (!value.trim()) return 'You must provide a reason!';
-      }
-    });
-
-    if (!reason) return; // cancelled or blank
-
-    try {
-      const res = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ item_id: itemId, reason: reason.trim() }),
-      });
-
-      const result = await res.json();
-
-      if (result.success) {
-        await MySwal.fire({
-          icon: 'success',
-          title: 'Deleted',
-          showConfirmButton: false,
-          timer: 1500,
-        });
-
-        setItems((prev) => prev.filter((i) => i.item_id !== itemId));
-      } else {
-        await MySwal.fire({
-          icon: 'error',
-          title: 'Failed to delete listing',
-          text: result.message || 'Unknown error occurred.',
-        });
-      }
-    } catch (e) {
-      await MySwal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while deleting the listing.',
+        text: 'Failed to communicate with the server.',
       });
     }
   };
@@ -202,7 +125,7 @@ function MyProfile() {
               }}
             >
               <div className="listingCard">
-                <h2>In Review Listings</h2>
+                <h2>Archived Items</h2>
                 <div className="search-container">
                   <input
                     type="text"
@@ -211,7 +134,6 @@ function MyProfile() {
                     placeholder="Search items..."
                   />
                 </div>
-
                 <div className="items">
                   {filteredItems.length > 0 ? (
                     filteredItems.map((item) => (
@@ -226,8 +148,8 @@ function MyProfile() {
                           IN REVIEW
                         </div>
                         <img
-                          src={item.preview_pic || "/default-image.png"}
-                          onError={(e) => (e.target.src = "/default-image.png")}
+                          src={item.preview_pic || '/default-image.png'}
+                          onError={(e) => (e.target.src = '/default-image.png')}
                           style={{
                             width: "180px",
                             height: "180px",
@@ -251,9 +173,6 @@ function MyProfile() {
                             <p>&#8369;{item.price}</p>
                             <p>&#x2022; {item.item_condition}</p>
                           </div>
-                        
-                          <button className="listButton" onClick={() => handleApprove(item.item_id)}>APPROVE LISTING</button>
-                          <button className="listButton" onClick={() => handleDelete(item.item_id)}>DELETE LISTING</button>
                           <button className="listButton" onClick={() => handleViewDetails(item)}>VIEW DETAILS</button>
                         </div>
                       </div>
@@ -282,10 +201,10 @@ function MyProfile() {
             <img
               src={
                 selectedItem.preview_pic ||
-                (selectedItem.images?.[0] ?? "/default-image.png")
+                (selectedItem.images?.[0] ?? '/default-image.png')
               }
               alt="Preview"
-              onError={(e) => (e.target.src = "/default-image.png")}
+              onError={(e) => (e.target.src = '/default-image.png')}
               style={{ width: 80, height: 80, borderRadius: 8, objectFit: "cover", padding: 0}}
             />
             <div>
@@ -304,6 +223,7 @@ function MyProfile() {
           <p><strong>Status:</strong> {selectedItem.status}</p>
           <p><strong>Listed On:</strong> {new Date(selectedItem.listing_date).toLocaleString()}</p>
           <p><strong>Description:</strong><br />{selectedItem.description || "No description provided."}</p>
+          <p><strong>Reason:</strong><br />{selectedItem.reason || "No reason provided."}</p>
 
           {selectedItem.images?.length > 0 && (
             <div
@@ -317,8 +237,8 @@ function MyProfile() {
               {selectedItem.images.map((img, i) => (
                 <img
                   key={i}
-                  src={img || "/default-image.png"}
-                  onError={(e) => (e.target.src = "/default-image.png")}
+                  src={img || '/default-image.png'}
+                  onError={(e) => (e.target.src = '/default-image.png')}
                   alt={`img-${i}`}
                   style={{
                     width: 100,
@@ -332,6 +252,7 @@ function MyProfile() {
               ))}
             </div>
           )}
+          <button className="listButton" onClick={() => handleRestore(selectedItem.item_id)}>RESTORE ITEM</button>
         </div>
       </div>
     )}

@@ -428,9 +428,18 @@ const BrowseItems = () => {
                     className="item-details-link"
                   >
                     <img
-                      src={item.preview_pic}
+                      src={item.preview_pic || "/default-image.png"}
+                      onError={(e) => (e.target.src = "/default-image.png")}
+                      style={{
+                          width: "180px",
+                          height: "180px",
+                          border: "3px solid green",
+                          borderRadius: "12px",
+                          alignItems: "center",
+                          objectFit: "cover",
+                      }}
                       alt={item.item_name}
-                    />
+                      />                    
                   </Link>
 
                   <div className="itemDeets-browse">
