@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
-import "./DragNdrop.css";
+import "../assets/DragNdrop.css";
 
 const fileTypes = ["JPG", "JPEG", "PNG"];
 
@@ -9,11 +9,8 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
   const hasInitialized = useRef(false);
 
   useEffect(() => {
-    console.log('DragNdrop useEffect triggered. Initial images:', initialImages);
-    console.log('Has initialized:', hasInitialized.current);
     
     if (initialImages.length > 0 && !hasInitialized.current) {
-      console.log('Setting initial images directly as URLs...');
       
       // Store URLs directly, we'll handle them differently in the parent component
       setFiles(initialImages);

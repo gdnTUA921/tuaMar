@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import DragNdrop from './DragNdrop';
-import './Sell.css';
+import DragNdrop from '../components/DragNdrop';
+import '../assets/Sell.css';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';

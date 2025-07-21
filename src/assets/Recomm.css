@@ -234,6 +234,15 @@
   }
 }
 
+@media (max-width: 1240px){
+
+    .pointing-hand{
+        width: 70px;
+        height: 70px;
+        margin-left: 5px;
+    }
+}
+
 
 @media (max-width: 768px){
 

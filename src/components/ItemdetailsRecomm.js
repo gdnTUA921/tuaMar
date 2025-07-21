@@ -1,5 +1,5 @@
   import React, { useEffect, useState } from 'react';
-  import './MyProfile.css';
+  import '../assets/MyProfile.css';
   import { Link, useNavigate } from "react-router-dom";
   import { Heart, Flag } from "lucide-react";
   import LoaderPart from './LoaderPart';
@@ -156,7 +156,11 @@
 
                         <Link to={userId == item.user_id ? "/myProfile" : `/userProfile/${item.first_name + " " + item.last_name}`} className="sellerLink">
                           <div className="itemSeller">
-                            <img src={item.profile_pic || "/tuamar-profile-icon.jpg"} />
+                            <img 
+                              src={item.profile_pic || "/tuamar-profile-icon.jpg"} 
+                              alt="Seller" 
+                              onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+                            />
                             <p>
                               {item.first_name}
                               <br />

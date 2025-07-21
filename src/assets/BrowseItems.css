@@ -389,6 +389,15 @@
     bottom: 20px !important;
     right: 20px !important;
     z-index: 998 !important;
+    animation: slide-up-down 1s ease-in-out infinite;
+}
+ @keyframes slide-up-down {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-13px); /* Moves to the left */
+  }
 }
 
 /* Popup container styles - Enhanced specificity */
@@ -406,8 +415,12 @@
     bottom: 80px !important;
     right: 20px !important;
     min-width: 300px !important;
-    transform: none !important; /* Override any transform from the popup library */
+   /* Override any transform from the popup library */
+    
 }
+   
+
+
 
 /* Popup overlay with enhanced specificity */
 .browsecontainer .popup-overlay {

@@ -252,6 +252,16 @@ function MyProfile() {
               ))}
             </div>
           )}
+          <p><strong>Listed By:</strong></p>
+          <div className="itemSeller">
+            <img 
+              src={selectedItem.profile_pic || "/tuamar-profile-icon.jpg"} 
+              alt="Seller" 
+              onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+            />
+            <p>{selectedItem.first_name + " " + selectedItem.last_name}</p>
+          </div>
+          <br/>
           <button className="listButton" onClick={() => handleRestore(selectedItem.item_id)}>RESTORE ITEM</button>
         </div>
       </div>

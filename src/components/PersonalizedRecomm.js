@@ -1,11 +1,11 @@
   import React, { useEffect, useRef, useState } from 'react';
-  import './Recomm.css';
+  import '../assets/Recomm.css';
   import { Link, useNavigate } from "react-router-dom";
   import { Heart, Flag, ChevronLeft, ChevronRight } from "lucide-react";
   import LoaderPart from './LoaderPart';
 
 
-  function PersonalizedRecommendation({userId}) {
+  function PersonalizedRecommendation({ userId, onFetchFail }) {
     const scrollRef = useRef(null);
     
     const ip = process.env.REACT_APP_LAPTOP_IP; // from .env file (e.g., 192.168.1.10)
@@ -52,6 +52,7 @@
         })
         .catch((error) => {
             console.error("Error fetching liked items:", error);
+            if (onFetchFail) onFetchFail();  // Notify parent if fetch fails
         });
     };
 
@@ -101,7 +102,7 @@
     });
   };
 
-  {/* fetching items based on search history*/}
+  {/* fetching items based on search, like, and view history*/}
   useEffect(() => {
     if (userId){
       fetch(`http://localhost:5050/personalized-recom`, {
@@ -113,12 +114,17 @@
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("Fetched recommendations:", data);
           setRecommendations(data); // this should be an array
           setIsLoading(false);
+
+          if (Array.isArray(data) && data.length === 0) {
+            if (onFetchFail) onFetchFail();
+          }
         })
         .catch((err) => {
           console.error("Recommendation fetch failed:", err);
+          setIsLoading(false);
+          if (onFetchFail) onFetchFail();  // Notify parent if fetch fails
         });
     }
   }, [userId]);
@@ -190,7 +196,11 @@
 
                                 <Link to={userId == item.user_id ? "/myProfile" : `/userProfile/${item.first_name + " " + item.last_name}`} className="recomm-sellerLink">
                                 <div className="recomm-itemSeller">
-                                    <img src={item.profile_pic || "/tuamar-profile-icon.jpg"} />
+                                    <img 
+                                      src={item.profile_pic || "/tuamar-profile-icon.jpg"} 
+                                      alt="Seller" 
+                                      onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+                                    />
                                     <p>
                                     {item.first_name}
                                     <br />

@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import "./Itemdetails.css";
+import "../assets/Itemdetails.css";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Heart, Flag } from "lucide-react"; 
-import LoaderPart from "./LoaderPart";
-import Recommendation from './ItemdetailsRecomm';
+import LoaderPart from "../components/LoaderPart";
+import Recommendation from '../components/ItemdetailsRecomm';
 
 const Itemdetails = () => {
 
@@ -46,7 +46,6 @@ useEffect(() => {
         navigate("/");
         return;
       } else {
-        console.log(sessionData.user_id);
         userId = sessionData.user_id;
         setUserID(sessionData.user_id);
       }
@@ -62,7 +61,6 @@ useEffect(() => {
         ...pic,
         uid: `${pic.image}_${idx}_${Date.now()}`,
       }));
-      console.log(picsWithIds);
       setPics(picsWithIds);
       setPicsDisplay(picsWithIds[0]);
 
@@ -74,18 +72,22 @@ useEffect(() => {
       });
       const itemData = await itemRes.json();
 
-      console.log(itemData);
 
-      console.log(userId);
       if (itemData.user_id !== userId && itemData.status === "IN REVIEW") {
         navigate("/home");
         return;
       }
 
       if (itemData.itemName == null && itemData.user_id == null){
-        navigate("/error");
+        navigate("/error404", {replace: true});
         return;
       }
+
+      if (itemData.status == "UNLISTED"){
+        navigate("/error404", {replace: true});
+        return;
+      }
+
       setItemDeets(itemData);
 
 
@@ -303,7 +305,11 @@ useEffect(() => {
                 
                   <div className="seller-profile-pic">
                     <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.user_id }`} className="sellerLink">
-                      <img src={itemDeets.profilePic} alt="Profile Photo" />
+                      <img 
+                        src={itemDeets.profilePic || "/tuamar-profile-icon.jpg"} 
+                        alt="Profile Photo"
+                        onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+                      />
                     </Link>
                   </div>
                 
@@ -318,15 +324,18 @@ useEffect(() => {
                 </div>
             </div>
             <hr/>
+            
+            {itemDeets.status == "AVAILABLE" &&
             <div className='itemsRecommended'>
              <Recommendation itemName={itemDeets.itemName} userId={userID}/> 
-            </div>
+            </div>}
 
           {/* View Image Modal */}
           {showEnlargeImg && (
             <div className="image-preview-overlay">
               <div className="image-preview-container">
                 <div className="image-preview-header">
+                  <h3></h3>
                   <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
                     ×
                   </button>

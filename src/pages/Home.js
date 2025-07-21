@@ -1,17 +1,26 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './Home.css';
+import '../assets/Home.css';
 import { Link, useNavigate } from "react-router-dom";
-import PersonalizedRecommendation from "./PersonalizedRecomm";
-import RecentlyPosted from "./RecentlyPosted";
-import MostViewed from './MostViewed';
-import RecommItemsHighlyRated from './RecommItemsHighlyRated';
-import TopPicks from './TopPicks';
+import PersonalizedRecommendation from "../components/PersonalizedRecomm";
+import RecentlyPosted from "../components/RecentlyPosted";
+import MostViewed from '../components/MostViewed';
+import RecommItemsHighlyRated from '../components/RecommItemsHighlyRated';
+import TopPicks from '../components/TopPicks';
 import Popup from 'reactjs-popup';
+import { display } from '@mui/system';
 
 function Home() {
   const navigate = useNavigate();
   const [userID, setUserID] = useState("");
   const ip = process.env.REACT_APP_LAPTOP_IP;
+
+  //set up for rendering recommendations
+  const [shouldRenderRecom1, setShouldRenderRecom1] = useState(true);
+  const [shouldRenderRecom2, setShouldRenderRecom2] = useState(true); 
+  const [shouldRenderRecom3, setShouldRenderRecom3] = useState(true); 
+  const [shouldRenderRecom4, setShouldRenderRecom4] = useState(true); 
+  const [shouldRenderRecom5, setShouldRenderRecom5] = useState(true); 
+
 
   const [showPopup, setShowPopup] = useState(false);
   const formPolicyRef = useRef(null); // 👈 Ref to scroll container
@@ -170,21 +179,29 @@ function Home() {
         </div>
 
         {/* Recommendations */}
-        <div className="items-recommend">
-          <PersonalizedRecommendation userId={userID} />
-        </div>
-        <div className="items-recommend">
-          <TopPicks userId={userID} />
-        </div>
-        <div className="items-recommend">
-          <RecentlyPosted userId={userID} />
-        </div>
-        <div className="items-recommend">
-          <MostViewed userId={userID} />
-        </div>
-        <div className="items-recommend">
-          <RecommItemsHighlyRated userId={userID} />
-        </div>
+        {shouldRenderRecom1 && 
+        (<div className="items-recommend">
+         <PersonalizedRecommendation userId={userID} onFetchFail={() => setShouldRenderRecom1(false)} />
+        </div>)}
+
+        {shouldRenderRecom2 && (<div className="items-recommend">
+          <TopPicks userId={userID} onFetchFail={() => setShouldRenderRecom2(false)} />
+        </div>)}
+
+        {shouldRenderRecom3 && 
+        (<div className="items-recommend">
+          <RecentlyPosted userId={userID} onFetchFail={() => setShouldRenderRecom3(false)} />
+        </div>)}
+
+        {shouldRenderRecom4 && 
+        (<div className="items-recommend">
+          <MostViewed userId={userID} onFetchFail={() => setShouldRenderRecom4(false)} />
+        </div>)}
+
+        {shouldRenderRecom5 && 
+        (<div className="items-recommend">
+          <RecommItemsHighlyRated userId={userID} onFetchFail={() => setShouldRenderRecom5(false)} />
+        </div>)}
       </main>
     </>
   );

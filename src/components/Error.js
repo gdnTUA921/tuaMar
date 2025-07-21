@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Error.css'; // Import the CSS file
+import '../assets/Error.css'; // Import the CSS file
 
 const Error = () => {
 

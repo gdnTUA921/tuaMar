@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from "react";
 import "./Listing.css";
-import "../MyProfile.css"; 
+import "../../assets/MyProfile.css"; 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -263,6 +263,15 @@ const handleDelete = async (itemId) => {
               ))}
             </div>
           )}
+          <p><strong>Listed By:</strong></p>
+          <div className="itemSeller">
+            <img 
+              src={selectedItem.profile_pic || "/tuamar-profile-icon.jpg"} 
+              alt="Seller" 
+              onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+            />
+            <p>{selectedItem.first_name + " " + selectedItem.last_name}</p>
+          </div>
         </div>
       </div>
     )}

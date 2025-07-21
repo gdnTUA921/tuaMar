@@ -8,19 +8,19 @@ import LoaderPart from "./components/LoaderPart";
 import MessageLoader from "./components/MessageLoader";
 
 
-const LogIn = React.lazy(() => import ('./components/LogIn'));
-const Home = React.lazy(() => import ('./components/Home'));
-const Sell = React.lazy(() => import ('./components/Sell'));
-const MyProfile = React.lazy(() => import ('./components/MyProfile'));
-const BrowseItems = React.lazy(() => import ('./components/BrowseItems'));
-const Itemdetails = React.lazy(() => import ('./components/Itemdetails'));
-const Reportitem = React.lazy(() => import ('./components/Reportitem'));
-const Message = React.lazy(() => import ('./components/Message'));
-const EditListing = React.lazy(() => import ('./components/EditListing'));
-const ReportUser = React.lazy(() => import ('./components/Reportuser'));
-const Reviewmod = React.lazy(() => import ('./components/Reviewmod'));
-const UserProfile = React.lazy(() => import ('./components/UserProfile'));
-const Admin = React.lazy(() => import ('./components/adminFolder/TuaMarAdmin'));
+const LogIn = React.lazy(() => import ('./pages/LogIn'));
+const Home = React.lazy(() => import ('./pages/Home'));
+const Sell = React.lazy(() => import ('./pages/Sell'));
+const MyProfile = React.lazy(() => import ('./pages/MyProfile'));
+const BrowseItems = React.lazy(() => import ('./pages/BrowseItems'));
+const Itemdetails = React.lazy(() => import ('./pages/Itemdetails'));
+const Reportitem = React.lazy(() => import ('./pages/Reportitem'));
+const Message = React.lazy(() => import ('./pages/Message'));
+const EditListing = React.lazy(() => import ('./pages/EditListing'));
+const ReportUser = React.lazy(() => import ('./pages/Reportuser'));
+const Reviewmod = React.lazy(() => import ('./pages/Reviewmod'));
+const UserProfile = React.lazy(() => import ('./pages/UserProfile'));
+const Admin = React.lazy(() => import ('./pages/adminFolder/TuaMarAdmin'));
 const Error = React.lazy(() => import ('./components/Error'));
 
 

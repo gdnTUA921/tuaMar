@@ -97,7 +97,8 @@ export default function UserListingsPopup({ listings, onClose }) {
         {first && (
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
             <img
-              src={first.profile_pic}
+              src={first.profile_pic || "/tuamar-profile-icon.jpg"} 
+              onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
               alt="Profile"
               style={{ width: 50, height: 50, borderRadius: '50%', marginRight: 10, padding: 0}}
             />
@@ -131,7 +132,7 @@ export default function UserListingsPopup({ listings, onClose }) {
               <li key={index} className="listing-item" onClick={() => toggleExpand(index)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <img
-                    src={item.preview_pic || "/default-image.png"}
+                    src={item.images[0] || "/default-image.png"}
                     onError={(e) => (e.target.src = "/default-image.png")}
                     alt="Item"
                     style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 6, padding: 0}}

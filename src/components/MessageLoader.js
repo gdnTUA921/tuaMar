@@ -1,5 +1,5 @@
 import React from 'react';
-import './MessageLoader.css'; // Make sure to import the CSS
+import '../assets/MessageLoader.css'; // Make sure to import the CSS
 
 const MessageLoader = () => {
   return (

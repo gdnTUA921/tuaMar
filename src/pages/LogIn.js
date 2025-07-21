@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import './Header.css';
-import './LogIn.css';
+import '../assets/Header.css';
+import '../assets/LogIn.css';
 import { useNavigate } from "react-router-dom";
 import { signInWithPopup, signOut} from 'firebase/auth';
 import { auth, googleProvider } from '../firebaseConfig';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import CountdownTimer from './CountdownTimer';
+import CountdownTimer from '../components/CountdownTimer';
 
 function LogIn() {
 
@@ -107,6 +107,7 @@ function LogIn() {
           .catch((error) => console.error("Error:", error));
       };
 
+      
     // Google Auth using Firebase
     const handleGoogleLogin = async () => {
         try {
@@ -114,55 +115,85 @@ function LogIn() {
             const user = result.user;
             const email = user.email;
             const uid = user.uid;
-            //const displayName = user.displayName;
             let displayPic = user.photoURL;
 
             if (displayPic) {
                 displayPic = displayPic.replace(/=s\d+-c$/, '=s1000-c');
             }
-    
+
             console.log("Logged in user email:", email);
             console.log("Display Picture:", displayPic);
-    
-            // Check if email ends with "@tua.edu.ph"
+
+            // Check for @tua.edu.ph email
             if (!email.endsWith("@tua.edu.ph")) {
-                MySwal.fire({
-                icon: 'error',
-                title: 'Login Failed',
-                text: "Only users with a TUA email address are allowed.",
-                confirmButtonColor: 'green'
+                await MySwal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: "Only users with a TUA email address are allowed.",
+                    confirmButtonColor: 'green'
                 });
-                {/*alert("Access denied: Only users with a TUA email address are allowed.");*/}
-                // Try to delete the user from Firebase Auth
+
                 try {
-                    await user.delete(); // Only works if auth is fresh
+                    await user.delete();
                     console.log("Unauthorized user deleted from Firebase.");
                 } catch (deleteError) {
                     console.warn("Failed to delete user:", deleteError);
                 }
 
-                // Sign out just in case
                 await signOut(auth);
                 return;
             }
-    
-            // Send email to PHP session for processing
-            await fetch(`${ip}/tua_marketplace/handleGoogleLogIn.php`, {
+
+            // Send data to PHP to verify and create session
+            const response = await fetch(`${ip}/tua_marketplace/handleGoogleLogIn.php`, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({ email, displayPic, uid }),
-                credentials: "include", // Important for sending cookies/session ID
+                credentials: "include",
             });
-    
-            MySwal.fire({
-                icon: 'success',
-                title: 'Login Successful',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            navigate("/home"); // Redirect to the home page after login
-    
+
+            const resultData = await response.json();
+
+            if (resultData.status === "banned") {
+                await MySwal.fire({
+                    icon: 'error',
+                    title: 'Access Denied',
+                    text: "Your account has been banned from TUA Marketplace.",
+                    confirmButtonColor: 'green'
+                });
+
+                await signOut(auth);
+                return;
+            }
+
+            if (resultData.status === "success") {
+                MySwal.fire({
+                    icon: 'success',
+                    title: 'Login Successful',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                navigate("/home");
+            } else {
+                await MySwal.fire({
+                    icon: 'error',
+                    title: 'Login Failed',
+                    text: resultData.message || "Unexpected error occurred.",
+                    confirmButtonColor: 'green'
+                });
+                await signOut(auth);
+            }
+
         } catch (error) {
             console.error("Error during Google login", error);
+            await MySwal.fire({
+                icon: 'error',
+                title: 'Login Error',
+                text: "An unexpected error occurred during login.",
+                confirmButtonColor: 'green'
+            });
         }
     };
 

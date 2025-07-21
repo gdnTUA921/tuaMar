@@ -25,6 +25,8 @@ export default function Members() {
   const [editUser, setEditUser] = useState(null); // selected user to edit
   const [editedData, setEditedData] = useState({});
 
+  const [refresh, setRefresh] = useState(false);
+
   // Hook to track screen size
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -56,7 +58,7 @@ export default function Members() {
         .catch((error) => {
           console.error("Error fetching list of users:", error);
         });
-    }, [ip]);
+    }, [ip, refresh]);
 
     //Fetching user count for each type
     useEffect(() => {
@@ -75,7 +77,7 @@ export default function Members() {
         .catch((error) => {
           console.error("Error fetching user counts:", error);
         });
-    }, [ip]);
+    }, [ip, refresh]);
 
   // Filtering users based on active tab and search term
   const filteredUsers = users.filter((user) => {
@@ -125,27 +127,52 @@ export default function Members() {
   };
 
   const handleDeleteUser = async (user_id) => {
-    const confirmDelete = window.confirm(`Are you sure you want to delete this user (ID: ${user_id})?`);
-    if (!confirmDelete) return;
+    MySwal.fire({
+      title: `Remove User ID: ${user_id}?`,
+      text: `Are you sure you want to delete this user (ID: ${user_id})?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#547B3E",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes"
+    }).then(async (result) => {
 
-    try {
-      const response = await fetch(`${ip}/tua_marketplace/deleteUser.php`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id }),
-      });
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`${ip}/tua_marketplace/deleteUser.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id }),
+          });
 
-      const result = await response.json();
-      if (result.success) {
-        alert("User deleted successfully.");
-        setUsers((prev) => prev.filter((u) => u.id !== user_id));
-      } else {
-        alert("Failed to delete user: " + result.message);
+          const result = await response.json();
+          if (result.success) {
+            MySwal.fire({
+              title: `User Deleted Successfully`,
+              icon: "success",
+              confirmButtonColor: "#547B3E",
+              confirmButtonText: "OK"
+            })
+            setUsers((prev) => prev.filter((u) => u.id !== user_id));
+            setRefresh(!refresh);
+          } else {
+            MySwal.fire({
+              title: `Failed to Delete User`,
+              text: "Failed to delete user: " + result.message,
+              icon: "error",
+              confirmButtonColor: "#547B3E",
+              confirmButtonText: "OK"
+            })
+          }
+        } catch (error) {
+          console.error("Error deleting user:", error);
+          alert("An error occurred while deleting the user.");
+        }
       }
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      alert("An error occurred while deleting the user.");
-    }
+      else{
+        return;
+      }
+    })
   };
 
   const handleFormSubmit = async (e) => {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useParams} from "react-router-dom";
 import { Flag, Heart, X, Search} from "lucide-react";
-import "./MyProfile.css";
-import LoaderPart from "./LoaderPart";
+import "../assets/MyProfile.css";
+import LoaderPart from "../components/LoaderPart";
 
 function UserProfile() {
 
@@ -76,6 +76,10 @@ function UserProfile() {
       else{
         setUserData(profileData);
         setItem(itemsData);
+      }
+
+      if (profileData.is_banned === 1){
+        navigate("/error404", {replace: true});
       }
       
 
@@ -181,7 +185,11 @@ else{
             <div className="profile-nameBox">
               <div className="profile-coverBG"></div>
               <div className="profile-pic">
-                <img src={userData.profile_pic} alt="Profile Photo" />
+                <img 
+                  src={userData.profile_pic || "/tuamar-profile-icon.jpg"} 
+                  alt="Profile Photo" 
+                  onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+                />
               </div>
               <div className="profile-name">
                 <h1>{userData.first_name + " " + userData.last_name}</h1>
@@ -326,6 +334,7 @@ else{
             <div className="image-preview-overlay">
               <div className="image-preview-container">
                 <div className="image-preview-header">
+                  <h3></h3>
                   <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
                     ×
                   </button>

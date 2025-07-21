@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Flag, Heart, X, Search} from "lucide-react";
-import "./BrowseItems.css";
+import "../assets/BrowseItems.css";
 import { Link, useNavigate} from "react-router-dom";
-import LoaderPart from "./LoaderPart";
+import LoaderPart from "../components/LoaderPart";
 import Popup from 'reactjs-popup';
 
 const BrowseItems = () => {
@@ -225,7 +225,7 @@ const BrowseItems = () => {
         credentials: "include",
       })
        .then(res => res.json())
-       .then(data => {setTopSellers(data); console.log(data);})
+       .then(data => {setTopSellers(data);})
        .catch(err => console.error("Failed to fetch top sellers:", err));
     }
   }, [userId, ip]);
@@ -479,7 +479,11 @@ const BrowseItems = () => {
                       className="sellerLink"
                     >
                       <div className="itemSeller">
-                        <img src={item.profile_pic || "/tuamar-profile-icon.jpg"} alt="Seller" />
+                        <img 
+                          src={item.profile_pic || "/tuamar-profile-icon.jpg"} 
+                          alt="Seller" 
+                          onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+                        />
                         <p>
                           {item.first_name}
                           <br />

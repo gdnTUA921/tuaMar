@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate} from "react-router-dom";
 import { Heart, Flag, SquarePen, Trash2 } from "lucide-react";
-import "./MyProfile.css";
+import "../assets/MyProfile.css";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'; 
-import LoaderPart from "./LoaderPart";
+import LoaderPart from "../components/LoaderPart";
 
 function MyProfile() {
 
@@ -207,7 +207,7 @@ function MyProfile() {
 
       if (result.isConfirmed) {
         //processing the deletion
-        fetch(`${ip}/tua_marketplace/deleteItem.php?`, {
+        fetch(`${ip}/tua_marketplace/deleteItem2.php?`, {
           method: "POST",
           credentials: "include",
           headers: {
@@ -332,8 +332,11 @@ function MyProfile() {
           <div className="profile-nameBox">
             <div className="profile-coverBG"></div>
             <div className="profile-pic">
-              <img src={userData.profile_pic || "/tuamar-profile-icon.jpg"} alt="Profile Photo" />
-             
+              <img 
+                src={userData.profile_pic || "/tuamar-profile-icon.jpg"} 
+                alt="Profile Photo" 
+                onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+              />
             </div>
             <div className="profile-name">
               <h1>{userData.first_name + " " + userData.last_name}</h1>
@@ -486,6 +489,7 @@ function MyProfile() {
             <div className="image-preview-overlay">
               <div className="image-preview-container">
                 <div className="image-preview-header">
+                  <h3></h3>
                   <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
                     ×
                   </button>
@@ -553,7 +557,8 @@ function MyProfile() {
                   <center><button>Update</button></center>
                 </form>*/}
               </div>
-              
+          
+          {/* Liked Items Tab */}
           </div>
             <div className="likeditems" style={{ display: activeTab === "liked" ? "block" : "none" }}>
               <div className="listingCard">
@@ -572,6 +577,15 @@ function MyProfile() {
               {filteredItems.length > 0 ? (
                 filteredItems.map((item) => (
                   <div className="itemCard" key={item.item_id}>
+                    <div className="soldBanner" style={{display: item.status === "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
+                      SOLD
+                    </div>
+                    <div className="reservedBanner" style={{display: item.status === "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
+                      RESERVED
+                    </div>
+                    <div className="reviewBanner" style={{display: item.status === "IN REVIEW" ? "block" : "none"}}> {/*set this up if item is considered UNDER REVIEW*/}
+                      IN REVIEW
+                    </div>
                     <Link
                       to={`/itemdetails/${item.item_id}/${item.item_name}`}
                       className="item-details-link"
@@ -616,7 +630,11 @@ function MyProfile() {
 
                       <Link to={userId === item.user_id ? "/myProfile" : `/userProfile/${item.first_name + " " + item.last_name}`} className="sellerLink">
                       <div className="itemSeller">
-                        <img src={item.profile_pic} alt="profile pic"/>
+                        <img 
+                          src={item.profile_pic || "/tuamar-profile-icon.jpg"} 
+                          alt="Seller" 
+                          onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
+                        />
                         <p></p>
                         <p>
                           {item.first_name}

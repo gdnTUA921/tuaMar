@@ -4,12 +4,12 @@ import { database } from '../firebaseConfig';
 import { ref, onValue, push, set, get, update } from 'firebase/database';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Link } from 'react-router-dom';
-import "./Message.css";
+import "../assets/Message.css";
 import { Send, Search, Flag, MoveLeft, Images } from "lucide-react";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import MessageLoader from './MessageLoader';
-import LoaderPart from './LoaderPart';
+import MessageLoader from '../components/MessageLoader';
+import LoaderPart from '../components/LoaderPart';
 
 function Message() {
   const [isLoading, setIsLoading] = useState(true);
@@ -151,7 +151,6 @@ function Message() {
 
       filteredChats.sort((a, b) => b.timestamp - a.timestamp);
 
-      console.log("fetchChats: Filtered chats for currentUserId", currentUserID, filteredChats);
       setChats(filteredChats);
       setIsLoading(false);
     });
@@ -341,8 +340,6 @@ function Message() {
     : [];
 
   const openChat = (itemId, userName, itemName, price, itemPicture, receiverPic, status, chat_id, receiverId, sellerID, user_id, receiverStatus) => {
-    console.log(itemId, userName, itemName, price, receiverPic, receiverId);
-    console.log("currentUserId: " + currentUserId);
     setItemId(itemId);
     setUserName(userName);
     setItemName(itemName);
@@ -597,7 +594,7 @@ function Message() {
                     );
                   }}
                 >
-                  <img src={receiverPfp} className="messagePFP" alt="User PFP" />
+                  <img src={receiverPfp || "/tuamar-profile-icon.jpg"} className="messagePFP" alt="User PFP" onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")} />
 
                   <div className="nameMessage">
                     <p style={{ display: "none" }}>{chat.item_id}</p>
@@ -657,12 +654,12 @@ function Message() {
           <div className="profile">
             <MoveLeft className='arrow-left' onClick={() => setChatBlock(false)} />
             <Link to={`/userProfile/${userName}`} className="messageSellerLink">
-              <img src={receiverPicture} className="right-con-pfp" alt='userName'/>
+              <img src={receiverPicture || "/tuamr-profile-icon.jpg"} className="right-con-pfp" alt='userName' onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}/>
             </Link>
             <Link to={`/userProfile/${userName}`} className="messageSellerLink">
               <h3>{userName}</h3>
             </Link>
-            <Link to="/reportUser" className="reportLink" state={{ passedItemID: itemId, receiverPicture, reportedUser: userName }}>
+            <Link to="/reportUser" className="reportLink" state={{ passedItemID: itemId, receiverPicture, reportedUser: userName, reportedUserId: appUserID }}>
               <Flag />
             </Link>
           </div>
@@ -671,7 +668,7 @@ function Message() {
         <div className='itemInquired'>
           <div className='itemInquiredDetails'>
             <Link to={`/itemdetails/${itemId}/${encodeURIComponent(itemName)}`} className="item-details-link">
-              <img src={itemPicture} alt='itemName'/>
+              <img src={itemPicture || "/default-image.png"} alt='itemName' onError={(e) => (e.target.src = "/default-image.png")}/>
             </Link>
             <div className='itemInquiredDeets'>
               <Link to={`/itemdetails/${itemId}/${encodeURIComponent(itemName)}`} className="item-details-link">
@@ -706,8 +703,8 @@ function Message() {
                 <img
                   src={
                     msg.senderId === currentUserId
-                      ? currentPfp
-                      : receiverPicture
+                      ? currentPfp || "/tuamar-profile-icon.jpg"
+                      : receiverPicture || "/tuamar-profile-icon.jpg"
                   }
                   alt="Profile"
                   className="message-bubble-pfp"
@@ -723,6 +720,7 @@ function Message() {
                     border: "1.5px solid #5a8d5a",
                     background: "#f0f0f0"
                   }}
+                  onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
                 />
               </Link>
               <div
@@ -794,6 +792,7 @@ function Message() {
             <div className="image-preview-overlay">
               <div className="image-preview-container">
                 <div className="image-preview-header">
+                  <h3></h3>
                   <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
                     ×
                   </button>

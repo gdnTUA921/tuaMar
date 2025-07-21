@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import "./Reviewmod.css";
+import "../assets/Reviewmod.css";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { Star } from "lucide-react";
-import DragNdrop from './DragNdrop';
+import DragNdrop from '../components/DragNdrop';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../firebaseConfig"; // Adjust path if needed
 import { v4 as uuidv4 } from "uuid";
@@ -73,7 +73,6 @@ const Reviewmod = () => {
           rating,
           reviewText,
           images: uploadedImageURLs, // now actual URLs
-          reviewedUser,
           reviewedUserID,
           reviewerStatus,
         }),

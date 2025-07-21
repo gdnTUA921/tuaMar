@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   FaUsers, FaChartBar, FaList,
   FaUserPlus, FaUser, FaChevronLeft, FaChevronRight, FaEye,
-  FaEyeSlash
+  FaEyeSlash, FaBan
 } from "react-icons/fa6";
 import {FaArchive, FaOutdent} from "react-icons/fa";
 import { FaTachometerAlt, FaCog } from "react-icons/fa";
@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import UsersByCollegeChart from './UsersByCollegeChart';
 import ItemsByCategoryChart from './ItemsByCategoryChart';
+import BannedUsers from './BannedUsers.js'
 
 
 export default function Admin() {
@@ -50,6 +51,10 @@ export default function Admin() {
   //alerts
   const MySwal = withReactContent(Swal);
 
+  
+  //to be used in case there are updates in data
+  const [refresh, setRefresh] = useState(false);
+
 
   // for Sidebar
   const [active, setActive] = useState("Dashboard");
@@ -63,6 +68,8 @@ export default function Admin() {
   const [showMembers, setShowMembers] = useState(false);
   const [showPendingListing, setShowPendingListings] = useState(false);
   const [showArchivedItems, setShowArchivedItems] = useState(false);
+  const [showBannedUsers, setShowBannedUsers] = useState(false);
+
 
   const menuItems = [
   { name: "Dashboard", icon: <FaTachometerAlt /> },
@@ -72,6 +79,7 @@ export default function Admin() {
   { name: "Listings", icon: <FaList /> },
   { name: "Pending Listings", icon: <FaOutdent /> },
   { name: "Archived Items", icon: <FaArchive /> },
+  { name: "Banned Users", icon: <FaBan /> },
   { name: "Settings", icon: <FaCog /> }
 ];
 
@@ -86,6 +94,8 @@ export default function Admin() {
     setShowMembers(itemName === "Users");
     setShowPendingListings(itemName === "Pending Listings");
     setShowArchivedItems(itemName === "Archived Items");
+    setShowBannedUsers(itemName === "Banned Users");
+    setRefresh(!refresh);
   };
 
 
@@ -107,6 +117,7 @@ export default function Admin() {
         timer: 1500
       });
         navigate("/");
+        window.location.reload();
     })
     .catch((error) => console.error("Error fetching data:", error));
   }
@@ -262,21 +273,21 @@ export default function Admin() {
       .catch((error) => {
         console.error("Error fetching total items:", error);
       });
-  }, [ip]);
+  }, [ip, refresh]);
 
   useEffect(() => {
     fetch(`${ip}/tua_marketplace/getCollegeStats.php`)
       .then(res => res.json())
       .then(data => setCollegeData(data))
       .catch(err => console.error('Failed to fetch college data:', err));
-  }, []);
+  }, [ip, refresh]);
 
   useEffect(() => {
   fetch(`${ip}/tua_marketplace/getItemCategoryStats.php`)
     .then(res => res.json())
     .then(data => setItemCategoryData(data))
     .catch(err => console.error('Failed to fetch item category data:', err));
-  }, []);
+  }, [ip, refresh]);
 
 
 
@@ -495,6 +506,9 @@ export default function Admin() {
           ) :
           showArchivedItems ? (
             <ArchivedItems/> 
+          ) :
+          showBannedUsers ? (
+            <BannedUsers/> 
           ) : (
             <h2 className="heading">{active}</h2>
           )}

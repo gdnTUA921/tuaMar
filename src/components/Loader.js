@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import "./Loader.css"; // Assuming you have a separate CSS file for styles
+import "../assets/Loader.css"; // Assuming you have a separate CSS file for styles
 
 
 const Loader = () => {

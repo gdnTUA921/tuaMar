@@ -1,17 +1,37 @@
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const COLORS = {
-  Textbooks: '#4CAF50',
-  Electronics: '#1976D2',
-  Uniforms: '#FF9800',
-  'School Supplies': '#9C27B0',
-  Foods: '#00BCD4',
-  Collectibles: '#E91E63',
-  Others: '#607D8B'
+  'Books & Study Materials': '#4CAF50',
+  'Electronics': '#1976D2',
+  'Furniture & Home Essentials': '#FF9800',
+  'Clothing & Accessories': '#9C27B0',
+  'Transportation': '#00BCD4',
+  'Food & Drinks': '#E91E63',
+  'Services & Gigs': '#3F51B5',
+  'Tickets & Events': '#8BC34A',
+  'Hobbies & Toys': '#FFC107',
+  'Housing & Rentals': '#009688',
+  'Health & Beauty': '#F44336',
+  'Announcements': '#9E9E9E',
+  'Others': '#607D8B'
 };
 
 const ItemsByCategoryChart = ({ data }) => {
-  const allCategories = ['Textbooks', 'Electronics', 'Uniforms', 'School Supplies', 'Foods', 'Collectibles', 'Others'];
+  const allCategories = [
+  'Books & Study Materials',
+  'Electronics',
+  'Furniture & Home Essentials',
+  'Clothing & Accessories',
+  'Transportation',
+  'Food & Drinks',
+  'Services & Gigs',
+  'Tickets & Events',
+  'Hobbies & Toys',
+  'Housing & Rentals',
+  'Health & Beauty',
+  'Announcements',
+  'Others'
+];
 
   const dataMap = Object.fromEntries(allCategories.map(c => [c, 0]));
   data.forEach(item => {

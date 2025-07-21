@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import DragNdrop from './DragNdrop';
-import './Sell.css';
+import DragNdrop from '../components/DragNdrop';
+import '../assets/Sell.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'; 
@@ -56,7 +56,6 @@ function EditListing() {
   }, [ip, navigate]);
 
   useEffect(() => {
-    console.log('EditListing useEffect triggered. ItemId:', itemId);
     
     fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
       method: "POST",
@@ -64,9 +63,7 @@ function EditListing() {
     })
       .then((res) => res.json())
       .then((pics) => {
-        console.log('Fetched pics from database:', pics);
         const imageUrls = pics.map((p) => p.image);
-        console.log('Image URLs:', imageUrls);
         setListingPics(imageUrls);
       })
       .catch((err) => console.error("Pics fetch error:", err));
@@ -77,7 +74,6 @@ function EditListing() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log('Fetched item details:', data);
         setItemName(data.itemName);
         setPrice(data.price);
         setCategory(data.category);
