@@ -69,7 +69,7 @@ function Message() {
   // Checking if logged in, if not redirected to log-in
   useEffect(() => {
     const intervalId = setInterval(() => {
-      fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+      fetch(`${ip}/fetchSession.php`, {
         method: "GET",
         credentials: "include",
       })
@@ -98,7 +98,7 @@ function Message() {
     if (passedUserID && passedItemID) {
       setChatBlock(true);
 
-      fetch(`${ip}/tua_marketplace/fetchContactSellerDeets.php`, {
+      fetch(`${ip}/fetchContactSellerDeets.php`, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -370,7 +370,7 @@ function Message() {
         let updateStatus;
         let message;
 
-        fetch(`${ip}/tua_marketplace/setItemStatus.php`, {
+        fetch(`${ip}/setItemStatus.php`, {
           method: "POST",
           body: JSON.stringify({ itemStatus, itemId }),
           credentials: "include",
@@ -495,7 +495,7 @@ function Message() {
   //Navigate to Review Module
   const goToReview = (itemId, itemPicture, itemName, userName, appUserID, receiverPicture, receiverStatus) => {
 
-    fetch (`${ip}/tua_marketplace/checkReview.php`, {
+    fetch (`${ip}/checkReview.php`, {
       headers: {
         "Content-Type": "application/json",
       },

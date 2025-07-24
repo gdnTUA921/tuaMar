@@ -42,7 +42,7 @@ function MyProfile() {
     const fetchAllData = async () => {
       try {
         // Step 1: Check session
-        const sessionRes = await fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+        const sessionRes = await fetch(`${ip}/fetchSession.php`, {
           method: "GET",
           credentials: "include",
         });
@@ -57,11 +57,11 @@ function MyProfile() {
 
         // Step 2: Fetch user profile details and liked items concurrently
         const [profileRes, likedRes] = await Promise.all([
-          fetch(`${ip}/tua_marketplace/fetchMyProfileDeets.php`, {
+          fetch(`${ip}/fetchMyProfileDeets.php`, {
             method: "GET",
             credentials: "include",
           }),
-          fetch(`${ip}/tua_marketplace/fetchLikedItems.php`, {
+          fetch(`${ip}/fetchLikedItems.php`, {
             method: "GET",
             credentials: "include",
           }),
@@ -74,7 +74,7 @@ function MyProfile() {
         setLikedItems(likedItems);
 
         // Step 3: Fetch user's own listings
-        const listingsRes = await fetch(`${ip}/tua_marketplace/fetchMyProfileItems.php`, {
+        const listingsRes = await fetch(`${ip}/fetchMyProfileItems.php`, {
           method: "GET",
           credentials: "include",
         });
@@ -83,7 +83,7 @@ function MyProfile() {
         setMyListings(myListingsData);
 
         // Step 4: Fetch like counts for user's listings
-        const likeCountRes = await fetch(`${ip}/tua_marketplace/fetchLikeCount.php`, {
+        const likeCountRes = await fetch(`${ip}/fetchLikeCount.php`, {
           method: "POST",
           credentials: "include",
           body: JSON.stringify({ myListings: myListingsData }),
@@ -93,7 +93,7 @@ function MyProfile() {
         setNumLikes(likeCounts);
 
         //Step 5: Fetch user review data
-        const reviewDataRes = await fetch(`${ip}/tua_marketplace/fetchUserReviewData.php`, {
+        const reviewDataRes = await fetch(`${ip}/fetchUserReviewData.php`, {
           method: "POST",
           body: JSON.stringify({user_id: sessionData.user_id}),
         });
@@ -130,7 +130,7 @@ function MyProfile() {
         let updateStatus;
         let message;
 
-        fetch (`${ip}/tua_marketplace/setItemStatus.php`, {
+        fetch (`${ip}/setItemStatus.php`, {
           method: "POST",
           body: JSON.stringify({itemStatus, itemId}),
           credentials: "include",
@@ -207,7 +207,7 @@ function MyProfile() {
 
       if (result.isConfirmed) {
         //processing the deletion
-        fetch(`${ip}/tua_marketplace/deleteItem2.php?`, {
+        fetch(`${ip}/deleteItem2.php?`, {
           method: "POST",
           credentials: "include",
           headers: {
@@ -262,7 +262,7 @@ function MyProfile() {
   const [liked, setLiked] = useState({});
   useEffect(() => {
     if (userId) {
-      fetch(`${ip}/tua_marketplace/fetchLikedItems.php?user_id=${userId}`, {
+      fetch(`${ip}/fetchLikedItems.php?user_id=${userId}`, {
         credentials: "include",
       })
         .then((res) => res.json())
@@ -291,7 +291,7 @@ function MyProfile() {
     }));
   
     // Send like/unlike to the backend
-    fetch(`${ip}/tua_marketplace/InsertLikeditems.php`, {
+    fetch(`${ip}/InsertLikeditems.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -32,7 +32,7 @@ function Sell() {
   const ip = process.env.REACT_APP_LAPTOP_IP;
 
   useEffect(() => {
-    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+    fetch(`${ip}/fetchSession.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -57,7 +57,7 @@ function Sell() {
       const imageUrls = await Promise.all(uploadPromises);
 
       // Send form data with image URLs
-      const response = await fetch(`${ip}/tua_marketplace/listItem.php`, {
+      const response = await fetch(`${ip}/listItem.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

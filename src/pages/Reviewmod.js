@@ -27,7 +27,7 @@ const Reviewmod = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+    fetch(`${ip}/fetchSession.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -64,7 +64,7 @@ const Reviewmod = () => {
 
       const reviewerStatus = passedStatus === "seller" ? "buyer" : "seller";
 
-      const response = await fetch(`${ip}/tua_marketplace/leaveReview.php`, {
+      const response = await fetch(`${ip}/leaveReview.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

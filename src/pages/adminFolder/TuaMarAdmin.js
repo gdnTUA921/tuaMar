@@ -29,7 +29,7 @@ export default function Admin() {
   
   useEffect(() => {
     //Checking if logged in, if not redirected to log-in
-    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+    fetch(`${ip}/fetchSession.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -105,7 +105,7 @@ export default function Admin() {
   const handleLogOut = (event) => {
     event.preventDefault();
 
-    fetch(`http://localhost/tua_marketplace/logOut.php`, {
+    fetch(`${ip}/logOut.php`, {
       credentials: "include", // This is important for cookies!
     })
     .then((response) => response.json())
@@ -149,7 +149,7 @@ export default function Admin() {
   const handleRegisterSubmit = (event) => {
     event.preventDefault();
 
-    fetch(`${ip}/tua_marketplace/register_submit.php`, {
+    fetch(`${ip}/register_submit.php`, {
       method: "POST",
       headers: {"Content-Type": "application/json",},
       body: JSON.stringify ({
@@ -209,7 +209,7 @@ export default function Admin() {
         return;
       }
 
-      fetch(`${ip}/tua_marketplace/updateadminpassword.php`, {
+      fetch(`${ip}/updateadminpassword.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -242,7 +242,7 @@ export default function Admin() {
   const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
-    fetch(`${ip}/tua_marketplace/fetchTotalUsers.php`, {
+    fetch(`${ip}/fetchTotalUsers.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -258,7 +258,7 @@ export default function Admin() {
         console.error("Error fetching total users:", error);
       });
 
-    fetch(`${ip}/tua_marketplace/fetchTotalItems.php`, {
+    fetch(`${ip}/fetchTotalItems.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -276,14 +276,14 @@ export default function Admin() {
   }, [ip, refresh]);
 
   useEffect(() => {
-    fetch(`${ip}/tua_marketplace/getCollegeStats.php`)
+    fetch(`${ip}/getCollegeStats.php`)
       .then(res => res.json())
       .then(data => setCollegeData(data))
       .catch(err => console.error('Failed to fetch college data:', err));
   }, [ip, refresh]);
 
   useEffect(() => {
-  fetch(`${ip}/tua_marketplace/getItemCategoryStats.php`)
+  fetch(`${ip}/getItemCategoryStats.php`)
     .then(res => res.json())
     .then(data => setItemCategoryData(data))
     .catch(err => console.error('Failed to fetch item category data:', err));

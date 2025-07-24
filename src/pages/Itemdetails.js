@@ -36,7 +36,7 @@ useEffect(() => {
     try {
 
       // Fetch session
-      const sessionRes = await fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+      const sessionRes = await fetch(`${ip}/fetchSession.php`, {
         method: "GET",
         credentials: "include",
       });
@@ -52,7 +52,7 @@ useEffect(() => {
 
 
       // Fetch item pictures
-      const picsRes = await fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
+      const picsRes = await fetch(`${ip}/itemPicsFetch.php`, {
         method: "POST",
         body: JSON.stringify({ item_id: itemId }),
       });
@@ -66,7 +66,7 @@ useEffect(() => {
 
 
       // Fetch item details
-      const itemRes = await fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
+      const itemRes = await fetch(`${ip}/fetchItemDeets.php`, {
         method: "POST",
         body: JSON.stringify({ item_id: itemId, item_name: itemName }),
       });
@@ -93,7 +93,7 @@ useEffect(() => {
 
       // Log view history if viewer is not the item's owner
       if (itemData.user_id && itemData.user_id !== userId && !sessionStorage.getItem(`viewed_${itemId}`) && itemData.status === "AVAILABLE") {
-        const logRes = await fetch(`${ip}/tua_marketplace/itemViewLog.php`, {
+        const logRes = await fetch(`${ip}/itemViewLog.php`, {
           method: "POST",
           body: JSON.stringify({
             item_id: itemId,
@@ -129,7 +129,7 @@ useEffect(() => {
     const [liked, setLiked] = useState({});
     useEffect(() => {
       if (userID) {
-        fetch(`${ip}/tua_marketplace/fetchLikedSpecific.php`, {
+        fetch(`${ip}/fetchLikedSpecific.php`, {
           credentials: "include",
           method: "POST",
           body: JSON.stringify({ item_id: itemId })
@@ -157,7 +157,7 @@ useEffect(() => {
     //fetching item like count
     const [likeChanged, setLikeChanged] = useState(false);
     useEffect(() => {
-      fetch(`${ip}/tua_marketplace/fetchLikeCountSpecific.php`, {
+      fetch(`${ip}/fetchLikeCountSpecific.php`, {
         method: "POST",
         body: JSON.stringify({ item_id: itemId })
       })
@@ -185,7 +185,7 @@ useEffect(() => {
       setNumLikes(isLiked ? numLikes+1 : numLikes-1)
     
       // Send like/unlike to the backend
-      fetch(`${ip}/tua_marketplace/InsertLikeditems.php`, {
+      fetch(`${ip}/InsertLikeditems.php`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

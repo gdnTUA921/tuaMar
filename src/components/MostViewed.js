@@ -40,7 +40,7 @@
     const fetchLikedItems = () => {
         if (!userId) return;
 
-        fetch(`${ip}/tua_marketplace/fetchLikedItems.php?user_id=${userId}`, {
+        fetch(`${ip}/fetchLikedItems.php?user_id=${userId}`, {
         credentials: "include",
         })
         .then((res) => res.json())
@@ -80,7 +80,7 @@
     }));
   
     // Send like/unlike to the backend
-    fetch(`${ip}/tua_marketplace/InsertLikeditems.php`, {
+    fetch(`${ip}/InsertLikeditems.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +106,7 @@
   {/* fetching newly posted items within the last 14 days*/}
   useEffect(() => {
 
-      fetch(`${ip}/tua_marketplace/fetchMostViewed.php`, {
+      fetch(`${ip}/fetchMostViewed.php`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',

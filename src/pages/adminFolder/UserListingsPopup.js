@@ -40,7 +40,7 @@ export default function UserListingsPopup({ listings, onClose }) {
     if (!reason) return; // cancelled or blank
 
     try {
-      const res = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
+      const res = await fetch(`${ip}/deleteItem.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ item_id: itemId, reason: reason.trim() }),

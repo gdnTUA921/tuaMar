@@ -61,7 +61,7 @@
 }
 
 .messagesList {
-   height: 75%;
+   height: calc(100vh - 250px);
    overflow: auto;
    position: relative;
 }
@@ -810,7 +810,7 @@
 @media (max-width: 375px) {
 
     .messagebox {
-        padding-right: 20px;
+        padding-right: 15px;
         height: 90vh;
     }
 
@@ -821,7 +821,6 @@
     .messagesList{
         overflow-y: auto;
         overflow-x: hidden;
-        height: 75%;
     }
 
     .messageRightCon{

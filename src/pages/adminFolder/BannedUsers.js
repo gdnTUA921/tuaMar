@@ -28,7 +28,7 @@ export default function BannedMembers() {
   const [refresh, setRefresh] = useState(false);
 
   // Hook to track screen size
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1200);
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,7 +41,7 @@ export default function BannedMembers() {
 
   //Fetching list of users from the server
   useEffect(() => {
-      fetch(`${ip}/tua_marketplace/fetchBannedUsersList.php`, {
+      fetch(`${ip}/fetchBannedUsersList.php`, {
         method: "GET",
       })
         .then((response) => response.json())
@@ -62,7 +62,7 @@ export default function BannedMembers() {
 
     //Fetching user count for each type
     useEffect(() => {
-      fetch(`${ip}/tua_marketplace/fetchBannedUserCount.php`, {
+      fetch(`${ip}/fetchBannedUserCount.php`, {
         method: "GET",
       })
         .then((response) => response.json())
@@ -88,7 +88,7 @@ export default function BannedMembers() {
   });
 
   const handleViewListings = (user) => {
-    fetch(`${ip}/tua_marketplace/getmemberslistings.php?user_id=${user.id}`)
+    fetch(`${ip}/getmemberslistings.php?user_id=${user.id}`)
       .then(res => res.json())
       .then(data => {
         setSelectedUserListings(data);
@@ -102,7 +102,7 @@ export default function BannedMembers() {
   };
 
   const handleUpdateUser = (user) => {
-    fetch(`${ip}/tua_marketplace/updateuserdetails.php?user_id=${user.id}`)
+    fetch(`${ip}/updateuserdetails.php?user_id=${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -139,7 +139,7 @@ export default function BannedMembers() {
 
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`${ip}/tua_marketplace/restoreUser.php`, {
+          const response = await fetch(`${ip}/restoreUser.php`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user_id }),
@@ -181,7 +181,7 @@ export default function BannedMembers() {
 
     try {
       // 1. Update MySQL backend
-      const res = await fetch(`${ip}/tua_marketplace/updateUser.php`, {
+      const res = await fetch(`${ip}/updateUser.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -204,7 +204,7 @@ export default function BannedMembers() {
 
       // 2. Refresh user list
       setEditUser(null);
-      const userRes = await fetch(`${ip}/tua_marketplace/fetchBannedUsersList.php`);
+      const userRes = await fetch(`${ip}/fetchBannedUsersList.php`);
       const userData = await userRes.json();
       if (Array.isArray(userData)) {
         setUsers(userData);

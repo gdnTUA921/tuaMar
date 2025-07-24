@@ -17,11 +17,11 @@ const BrowseItems = () => {
     let isMounted = true;
 
     Promise.all([
-      fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+      fetch(`${ip}/fetchSession.php`, {
         method: "GET",
         credentials: "include",
       }).then(res => res.json()),
-      fetch(`${ip}/tua_marketplace/browseItems.php`).then(res => res.json())
+      fetch(`${ip}/browseItems.php`).then(res => res.json())
     ])
     .then(([sessionData, itemsData]) => {
       if (!isMounted) return;
@@ -124,7 +124,7 @@ const BrowseItems = () => {
 
   //passing filters to backend for processing queries
   const handleFilters = (filters) => {
-    fetch(`${ip}/tua_marketplace/browseItemsFiltering.php`, {
+    fetch(`${ip}/browseItemsFiltering.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -168,7 +168,7 @@ const BrowseItems = () => {
   const [liked, setLiked] = useState({});
   useEffect(() => {
     if (userId) {
-      fetch(`${ip}/tua_marketplace/fetchLikedItems.php?user_id=${userId}`, {
+      fetch(`${ip}/fetchLikedItems.php?user_id=${userId}`, {
         credentials: "include",
       })
         .then((res) => res.json())
@@ -195,7 +195,7 @@ const BrowseItems = () => {
     }));
 
     // Send like/unlike to the backend
-    fetch(`${ip}/tua_marketplace/InsertLikeditems.php`, {
+    fetch(`${ip}/InsertLikeditems.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -221,7 +221,7 @@ const BrowseItems = () => {
   const [topSellers, setTopSellers] = useState([]);
   useEffect(() => {
     if (userId) {
-      fetch(`${ip}/tua_marketplace/fetchRatedSellers.php`, {
+      fetch(`${ip}/fetchRatedSellers.php`, {
         credentials: "include",
       })
        .then(res => res.json())
@@ -233,7 +233,7 @@ const BrowseItems = () => {
   // For search items
   const searchItem = (query) => {
     if (query != ""){
-        fetch(`${ip}/tua_marketplace/searchItem.php`, {
+        fetch(`${ip}/searchItem.php`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

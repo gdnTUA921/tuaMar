@@ -78,7 +78,7 @@ button:hover{
     height: auto;
     background-color: #D9D9D9;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 30px 50px;
     padding-bottom: 0;
 }

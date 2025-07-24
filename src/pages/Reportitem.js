@@ -21,7 +21,7 @@ const Reportitem = () => {
 
   useEffect(() => {
     // Checking if logged in, if not redirected to log-in
-    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+    fetch(`${ip}/fetchSession.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -46,7 +46,7 @@ const Reportitem = () => {
       description,
     });
  
-    fetch(`${ip}/tua_marketplace/report.php`, {
+    fetch(`${ip}/report.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

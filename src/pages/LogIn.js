@@ -76,7 +76,7 @@ function LogIn() {
      const handleLogIn = (event) => {
         event.preventDefault();
     
-        fetch(`${ip}/tua_marketplace/handleLogIn.php`, {
+        fetch(`${ip}/handleLogIn.php`, {
           method: "POST",
           body: JSON.stringify({
             user,
@@ -145,7 +145,7 @@ function LogIn() {
             }
 
             // Send data to PHP to verify and create session
-            const response = await fetch(`${ip}/tua_marketplace/handleGoogleLogIn.php`, {
+            const response = await fetch(`${ip}/handleGoogleLogIn.php`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

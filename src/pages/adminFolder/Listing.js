@@ -19,7 +19,7 @@ function MyProfile() {
     const fetchData = async () => {
       try {
         // Fetch item listings
-        const itemRes = await fetch(`${ip}/tua_marketplace/itemlistingsadmin.php`);
+        const itemRes = await fetch(`${ip}/itemlistingsadmin.php`);
         const itemData = await itemRes.json();
 
         if (Array.isArray(itemData)) {
@@ -31,7 +31,7 @@ function MyProfile() {
         }
 
         // Fetch like count (add handling logic as needed)
-        const likeCountRes = await fetch(`${ip}/tua_marketplace/fetchLikeCount.php`, {
+        const likeCountRes = await fetch(`${ip}/fetchLikeCount.php`, {
           method: "POST",
           credentials: "include",
           body: JSON.stringify({ myListings: itemData }),
@@ -81,7 +81,7 @@ const handleDelete = async (itemId) => {
     if (!reason) return; // cancelled or blank
 
     try {
-      const res = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
+      const res = await fetch(`${ip}/deleteItem.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ item_id: itemId, reason: reason.trim() }),

@@ -35,7 +35,7 @@ function UserProfile() {
 
     try {
       // Fetching session
-      const sessionRes = await fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+      const sessionRes = await fetch(`${ip}/fetchSession.php`, {
         method: "GET",
         credentials: "include",
       });
@@ -55,12 +55,12 @@ function UserProfile() {
 
       // Fetch user profile & listings concurrently
       const [profileRes, itemsRes] = await Promise.all([
-        fetch(`${ip}/tua_marketplace/fetchUserProfileDeets.php`, {
+        fetch(`${ip}/fetchUserProfileDeets.php`, {
           method: "POST",
           credentials: "include",
           body: JSON.stringify({ user_name: userName }),
         }),
-        fetch(`${ip}/tua_marketplace/fetchUserProfileItems.php`, {
+        fetch(`${ip}/fetchUserProfileItems.php`, {
           method: "POST",
           credentials: "include",
           body: JSON.stringify({ user_name: userName }),
@@ -84,7 +84,7 @@ function UserProfile() {
       
 
       //Step 5: Fetch user review data
-      const reviewDataRes = await fetch(`${ip}/tua_marketplace/fetchUserReviewData.php`, {
+      const reviewDataRes = await fetch(`${ip}/fetchUserReviewData.php`, {
         method: "POST",
         body: JSON.stringify({user_id: profileData.user_id}),
       });
@@ -117,7 +117,7 @@ function UserProfile() {
 const [liked, setLiked] = useState({});
 useEffect(() => {
   if (userId) {
-    fetch(`${ip}/tua_marketplace/fetchLikedItems.php?user_id=${userId}`, {
+    fetch(`${ip}/fetchLikedItems.php?user_id=${userId}`, {
       credentials: "include",
     })
       .then((res) => res.json())
@@ -145,7 +145,7 @@ useEffect(() => {
   }));
 
   // Send like/unlike to the backend
-  fetch(`${ip}/tua_marketplace/InsertLikeditems.php`, {
+  fetch(`${ip}/InsertLikeditems.php`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

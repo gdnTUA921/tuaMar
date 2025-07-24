@@ -8,6 +8,7 @@
   function Recommendation({itemName, userId}) {
     
     const ip = process.env.REACT_APP_LAPTOP_IP; // from .env file (e.g., 192.168.1.10)
+    const ipPython = process.env.REACT_APP_IP_PYTHON; // from .env file (e.g., https://python-backend-388938576760.asia-southeast1.run.app)
 
     const [recommendations, setRecommendations] = useState([]); //setting up recommendations
 
@@ -20,7 +21,7 @@
   const [liked, setLiked] = useState({});
   useEffect(() => {
     if (userId) {
-      fetch(`${ip}/tua_marketplace/fetchLikedItems.php?user_id=${userId}`, {
+      fetch(`${ip}/fetchLikedItems.php?user_id=${userId}`, {
         credentials: "include",
       })
         .then((res) => res.json())
@@ -49,7 +50,7 @@
     }));
   
     // Send like/unlike to the backend
-    fetch(`${ip}/tua_marketplace/InsertLikeditems.php`, {
+    fetch(`${ip}/InsertLikeditems.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,7 +76,7 @@
   {/* fetching items based only to the clicked item*/}
   useEffect(() => {
     if (itemName) {
-      fetch(`http://localhost:5050/recommend-item`, {
+      fetch(`${ipPython}/recommend-item`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

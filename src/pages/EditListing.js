@@ -44,7 +44,7 @@ function EditListing() {
   const goBack = () => navigate("/myProfile");
 
   useEffect(() => {
-    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+    fetch(`${ip}/fetchSession.php`, {
       method: "GET",
       credentials: "include",
     })
@@ -57,7 +57,7 @@ function EditListing() {
 
   useEffect(() => {
     
-    fetch(`${ip}/tua_marketplace/itemPicsFetch.php`, {
+    fetch(`${ip}/itemPicsFetch.php`, {
       method: "POST",
       body: JSON.stringify({ item_id: itemId }),
     })
@@ -68,7 +68,7 @@ function EditListing() {
       })
       .catch((err) => console.error("Pics fetch error:", err));
 
-    fetch(`${ip}/tua_marketplace/fetchItemDeets.php`, {
+    fetch(`${ip}/fetchItemDeets.php`, {
       method: "POST",
       body: JSON.stringify({ item_id: itemId, item_name: listingName }),
     })
@@ -151,7 +151,7 @@ function EditListing() {
       console.log('Final image URLs:', allImageUrls);
 
       // Update listing in database
-      const res = await fetch(`${ip}/tua_marketplace/updateListing.php`, {
+      const res = await fetch(`${ip}/updateListing.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -28,7 +28,7 @@ export default function Members() {
   const [refresh, setRefresh] = useState(false);
 
   // Hook to track screen size
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1200);
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,12 +41,11 @@ export default function Members() {
 
   //Fetching list of users from the server
   useEffect(() => {
-      fetch(`${ip}/tua_marketplace/fetchListUsers.php`, {
+      fetch(`${ip}/fetchListUsers.php`, {
         method: "GET",
       })
         .then((response) => response.json())
         .then((data) => {
-              console.log('Fetched users:', data); // Log the fetched users
               if (Array.isArray(data)) {
                 // Assuming data is an array of user objects
                 setUsers(data);
@@ -62,12 +61,11 @@ export default function Members() {
 
     //Fetching user count for each type
     useEffect(() => {
-      fetch(`${ip}/tua_marketplace/fetchUserCount.php`, {
+      fetch(`${ip}/fetchUserCount.php`, {
         method: "GET",
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log('Fetched user counts:', data);
           if (data && typeof data === "object" && !Array.isArray(data)) {
             setUserCounts(data); // Set it if it's a plain object
           } else {
@@ -88,7 +86,7 @@ export default function Members() {
   });
 
   const handleViewListings = (user) => {
-    fetch(`${ip}/tua_marketplace/getmemberslistings.php?user_id=${user.id}`)
+    fetch(`${ip}/getmemberslistings.php?user_id=${user.id}`)
       .then(res => res.json())
       .then(data => {
         setSelectedUserListings(data);
@@ -102,7 +100,7 @@ export default function Members() {
   };
 
   const handleUpdateUser = (user) => {
-    fetch(`${ip}/tua_marketplace/updateuserdetails.php?user_id=${user.id}`)
+    fetch(`${ip}/updateuserdetails.php?user_id=${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
@@ -139,7 +137,7 @@ export default function Members() {
 
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`${ip}/tua_marketplace/deleteUser.php`, {
+          const response = await fetch(`${ip}/deleteUser.php`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ user_id }),
@@ -180,7 +178,7 @@ export default function Members() {
 
     try {
       // 1. Update MySQL backend
-      const res = await fetch(`${ip}/tua_marketplace/updateUser.php`, {
+      const res = await fetch(`${ip}/updateUser.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -203,7 +201,7 @@ export default function Members() {
 
       // 2. Refresh user list
       setEditUser(null);
-      const userRes = await fetch(`${ip}/tua_marketplace/fetchListUsers.php`);
+      const userRes = await fetch(`${ip}/fetchListUsers.php`);
       const userData = await userRes.json();
       if (Array.isArray(userData)) {
         setUsers(userData);

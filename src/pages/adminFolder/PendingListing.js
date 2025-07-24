@@ -21,7 +21,7 @@ function MyProfile() {
       const fetchData = async () => {
         try {
           // Fetch item listings
-          const itemRes = await fetch(`${ip}/tua_marketplace/pendingitemfetch.php`);
+          const itemRes = await fetch(`${ip}/pendingitemfetch.php`);
           const itemData = await itemRes.json();
   
           if (Array.isArray(itemData)) {
@@ -32,7 +32,7 @@ function MyProfile() {
           }
   
           // Fetch like count (add handling logic as needed)
-          const likeCountRes = await fetch(`${ip}/tua_marketplace/fetchLikeCount.php`, {
+          const likeCountRes = await fetch(`${ip}/fetchLikeCount.php`, {
             method: "POST",
             credentials: "include",
             body: JSON.stringify({ myListings: itemData }),
@@ -69,7 +69,7 @@ function MyProfile() {
     if (!confirmResult.isConfirmed) return;
 
     try {
-      const res = await fetch(`${ip}/tua_marketplace/approveItem.php`, {
+      const res = await fetch(`${ip}/approveItem.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ item_id: itemId }),
@@ -119,6 +119,7 @@ function MyProfile() {
         title: 'Error',
         text: 'An error occurred while approving the listing.',
       });
+      console.error(e);
     }
   };
 
@@ -148,7 +149,7 @@ function MyProfile() {
     if (!reason) return; // cancelled or blank
 
     try {
-      const res = await fetch(`${ip}/tua_marketplace/deleteItem.php`, {
+      const res = await fetch(`${ip}/deleteItem.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ item_id: itemId, reason: reason.trim() }),

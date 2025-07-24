@@ -9,6 +9,7 @@
     const scrollRef = useRef(null);
     
     const ip = process.env.REACT_APP_LAPTOP_IP; // from .env file (e.g., 192.168.1.10)
+    const ipPython = process.env.REACT_APP_IP_PYTHON; // from .env file (e.g., https://python-backend-388938576760.asia-southeast1.run.app)
 
     const [recommendations, setRecommendations] = useState([]); //setting up recommendations
 
@@ -39,7 +40,7 @@
     const fetchLikedItems = () => {
         if (!userId) return;
 
-        fetch(`${ip}/tua_marketplace/fetchLikedItems.php?user_id=${userId}`, {
+        fetch(`${ip}/fetchLikedItems.php?user_id=${userId}`, {
         credentials: "include",
         })
         .then((res) => res.json())
@@ -79,7 +80,7 @@
     }));
   
     // Send like/unlike to the backend
-    fetch(`${ip}/tua_marketplace/InsertLikeditems.php`, {
+    fetch(`${ip}/InsertLikeditems.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -105,7 +106,7 @@
   {/* fetching items based on search, like, and view history*/}
   useEffect(() => {
     if (userId){
-      fetch(`http://localhost:5050/personalized-recom`, {
+      fetch(`${ipPython}/personalized-recom`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',

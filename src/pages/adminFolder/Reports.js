@@ -54,6 +54,9 @@ export default function Reports() {
   const [showPopup, setShowPopup] = useState(false);
 
 
+  const ip = process.env.REACT_APP_LAPTOP_IP; //ip address of computer or hosting machine
+
+
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
@@ -62,7 +65,10 @@ export default function Reports() {
 
   
   useEffect(() => {
-  fetch("http://localhost/tua_marketplace/fetch_reports.php")
+  fetch(`${ip}/fetch_reports.php`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
     .then((res) => res.json())
     .then((data) => {
       const formatted = data.map((r) => ({
@@ -90,7 +96,7 @@ export default function Reports() {
     setReports(updatedReports);
     setEditingId(null);
 
-    fetch("http://localhost/tua_marketplace/update_report_status.php", {
+    fetch(`${ip}/update_report_status.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ report_id: id, status: newStatus }),

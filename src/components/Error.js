@@ -21,7 +21,7 @@ const Error = () => {
 
 useEffect(() => {
       // Checking if logged in, if not redirected to log-in
-      fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+      fetch(`${ip}/fetchSession.php`, {
         method: "GET",
         credentials: "include",
       })

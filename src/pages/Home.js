@@ -26,7 +26,7 @@ function Home() {
   const formPolicyRef = useRef(null); // 👈 Ref to scroll container
 
   useEffect(() => {
-    fetch(`${ip}/tua_marketplace/fetchSession.php`, {
+    fetch(`${ip}/fetchSession.php`, {
       method: "GET",
       credentials: "include",
     })

@@ -22,7 +22,7 @@ function Header() {
       try{
           await signOut(auth);
 
-          const response = await fetch(`${ip}/tua_marketplace/logOut.php`, {
+          const response = await fetch(`${ip}/logOut.php`, {
             credentials: "include", // This is important for cookies!
           });
 
