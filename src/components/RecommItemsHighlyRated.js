@@ -115,7 +115,7 @@
           const shuffled = [...data].sort(() => Math.random() - 0.5);
           setRecommendations(shuffled); 
           setIsLoading(false);
-          if (Array.isArray(data) && data.length === 0) {
+          if ((Array.isArray(data) && data.length === 0) || data.message === "Error: Failed to Fetch Recently Posted Listings.") {
             if (onFetchFail) onFetchFail();
           }
         })
@@ -154,16 +154,17 @@
                                     className="recomm-item-details-link"
                                 >
                                         <img
-                                            src={item.preview_pic}
+                                            src={item.preview_pic || "/default-image.png"}
+                                            onError={(e) => (e.target.src = "/default-image.png")}
                                             style={{
-                                            width: "180px",
-                                            height: "180px",
-                                            border: "3px solid green",
-                                            borderRadius: "12px",
-                                            alignItems: "center",
-                                            marginLeft: "5.5px"
+                                              width: "180px",
+                                              height: "180px",
+                                              border: "3px solid green",
+                                              borderRadius: "12px",
+                                              alignItems: "center",
+                                              marginLeft: "5.5px"
                                             }}
-                                            alt="Item"
+                                            alt={item.item_name}
                                         />
                                     </Link>
 

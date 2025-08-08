@@ -45,6 +45,7 @@ function LogIn() {
      const [user, setUser] = useState("");
      const [password, setPassword] = useState("");
 
+
      const togglePassword = (eyeType, passwordType) => {
 
         if (eyeType == "bi bi-eye-fill inputIcon"){
@@ -199,11 +200,15 @@ function LogIn() {
 
 
     //For forgot password
+    const [user2, setUser2] = useState(""); 
+
     const [otp, setOTP] = useState(""); //for OTP input
     const [sentStatus, setSentStatus] = useState(false);
     const [otpVerified, setOTPVerified] = useState(false);
     const [newPass, setNewPass] = useState(false);
     const [confirmPass, setConfirmPass] = useState(false);
+
+    const handleUserChange2 = (event) => setUser2(event.target.value);
 
     const handleNewUserPass = (event) => setNewPass(event.target.value);
     const handleConfirmUserPass = (event) => setConfirmPass(event.target.value);
@@ -217,9 +222,9 @@ function LogIn() {
 
     const handleOTPSubmit = (event) => {
         event.preventDefault();
-        fetch(`${ip}/tua_marketplace/verifyOTP.php`, {
+        fetch(`${ip}/verifyOTP.php`, {
             method: "POST",
-            body: JSON.stringify({email: user, otp: otp})
+            body: JSON.stringify({email: user2, otp: otp})
         })
         .then((res) => res.json())
         .then((data) => {
@@ -258,9 +263,9 @@ function LogIn() {
 
     //request OTP Function common for handleRequestNewOTP and handleForgotPass
     const requestOTP = () => {
-        fetch(`${ip}/tua_marketplace/generateOTP.php`, {
+        fetch(`${ip}/generateOTP.php`, {
             method: "POST",
-            body: JSON.stringify({email: user})
+            body: JSON.stringify({email: user2})
         })
         .then((res) => res.json())
         .then((data) => {
@@ -304,9 +309,9 @@ function LogIn() {
     //For Password Reset
     const handlePasswordReset = (event) =>{
         event.preventDefault();
-        fetch(`${ip}/tua_marketplace/resetPassword.php`, {
+        fetch(`${ip}/resetPassword.php`, {
             method: "POST",
-            body: JSON.stringify({email: user, newPass: newPass, confirmPass: confirmPass})
+            body: JSON.stringify({email: user2, newPass: newPass, confirmPass: confirmPass})
         })
         .then((res) => res.json())
         .then((data) => {
@@ -365,6 +370,8 @@ function LogIn() {
                         Continue with Google
                     </button>
                 </div>
+
+                {/*Admin Log In*/}
                 <div className="logInContents_admin" style={{display: adminLogIn === "none" ? "none" : "flex"}}>
                     <div className="adminLogInHeader">
                         <img src="/tuamar.png" alt="TUA Logo" />
@@ -374,6 +381,7 @@ function LogIn() {
                         <div className="inputWrapper">
                             <i className="bi bi-person-fill inputIcon"></i>
                             <input
+                                className="userName"
                                 id="userName"
                                 type="text"
                                 name="username"
@@ -420,11 +428,12 @@ function LogIn() {
                         <div className="inputWrapper">
                             <i className="bi bi-person-fill inputIcon"></i>
                             <input
-                                id="userName"
+                                className="userName"
+                                id="userName2"
                                 type="text"
                                 name="username"
                                 placeholder="Email"
-                                onChange={handleUserChange}
+                                onChange={handleUserChange2}
                                 required
                             />
                         </div>
@@ -481,7 +490,7 @@ function LogIn() {
                                 type={passType === "password" ? "password" : "text"}
                                 name="password"
                                 placeholder="Enter New Password"
-                                id="logInPass"
+                                id="newUserPass"
                                 onChange={handleNewUserPass}
                                 required
                             />
@@ -501,7 +510,7 @@ function LogIn() {
                                 type={passType2 === "password" ? "password" : "text"}
                                 name="password"
                                 placeholder="Confirm New Password"
-                                id="logInPass"
+                                id="confirmUserPass"
                                 onChange={handleConfirmUserPass}
                                 required
                             />

@@ -473,7 +473,7 @@ function MyProfile() {
 
                     {rev.images ? <div className="review-images">
                       {rev.images && rev.images.length > 0 ? (rev.images.map((img, index) => (       
-                          <img key={index} src={img} className="review-image" onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(img)}} alt="review image"/>
+                          <img key={index} src={img || "/default-image.png"} onError={(e) => (e.target.src = "/default-image.png")} className="review-image" onClick={() => {setShowEnlargeImg(true); setEnlargeImg(img)}}/>
                       ))) : ("")}
                     </div> : ""}
                   
@@ -495,7 +495,7 @@ function MyProfile() {
                   </button>
                 </div>
                 <div className="image-preview-content">
-                  <img src={enlargedImg} alt="Preview" className="popup-preview-image" />
+                  <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
                 </div>
               </div>
             </div>

@@ -114,10 +114,16 @@
       })
         .then((res) => res.json())
         .then((data) => {
-          const shuffled = [...data].sort(() => Math.random() - 0.5);
-          setRecommendations(shuffled); // this should be an array
+          // Check if data is an array and has items
+          if (Array.isArray(data) && data.length > 0) {
+            // Shuffle the data array to randomize the order
+            const shuffled = [...data].sort(() => Math.random() - 0.5);
+            setRecommendations(shuffled); // this should be an array
+          }
           setIsLoading(false);
-          if (Array.isArray(data) && data.length === 0) {
+
+          // Check if data is empty and call onFetchFail if provided
+          if ((Array.isArray(data) && data.length === 0) || data.message === "Error: Failed to fetch most viewed items") {
             if (onFetchFail) onFetchFail();
           }
         })
@@ -156,16 +162,17 @@
                                     className="recomm-item-details-link"
                                 >
                                         <img
-                                            src={item.preview_pic}
+                                            src={item.preview_pic || "/default-image.png"}
+                                            onError={(e) => (e.target.src = "/default-image.png")}
                                             style={{
-                                            width: "180px",
-                                            height: "180px",
-                                            border: "3px solid green",
-                                            borderRadius: "12px",
-                                            alignItems: "center",
-                                            marginLeft: "5.5px"
+                                              width: "180px",
+                                              height: "180px",
+                                              border: "3px solid green",
+                                              borderRadius: "12px",
+                                              alignItems: "center",
+                                              marginLeft: "5.5px"
                                             }}
-                                            alt="Item"
+                                            alt={item.item_name}
                                         />
                                     </Link>
 
