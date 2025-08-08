@@ -341,7 +341,7 @@ useEffect(() => {
                   </button>
                 </div>
                 <div className="image-preview-content">
-                  <img src={enlargedImg} alt="Preview" className="popup-preview-image" />
+                  <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
                 </div>
               </div>
             </div>
