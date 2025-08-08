@@ -304,7 +304,7 @@ useEffect(() => {
                 <h1>Meet The Seller</h1>
                 
                   <div className="seller-profile-pic">
-                    <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.user_id }`} className="sellerLink">
+                    <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.firstName + " " + itemDeets.lastName}`} className="sellerLink">
                       <img 
                         src={itemDeets.profilePic || "/tuamar-profile-icon.jpg"} 
                         alt="Profile Photo"
