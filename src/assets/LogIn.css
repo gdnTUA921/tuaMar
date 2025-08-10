@@ -410,7 +410,6 @@ body {
 
     .googleLogIn, .adminLogIn {
         padding-left: 2rem;
-        font-size: 1.8vh;
         gap: 10px;
         padding-left: 40px !important;
     }
@@ -444,12 +443,14 @@ body {
     }
 
     .logInTitle {
-        font-size: 2.2vh !important;
+        font-size: 2.5vh !important;
+        white-space: wrap;
         text-align: center;
+        animation: none;
+        border-right: none; /* Optional: remove the caret effect too */
     }
 
     .googleLogIn, .adminLogIn {
-        font-size: 1.6vh;
         gap: 10px;
         padding-left: 40px !important;
     }
@@ -474,8 +475,11 @@ body {
     }
 
     .adminLogInHeader h2{
-    font-size: 2.5vh;
     text-align: center;
+    }
+
+    .logInContents_admin{
+        width: 100% !important;
     }
 }
 
@@ -489,6 +493,29 @@ body {
         padding-left: 1.5rem;
     }
 
+    .logInTitle{
+        font-size: 2vh !important;
+    }
+
+    .adminLogInHeader h2{
+        font-size: 18px;
+    }
+
+    .adminLogInHeader{
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+    }
+
+    .logInContents{
+        margin-top: 0;
+        width: 100% !important;
+    }
+
+    .logInBox{
+        width: 100%;
+        padding: 30px;
+    }
 }
 
 @media only screen and (max-height: 500px) {

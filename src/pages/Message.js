@@ -355,7 +355,8 @@ function Message() {
     setReceiverStatus(receiverStatus);
   }
 
-  // Function for Seller marking item as SOLD / RESERVED
+  // Function for Seller marking item as SOLD / RESERVED / AVAILABLE
+  // This function will update the item_status in PHP Backend and the chatsList in Firebase
   const handleItemStatus = (itemStatus, itemId) => {
     MySwal.fire({
       title: "Mark this listing as " + itemStatus + "?",

@@ -5,7 +5,7 @@
   import LoaderPart from './LoaderPart';
 
 
-  function Recommendation({itemName, userId}) {
+  function Recommendation({itemName, userId, onFetchFail}) {
     
     const ip = process.env.REACT_APP_LAPTOP_IP; // from .env file (e.g., 192.168.1.10)
     const ipPython = process.env.REACT_APP_IP_PYTHON; // from .env file (e.g., https://python-backend-388938576760.asia-southeast1.run.app)
@@ -85,12 +85,18 @@
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("Fetched recommendations:", data);
           setRecommendations(data); // this should be an array
           setIsLoading(false);
+
+          // Check if data is empty and call onFetchFail if provided
+          if (Array.isArray(data) && data.length === 0)  {
+            if (onFetchFail) onFetchFail();
+          }
         })
         .catch((err) => {
           console.error("Recommendation fetch failed:", err);
+          setIsLoading(false);
+          if (onFetchFail) onFetchFail();  // Notify parent if fetch fails
         });
     }
   }, [itemName]);

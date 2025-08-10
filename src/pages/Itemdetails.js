@@ -29,6 +29,10 @@ const Itemdetails = () => {
   const [enlargedImg, setEnlargeImg] = useState("");
 
 
+  //For rendering item recommendations
+  const [shouldRenderItemRecomm, setShouldRenderItemRecomm] = useState(true);
+
+
 useEffect(() => {
   const fetchAndLog = async () => {
     let userId;
@@ -325,9 +329,9 @@ useEffect(() => {
             </div>
             <hr/>
             
-            {itemDeets.status == "AVAILABLE" &&
+            {itemDeets.status == "AVAILABLE" && shouldRenderItemRecomm &&
             <div className='itemsRecommended'>
-             <Recommendation itemName={itemDeets.itemName} userId={userID}/> 
+             <Recommendation itemName={itemDeets.itemName} userId={userID} onFetchFail={() => setShouldRenderItemRecomm(false)}/> 
             </div>}
 
           {/* View Image Modal */}

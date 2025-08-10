@@ -5,6 +5,8 @@ import "../assets/MyProfile.css";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'; 
 import LoaderPart from "../components/LoaderPart";
+import { database } from '../firebaseConfig';
+import { ref, get, update } from 'firebase/database';
 
 function MyProfile() {
 
@@ -110,11 +112,12 @@ function MyProfile() {
     };
 
     fetchAllData();
-  }, [activeTab]);
+  }, [ip, navigate, activeTab]);
 
 
 
-//function for marking item as SOLD / RESERVED / AVAILABLE
+  // Function for Seller marking item as SOLD / RESERVED / AVAILABLE
+  // This function will update the item_status in PHP Backend and the chatsList in Firebase
   const handleItemStatus = (itemStatus, itemId) => {
     MySwal.fire({
       title: "Mark this listing as " + itemStatus + "?",
@@ -126,35 +129,51 @@ function MyProfile() {
       confirmButtonText: "Yes"
     }).then((result) => {
       if (result.isConfirmed) {
-
         let updateStatus;
         let message;
 
-        fetch (`${ip}/setItemStatus.php`, {
+        fetch(`${ip}/setItemStatus.php`, {
           method: "POST",
-          body: JSON.stringify({itemStatus, itemId}),
+          body: JSON.stringify({ itemStatus, itemId }),
           credentials: "include",
           headers: {
-            "Content-Type": "application/json"  // ✅ ensure correct header
+            "Content-Type": "application/json"
           },
         })
-        .then ((response) => response.json())
-        .then ((data) => { 
-            console.log(data.updateStatus);
+          .then((response) => response.json())
+          .then((data) => {
             updateStatus = data.updateStatus;
             message = data.message;
 
             if (updateStatus === "success") {
+              // Update item_status in Firebase
+              const db = database;
+              const chatsRef = ref(db, "chatsList");
 
-              if (itemStatus === "Sold"){
+              get(chatsRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                  const chatsData = snapshot.val();
+
+                  Object.entries(chatsData).forEach(([chatId, chat]) => {
+                    if (chat.item_id === itemId) {
+                      const chatRef = ref(db, `chatsList/${chatId}`);
+                      update(chatRef, { item_status: itemStatus.toUpperCase() })
+                        .then(() => {
+                          console.log(`Firebase item_status updated for chat ${chatId}`);
+                        })
+                        .catch((error) => {
+                          console.error("Error updating Firebase item_status:", error);
+                        });
+                    }
+                  });
+                }
+              });
+
+              if (itemStatus === "Sold") {
                 message = "Congratulations! This item is now marked Sold.";
-              }
-             
-              else if (itemStatus === "Reserved") {
+              } else if (itemStatus === "Reserved") {
                 message = "This item is now marked Reserved.";
-              } 
-              
-              else {
+              } else {
                 message = "This item is now marked Available.";
               }
 
@@ -164,32 +183,29 @@ function MyProfile() {
                 icon: "success",
                 confirmButtonColor: "#547B3E",
               }).then((result) => {
-                  if (result.isConfirmed){
-                    window.location.reload();
-                  }
+                if (result.isConfirmed) {
+                  window.location.reload();
+                }
               });
-            }
-
-            else {
+            } else {
               MySwal.fire({
                 title: "Failure to Update Status!",
                 text: "Failed to Update Listing Status",
                 icon: "error",
                 confirmButtonColor: "#547B3E",
               }).then((result) => {
-                  if (result.isConfirmed){
-                    window.location.reload();
-                  }
+                if (result.isConfirmed) {
+                  window.location.reload();
+                }
               });
             }
-        })
-
-        .catch((error) => {
-          console.error("Error updating listing status:", error);
-        });
+          })
+          .catch((error) => {
+            console.error("Error updating listing status:", error);
+          });
       }
     });
-  }
+  };
 
 
 
@@ -277,7 +293,7 @@ function MyProfile() {
           console.error("Error fetching liked items:", error);
         });
     }
-  }, [userId]);
+  }, [ip, userId]);
   
   
      // for setting or toggling likes
@@ -334,7 +350,7 @@ function MyProfile() {
             <div className="profile-pic">
               <img 
                 src={userData.profile_pic || "/tuamar-profile-icon.jpg"} 
-                alt="Profile Photo" 
+                alt="Profile Pic" 
                 onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
               />
             </div>
@@ -345,7 +361,7 @@ function MyProfile() {
                 <span id="starReview">
                   <i className="bi bi-star-fill"></i>
                 </span>
-                <p className="rating-score">{userData.ratingAvg || 0}</p>
+                <p className="rating-score">{userData.ratingAvg || "0.0"}</p>
               </div>
             </div>
            
@@ -455,7 +471,7 @@ function MyProfile() {
               {userReviewData.length > 0 ? (userReviewData.map((rev, index) => (
                   <div className='reviewCard' key={index}>
                     <div className="profile-reviews">
-                      <Link to={`/userProfile/${rev.userName}`} className="sellerLink"><img src={rev.profile_pic || "tua-mar-profile-icon.jpg"} alt="Profile Photo" /></Link>
+                      <Link to={`/userProfile/${rev.userName}`} className="sellerLink"><img src={rev.profile_pic || "tua-mar-profile-icon.jpg"} alt="Profile Pic" /></Link>
                       <p><Link to={`/userProfile/${rev.userName}`} className="sellerLink">{rev.userName}</Link></p>
                       <p>&#x2022;&nbsp;Review from {rev.reviewer_status}</p>
                       <p>{new Date(rev.time_stamp).toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' })}</p>
@@ -473,7 +489,7 @@ function MyProfile() {
 
                     {rev.images ? <div className="review-images">
                       {rev.images && rev.images.length > 0 ? (rev.images.map((img, index) => (       
-                          <img key={index} src={img || "/default-image.png"} onError={(e) => (e.target.src = "/default-image.png")} className="review-image" onClick={() => {setShowEnlargeImg(true); setEnlargeImg(img)}}/>
+                          <img key={index} src={img || "/default-image.png"} onError={(e) => (e.target.src = "/default-image.png")} alt="Review Pics" className="review-image" onClick={() => {setShowEnlargeImg(true); setEnlargeImg(img)}}/>
                       ))) : ("")}
                     </div> : ""}
                   
@@ -526,36 +542,11 @@ function MyProfile() {
                     </tr>
                     <tr>
                       <td><b>Date Registered</b></td>
-                      <td>{userData.regDate}</td>
+                      <td>{new Date(userData.regDate).toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })}</td>
                     </tr>
                   </tbody>
                 </table>
                 <br/><hr/>
-
-                {/* (For change password in case implemented)
-                <h3>Change Password</h3><br/>
-                
-                <form action="">
-                  <label>Enter Old Password:</label>
-                  <div class="password-wrapper">
-                      <input type={oldPasswordType} id="password1" placeholder="Old Password" name="oldPass"/>
-                      <i id="eyeBtn_1" className={oldPassView} onClick={() => togglePassword("oldPassword")}></i>
-                  </div><br/><br/>
-
-                  <label>Enter New Password:</label>
-                  <div class="password-wrapper">
-                      <input type={newPasswordType} id="password2" placeholder="New Password" name="newPass"/>
-                      <i id="eyeBtn2" className={newPassView} onClick={() => togglePassword("newPassword")}></i>
-                  </div><br/><br/>
-
-                  <label>Confirm New Password:</label>
-                  <div class="password-wrapper">
-                      <input type={confirmPasswordType} id="password3" placeholder="Confirm New Password" name="confirmPass"/>
-                      <i id="eyeBtn3" className={confirmPassView} onClick={() => togglePassword("confirmPassword")}></i>
-                  </div>
-
-                  <center><button>Update</button></center>
-                </form>*/}
               </div>
           
           {/* Liked Items Tab */}

@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./Listing.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { database } from '../../firebaseConfig';
-import { ref, onValue, push, set, get, update} from 'firebase/database';
 
-function MyProfile() {
-  const [activeTab, setActiveTab] = useState("myListings");
+function ArchivedItems() {
   const [searchQuery, setSearchQuery] = useState("");
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null); // for popup
@@ -120,7 +117,6 @@ function MyProfile() {
             <div
               className="myListings"
               style={{
-                display: activeTab === "myListings" ? "block" : "none",
                 overflow: "scroll",
               }}
             >
@@ -138,13 +134,13 @@ function MyProfile() {
                   {filteredItems.length > 0 ? (
                     filteredItems.map((item) => (
                       <div className="itemCard" key={item.item_id}>
-                        <div className="soldBanner" style={{display: item.status == "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
+                        <div className="soldBanner" style={{display: item.status === "SOLD" ? "block" : "none"}}> {/*set this up if item is considered SOLD*/}
                           SOLD
                         </div>
-                        <div className="reservedBanner" style={{display: item.status == "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
+                        <div className="reservedBanner" style={{display: item.status === "RESERVED" ? "block" : "none"}}> {/*set this up if item is considered RESERVED*/}
                           RESERVED
                         </div>
-                        <div className="reviewBanner" style={{display: item.status == "IN REVIEW" ? "block" : "none"}}> {/*set this up if item is considered UNDER REVIEW*/}
+                        <div className="reviewBanner" style={{display: item.status === "IN REVIEW" ? "block" : "none"}}> {/*set this up if item is considered UNDER REVIEW*/}
                           IN REVIEW
                         </div>
                         <img
@@ -270,4 +266,4 @@ function MyProfile() {
   );
 }
 
-export default MyProfile;
+export default ArchivedItems;
