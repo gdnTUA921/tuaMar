@@ -155,7 +155,7 @@ function MyProfile() {
                   const chatsData = snapshot.val();
 
                   Object.entries(chatsData).forEach(([chatId, chat]) => {
-                    if (chat.item_id === itemId) {
+                    if (String(chat.item_id) === String(itemId)) {
                       const chatRef = ref(db, `chatsList/${chatId}`);
                       update(chatRef, { item_status: itemStatus.toUpperCase() })
                         .then(() => {
@@ -233,17 +233,54 @@ function MyProfile() {
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
-            MySwal.fire({
-              title: "DELETED!",
-              text: "Item successfully deleted.",
-              icon: "success",
-              confirmButtonColor: "#547B3E",
-            }).then((result) => {
-              if (result.isConfirmed){
-                window.location.reload();
-              }
-            });
+            if (data.message === "Item deleted") {
+              
+              // Update item_status in Firebase
+              const db = database;
+              const chatsRef = ref(db, "chatsList");
+
+              get(chatsRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                  const chatsData = snapshot.val();
+
+                  Object.entries(chatsData).forEach(([chatId, chat]) => {
+                    if (String(chat.item_id) === String(itemId)) {
+                      const chatRef = ref(db, `chatsList/${chatId}`);
+                      update(chatRef, { item_status: "UNLISTED" })
+                        .then(() => {
+                          console.log(`Firebase item_status updated for chat ${chatId}`);
+                        })
+                        .catch((error) => {
+                          console.error("Error updating Firebase item_status:", error);
+                        });
+                    }
+                  });
+                }
+              });
+            
+              MySwal.fire({
+                title: "DELETED!",
+                text: "Item successfully deleted.",
+                icon: "success",
+                confirmButtonColor: "#547B3E",
+              }).then((result) => {
+                if (result.isConfirmed){
+                  window.location.reload();
+                }
+              });
+            }
+            else {
+              MySwal.fire({
+                title: "Deletion Failed!",
+                text: "Failed to delete item.",
+                icon: "error",
+                confirmButtonColor: "#547B3E",
+              }).then((result) => {
+                if (result.isConfirmed){
+                  window.location.reload();
+                }
+              });
+            }
           })
           .catch((error) => {
             console.error("Error deleting item:", error);

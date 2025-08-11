@@ -176,6 +176,15 @@ button:hover{
     }
 }
 
+@media (max-width: 600px){
+    .popup-content{
+        display: flex;
+        width: 80%;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
 @media (max-width: 375px){
     .items-recommend{
         padding: 10px;

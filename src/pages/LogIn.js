@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../assets/Header.css';
 import '../assets/LogIn.css';
 import { useNavigate } from "react-router-dom";
@@ -38,7 +38,19 @@ function LogIn() {
         setAdminOTP("none");
      }
 
+     //Reload the page upon start up -- beneficial for clearing CSS properties of popup boxes for both admin and user accounts
+     //This is to ensure that the CSS properties for popup box does not affect each account types upon switching accounts.
+    useEffect(() => {
+        if (sessionStorage.getItem("reloaded")) {
+            return; // If already reloaded, do nothing
+        }
+        window.location.reload();
+        sessionStorage.setItem("reloaded", true);
+     }, []);
 
+
+     //For Log In Functionality (setting up states for username and password details)
+     //setting up eyes, password type, and user details
      const [eyeBtn, setEyeBtn] = useState("bi bi-eye-fill inputIcon");
      const [passType, setPassType] = useState("password");
      const [passType2, setPassType2] = useState("password");
@@ -46,6 +58,7 @@ function LogIn() {
      const [password, setPassword] = useState("");
 
 
+     // Toggle password visibility function
      const togglePassword = (eyeType, passwordType) => {
 
         if (eyeType == "bi bi-eye-fill inputIcon"){
@@ -69,11 +82,15 @@ function LogIn() {
         }
      }
 
+    //For supplying states of username and password for log in
     const handleUserChange = (event) => setUser(event.target.value);
     const handleUserPassword = (event) => setPassword(event.target.value);
 
-    const navigate = useNavigate();
+    
+    const navigate = useNavigate(); //for navigation to other pages
 
+    //For Admin Log In
+    //This function handles the log in of the admin account
      const handleLogIn = (event) => {
         event.preventDefault();
     
@@ -95,6 +112,7 @@ function LogIn() {
                 showConfirmButton: false,
                 timer: 1500
                 });
+                sessionStorage.removeItem("reloaded"); // Clear the reload session storage
                 navigate("/admin");
             } else {
                 MySwal.fire({
@@ -108,8 +126,13 @@ function LogIn() {
           .catch((error) => console.error("Error:", error));
       };
 
-      
-    // Google Auth using Firebase
+    
+    // For Google Log In
+    // This function handles the Google authentication process for user accounts.
+    // It checks if the user has a TUA email and handles the session creation
+    // If the user is unauthorized, it deletes the user from Firebase and signs them out.
+    // If the user is banned, it shows an error message and signs them out
+    // Log In is done through Google Auth using Firebase
     const handleGoogleLogin = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);
@@ -176,6 +199,7 @@ function LogIn() {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                sessionStorage.removeItem("reloaded"); // Clear the reload session storage
                 navigate("/home");
             } else {
                 await MySwal.fire({
@@ -215,11 +239,13 @@ function LogIn() {
     const handleOTPChange = (event) => setOTP(event.target.value);
 
 
+    //Once the user supplies their email address, this function will send a request to the backend to generate an OTP
     const handleForgotPass = (event) => {
         event.preventDefault();
         requestOTP();
     }
 
+    //For OTP Verification
     const handleOTPSubmit = (event) => {
         event.preventDefault();
         fetch(`${ip}/verifyOTP.php`, {
@@ -255,7 +281,7 @@ function LogIn() {
         .catch((error) => console.error("Error:", error));
     }
 
-
+    //For requesting a new OTP
     const handleRequestNewOTP = (event) => {
         event.preventDefault();
         requestOTP();

@@ -682,9 +682,9 @@ function Message() {
             <button className="review-button" disabled={messageCount < 7} onClick={() => goToReview(itemId, itemPicture, itemName, userName, appUserID, receiverPicture, receiverStatus)}>
               Leave Review
             </button>
-            <button className="view-button" style={{ display: currentUserId !== sellerID || itemStatus === "SOLD" || itemStatus === "IN REVIEW" ? "none" : "block" }} onClick={() => handleItemStatus("Sold", itemId)}>Mark Sold</button>
-            <button className="view-button" style={{ display: currentUserId !== sellerID || itemStatus === "RESERVED" || itemStatus === "SOLD" || itemStatus === "IN REVIEW" ? "none" : "block" }} onClick={() => handleItemStatus("Reserved", itemId)}>Reserve</button>
-            <button className="view-button" style={{ display: currentUserId !== sellerID || itemStatus === "AVAILABLE" || itemStatus === "IN REVIEW" ? "none" : "block" }} onClick={() => handleItemStatus("Available", itemId)}>Available</button>
+            <button className="view-button" style={{ display: currentUserId !== sellerID || itemStatus === "SOLD" || itemStatus === "IN REVIEW" || itemStatus === "UNLISTED" ? "none" : "block" }} onClick={() => handleItemStatus("Sold", itemId)}>Mark Sold</button>
+            <button className="view-button" style={{ display: currentUserId !== sellerID || itemStatus === "RESERVED" || itemStatus === "SOLD" || itemStatus === "IN REVIEW" || itemStatus === "UNLISTED" ? "none" : "block" }} onClick={() => handleItemStatus("Reserved", itemId)}>Reserve</button>
+            <button className="view-button" style={{ display: currentUserId !== sellerID || itemStatus === "AVAILABLE" || itemStatus === "IN REVIEW" || itemStatus === "UNLISTED" ? "none" : "block" }} onClick={() => handleItemStatus("Available", itemId)}>Available</button>
           </div>
         </div>
 
@@ -774,7 +774,7 @@ function Message() {
                   </button>
                 </div>
                 <div className="image-preview-content">
-                  <img src={previewUrl} alt="Preview" className="popup-preview-image" />
+                  <img src={previewUrl} alt="Preview" className="popup-preview-image-2" />
                 </div>
                 <div className="image-preview-actions">
                   <button className="cancel-btn" onClick={closePreview}>

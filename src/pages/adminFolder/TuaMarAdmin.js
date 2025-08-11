@@ -115,9 +115,9 @@ export default function Admin() {
         title: 'Log-Out Successful',
         showConfirmButton: false,
         timer: 1500
-      });
+      }).then(() => {
         navigate("/");
-        window.location.reload();
+      });
     })
     .catch((error) => console.error("Error fetching data:", error));
   }

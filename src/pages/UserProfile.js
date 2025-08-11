@@ -371,7 +371,7 @@ else{
                       </tr>
                       <tr>
                         <td><b>Date Registered</b></td>
-                        <td>{userData.regDate}</td>
+                        <td>{new Date(userData.regDate).toLocaleDateString("en-US", { month: 'long', day: 'numeric', year: 'numeric' })}</td>
                       </tr>
                     </tbody>
                   </table>

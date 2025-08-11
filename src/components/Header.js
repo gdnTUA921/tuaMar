@@ -34,8 +34,9 @@ function Header() {
                 title: 'Log-Out Successful',
                 showConfirmButton: false,
                 timer: 1500
+            }).then(() => {
+              navigate("/");
             });
-            navigate("/");
           }
       } catch (error) {
           console.error("Logout error:", error);

@@ -573,6 +573,16 @@
   padding-left: 0;
 }
 
+.popup-preview-image-2 {
+  width: 100%;
+  max-height: 55vh;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+  padding-left: 0;
+}
+
 .image-preview-actions {
   padding: 15px 20px;
   display: flex;

@@ -177,12 +177,13 @@ export default function Members() {
     e.preventDefault();
 
     try {
-      // 1. Update MySQL backend
+      // 1. Update MySQL DB and Firebase Realtime Database in Backend
       const res = await fetch(`${ip}/updateUser.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: editUser.id,
+          original_full_name: `${editUser.first_name} ${editUser.last_name}`.trim() || "",
           first_name: editedData.first_name?.trim() || "",
           last_name: editedData.last_name?.trim() || "",
           email: editedData.email?.trim() || "",
@@ -205,34 +206,6 @@ export default function Members() {
       const userData = await userRes.json();
       if (Array.isArray(userData)) {
         setUsers(userData);
-      }
-
-      // 3. Firebase update (optional — if item update needed for chatsList)
-      const originalFullName = `${editUser.first_name} ${editUser.last_name}`.trim();
-      const updatedFullName = `${editedData.first_name} ${editedData.last_name}`.trim();
-
-      const chatListRef = ref(database, 'chatsList');
-      const snapshot = await get(chatListRef);
-
-      if (snapshot.exists()) {
-        const updates = {};
-
-        snapshot.forEach(childSnapshot => {
-          const chatKey = childSnapshot.key;
-          const chatData = childSnapshot.val();
-
-          // Match by either seller name or buyer name (adjust as needed)
-          if (String(chatData.buyer_name) === String(originalFullName)){
-            updates[`/chatsList/${chatKey}/buyer_name`] = updatedFullName;
-          }
-          if (String(chatData.seller_name) === String(originalFullName)){
-            updates[`/chatsList/${chatKey}/seller_name`] = updatedFullName;
-          }
-        });
-
-        if (Object.keys(updates).length > 0) {
-          await update(ref(database), updates);
-        }
       }
 
       await MySwal.fire({

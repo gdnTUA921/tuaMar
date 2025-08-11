@@ -117,7 +117,7 @@ function Home() {
                       </h5>
                     </div>
                     <div className="modal-body">
-                      <h3 className='genrules'>📜General Rules </h3>
+                      <h3 className='genrules'>📜 General Rules </h3>
                       <ul>
                         <li>This platform is for school-related, secondhand, or personal-use item exchanges only.</li>
                         <li>Users must respect each other and communicate politely.</li>
