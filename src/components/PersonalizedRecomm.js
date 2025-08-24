@@ -5,7 +5,7 @@
   import LoaderPart from './LoaderPart';
 
 
-  function PersonalizedRecommendation({ userId, onFetchFail }) {
+  function PersonalizedRecommendation({ userId, onFetchFail, isNotLoading}) {
     const scrollRef = useRef(null);
     
     const ip = process.env.REACT_APP_LAPTOP_IP; // from .env file (e.g., 192.168.1.10)
@@ -117,15 +117,18 @@
         .then((data) => {
           setRecommendations(data); // this should be an array
           setIsLoading(false);
+          if (isNotLoading) isNotLoading();  // Notify parent to stop loading state
 
           if (Array.isArray(data) && data.length === 0) {
-            if (onFetchFail) onFetchFail();
+            if (onFetchFail) onFetchFail();   // Notify parent if fetch fails
+            if (isNotLoading) isNotLoading();  // Notify parent to stop loading state
           }
         })
         .catch((err) => {
           console.error("Recommendation fetch failed:", err);
           setIsLoading(false);
           if (onFetchFail) onFetchFail();  // Notify parent if fetch fails
+          if (isNotLoading) isNotLoading();  // Notify parent to stop loading state
         });
     }
   }, [userId]);

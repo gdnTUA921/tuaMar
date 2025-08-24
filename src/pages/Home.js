@@ -22,8 +22,18 @@ function Home() {
   const [shouldRenderRecom5, setShouldRenderRecom5] = useState(true); 
 
 
+  //set up for component loading
+  const [isLoading1, setIsLoading1] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
+  const [isLoading3, setIsLoading3] = useState(true);
+  const [isLoading4, setIsLoading4] = useState(true);
+  const [isLoading5, setIsLoading5] = useState(true);
+
+
+  // For Popup state and ref
   const [showPopup, setShowPopup] = useState(false);
   const formPolicyRef = useRef(null); // 👈 Ref to scroll container
+
 
   useEffect(() => {
     fetch(`${ip}/fetchSession.php`, {
@@ -51,6 +61,7 @@ function Home() {
         console.error("Error fetching session data:", error);
       });
   }, [ip, userID, navigate]);
+
 
   // Handle popup scroll to top
   useEffect(() => {
@@ -180,27 +191,28 @@ function Home() {
 
         {/* Recommendations */}
         {shouldRenderRecom1 && 
-        (<div className="items-recommend">
-         <PersonalizedRecommendation userId={userID} onFetchFail={() => setShouldRenderRecom1(false)} />
+        (<div className="items-recommend" style={{justifyContent: isLoading1 ? "center" : "flex-start"}}>
+         <PersonalizedRecommendation userId={userID} onFetchFail={() => setShouldRenderRecom1(false)} isNotLoading={() => setIsLoading1(false)}/>
         </div>)}
 
-        {shouldRenderRecom2 && (<div className="items-recommend">
-          <TopPicks userId={userID} onFetchFail={() => setShouldRenderRecom2(false)} />
+        {shouldRenderRecom2 && 
+        (<div className="items-recommend" style={{justifyContent: isLoading2 ? "center" : "flex-start"}}>
+          <TopPicks userId={userID} onFetchFail={() => setShouldRenderRecom2(false)} isNotLoading={() => setIsLoading2(false)}/>
         </div>)}
 
         {shouldRenderRecom3 && 
-        (<div className="items-recommend">
-          <RecentlyPosted userId={userID} onFetchFail={() => setShouldRenderRecom3(false)} />
+        (<div className="items-recommend" style={{justifyContent: isLoading3 ? "center" : "flex-start"}}>
+          <RecentlyPosted userId={userID} onFetchFail={() => setShouldRenderRecom3(false)} isNotLoading={() => setIsLoading3(false)}/>
         </div>)}
 
         {shouldRenderRecom4 && 
-        (<div className="items-recommend">
-          <MostViewed userId={userID} onFetchFail={() => setShouldRenderRecom4(false)} />
+        (<div className="items-recommend" style={{justifyContent: isLoading4 ? "center" : "flex-start"}}>
+          <MostViewed userId={userID} onFetchFail={() => setShouldRenderRecom4(false)} isNotLoading={() => setIsLoading4(false)}/>
         </div>)}
 
         {shouldRenderRecom5 && 
-        (<div className="items-recommend">
-          <RecommItemsHighlyRated userId={userID} onFetchFail={() => setShouldRenderRecom5(false)} />
+        (<div className="items-recommend" style={{justifyContent: isLoading5 ? "center" : "flex-start"}}>
+          <RecommItemsHighlyRated userId={userID} onFetchFail={() => setShouldRenderRecom5(false)} isNotLoading={() => setIsLoading5(false)}/>
         </div>)}
       </main>
     </>

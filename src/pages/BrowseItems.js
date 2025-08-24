@@ -230,7 +230,7 @@ const BrowseItems = () => {
     }
   }, [userId, ip]);
 
-  // For search items
+  // For search items -- logging search history
   const searchItem = (query) => {
     if (query != ""){
         fetch(`${ip}/searchItem.php`, {

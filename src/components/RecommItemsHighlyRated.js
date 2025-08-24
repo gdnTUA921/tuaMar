@@ -5,7 +5,7 @@
   import LoaderPart from './LoaderPart';
 
 
-  function RecommItemsHighlyRated({userId, onFetchFail}) {
+  function RecommItemsHighlyRated({userId, onFetchFail, isNotLoading}) {
     const scrollRef = useRef(null);
     
     const ip = process.env.REACT_APP_LAPTOP_IP; // from .env file (e.g., 192.168.1.10)
@@ -115,14 +115,18 @@
           const shuffled = [...data].sort(() => Math.random() - 0.5);
           setRecommendations(shuffled); 
           setIsLoading(false);
+          if (isNotLoading) isNotLoading();  // Notify parent to stop loading state
+          
           if ((Array.isArray(data) && data.length === 0) || data.message === "Error: Failed to Fetch Recently Posted Listings.") {
-            if (onFetchFail) onFetchFail();
+            if (onFetchFail) onFetchFail(); // Notify parent if fetch fails
+            if (isNotLoading) isNotLoading();  // Notify parent to stop loading state
           }
         })
         .catch((err) => {
           console.error("Recommendation fetch failed:", err);
           setIsLoading(false);
           if (onFetchFail) onFetchFail();  // Notify parent if fetch fails
+          if (isNotLoading) isNotLoading();  // Notify parent to stop loading state
         });
 
   }, [userId]);

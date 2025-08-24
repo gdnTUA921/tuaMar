@@ -184,7 +184,8 @@ export default function UserListingsPopup({ listings, onClose }) {
                         padding: '6px 12px',
                         borderRadius: '6px',
                         cursor: 'pointer',
-                        marginTop: '10px'
+                        marginTop: '10px',
+                        display: item.status === 'UNLISTED' ? 'none' : 'block',
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
