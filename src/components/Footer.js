@@ -9,7 +9,7 @@ function Footer() {
         <h2>Contact us at:</h2>
         <div className="conDetails">
           <i className="bi bi-telephone-fill phone"/>
-          <a href="#"><h3>09151234567</h3></a>
+          <a href="#"><h3>09279142603</h3></a>
         </div>
         <div className="conDetails">
           <i className="bi bi-envelope-at-fill envelope"/>
@@ -17,7 +17,7 @@ function Footer() {
         </div>
         <div className="conDetails">
           <i className="bi bi-geo-alt-fill location"/>
-          <a href="#"><h3>TUA - University Student Council<br/>SSC Building (2nd Floor)</h3></a>
+          <a href="#"><h3>TUA - CEIS<br/>SSC Building (4th Floor)</h3></a>
         </div>         
       </div>
 

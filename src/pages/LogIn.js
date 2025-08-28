@@ -138,15 +138,7 @@ function LogIn() {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
             const email = user.email;
-            const uid = user.uid;
-            let displayPic = user.photoURL;
-
-            if (displayPic) {
-                displayPic = displayPic.replace(/=s\d+-c$/, '=s1000-c');
-            }
-
-            console.log("Logged in user email:", email);
-            console.log("Display Picture:", displayPic);
+            const idToken = await user.getIdToken();
 
             // Check for @tua.edu.ph email
             if (!email.endsWith("@tua.edu.ph")) {
@@ -174,7 +166,7 @@ function LogIn() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ email, displayPic, uid }),
+                body: JSON.stringify({ idToken }),
                 credentials: "include",
             });
 
