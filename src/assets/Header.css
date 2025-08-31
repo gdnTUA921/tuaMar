@@ -113,6 +113,7 @@ nav{
     right: 35px; /* Icon stays on the right */
     width: 120px;
     text-align: center;
+    justify-content: center;
     gap: 5px;
     border-radius: 5px;
 }
@@ -125,11 +126,12 @@ nav{
 }
 
 
-.productDropDown a, .logOut{
+.productDropDown a{
+    display: flex;
     color: white;
     text-decoration: none;
-    margin-left: 8px;
     font-size: 16px;
+    align-items: center;
 }
 
 

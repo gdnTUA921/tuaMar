@@ -4,10 +4,11 @@ import '../assets/Header.css';
 import { Link } from "react-router-dom";
 import { signInWithPopup, signOut} from 'firebase/auth';
 import { auth, googleProvider } from '../firebaseConfig';
+import { LogIn, LogOut } from 'lucide-react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-function Header() {
+function Header({loggedIn, setLoggedIn}) {
 
     //for IP address
     const ip = process.env.REACT_APP_LAPTOP_IP;
@@ -35,7 +36,8 @@ function Header() {
                 showConfirmButton: false,
                 timer: 1500
             }).then(() => {
-              navigate("/");
+              setLoggedIn(false);
+              navigate("/login");
             });
           }
       } catch (error) {
@@ -48,10 +50,15 @@ function Header() {
       }
     }
 
+    const handleLogIn = async (event) => {
+      event.preventDefault();
+      navigate("/login");
+    }
+
 
   return (
     <header>
-      <Link to="/home" className="homeLogo">
+      <Link to="/" className="homeLogo">
       <div className="logo">
         <img 
           src="/tuamar.png" 
@@ -62,7 +69,7 @@ function Header() {
       </Link>
 
       <nav>
-        <Link to="/home" className="nav-link"><h2>Home</h2></Link>
+        <Link to="/" className="nav-link"><h2>Home</h2></Link>
         <Link to="/browseItems" className="nav-link"><h2>Browse Items</h2></Link>
         <Link to="/sell" className="nav-link"><h2>Sell Item</h2></Link>
         <Link to="/messages" className="nav-link"><h2>Messages</h2></Link>
@@ -72,7 +79,7 @@ function Header() {
       <div className="container">
         <i className="bi bi-person-fill" id="headerIcon"></i>
         <div className="productDropDown">
-          <Link onClick={handleLogOut}><i className="bi bi-box-arrow-right logOut">&nbsp;&nbsp;&nbsp;Log Out</i></Link>
+          <Link onClick={loggedIn ? handleLogOut : handleLogIn}>{loggedIn ? <LogIn/> : <LogOut/>}&nbsp;&nbsp;&nbsp;{loggedIn ? "Log Out" : "Log In"}</Link>
         </div>
       </div>
       

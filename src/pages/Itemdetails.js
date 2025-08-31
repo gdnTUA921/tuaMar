@@ -4,8 +4,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Heart, Flag } from "lucide-react"; 
 import LoaderPart from "../components/LoaderPart";
 import Recommendation from '../components/ItemdetailsRecomm';
+import ShareButton from '../components/ShareButton';
 
-const Itemdetails = () => {
+const Itemdetails = ({loggedIn}) => {
 
   const [loading, setLoading] = useState(true); //for loading state
 
@@ -31,7 +32,7 @@ const Itemdetails = () => {
 
   //For rendering item recommendations
   const [shouldRenderItemRecomm, setShouldRenderItemRecomm] = useState(true);
-
+  
 
 useEffect(() => {
   const fetchAndLog = async () => {
@@ -47,8 +48,7 @@ useEffect(() => {
       const sessionData = await sessionRes.json();
 
       if (!sessionData.user_id) {
-        navigate("/");
-        return;
+        //Do nothing, user is not logged in
       } else {
         userId = sessionData.user_id;
         setUserID(sessionData.user_id);
@@ -87,7 +87,7 @@ useEffect(() => {
         return;
       }
 
-      if (itemData.status == "UNLISTED"){
+      if (itemData.status === "UNLISTED"){
         navigate("/error404", {replace: true});
         return;
       }
@@ -96,7 +96,7 @@ useEffect(() => {
 
 
       // Log view history if viewer is not the item's owner
-      if (itemData.user_id && itemData.user_id !== userId && !sessionStorage.getItem(`viewed_${itemId}`) && itemData.status === "AVAILABLE") {
+      if (loggedIn && itemData.user_id && itemData.user_id !== userId && !sessionStorage.getItem(`viewed_${itemId}`) && itemData.status === "AVAILABLE") {
         const logRes = await fetch(`${ip}/itemViewLog.php`, {
           method: "POST",
           body: JSON.stringify({
@@ -245,25 +245,37 @@ useEffect(() => {
                                 src={pics.image || "/default-image.png"}
                                 onError={(e) => (e.target.src = "/default-image.png")}
                                 className="smallPics"
-                                style={{opacity: pics.uid==picsDisplay.uid ? "" : "0.5"}}
+                                style={{opacity: pics.uid === picsDisplay.uid ? "" : "0.5"}}
                                 onClick={() => setPicsDisplay(pics)}
+                                alt='item pic'
                             />
                         ))): (
                             <p>No additional images.</p>
                         )}
                     </div>
 
-                    <Link to="/messages" state={{passedUserID: itemDeets.fb_uid, passedUserIDSender: userID, passedUserIDReceiver: itemDeets.user_id, passedItemID: itemId, passedItemStatus: itemDeets.status}} className='messageLink'><button className = 'contactbutton' style={{ display: userID == itemDeets.user_id || itemDeets.status == "IN REVIEW" ? "none" : "block"}} disabled={itemDeets.status == "SOLD" || itemDeets.status == "RESERVED"}>{itemDeets.status == "SOLD" ? "SOLD" : itemDeets.status == "RESERVED" ? "RESERVED" : "Contact Seller"}</button></Link>
+                  
+                    <Link to="/messages" state={{passedUserID: itemDeets.fb_uid, passedUserIDSender: userID, passedUserIDReceiver: itemDeets.user_id, passedItemID: itemId, passedItemStatus: itemDeets.status}} className='messageLink'><button className = 'contactbutton' style={{ display: userID === itemDeets.user_id || itemDeets.status === "IN REVIEW" ? "none" : "block"}} disabled={itemDeets.status === "SOLD" || itemDeets.status === "RESERVED"}>{itemDeets.status === "SOLD" ? "SOLD" : itemDeets.status === "RESERVED" ? "RESERVED" : "Contact Seller"}</button></Link>
+                    
+                    {loggedIn &&
                     <div className='numLikes'>
-                        <Heart size={40} className='hearticon' onClick={itemDeets.status == "IN REVIEW" ? () => {} : () => toggleLike(itemDeets)} fill= {liked[itemId] ?'green' : 'none'} color= {liked[itemId] ?'green' : 'black'}/>
-                        <p>{numLikes}{numLikes == 1 ? " Like" : " Likes"}</p>
+                        <Heart size={40} className='hearticon' onClick={itemDeets.status === "IN REVIEW" ? () => {} : () => toggleLike(itemDeets)} fill={liked[itemId] ? 'green' : 'none'} color={liked[itemId] ? 'green' : 'black'}/>
+                        <p>{numLikes}{numLikes === 1 ? " Like" : " Likes"}</p>
                     </div>
+                    }
+                  
 
-                    <Link to="/reportitem" className="reportLink" state={{ passedID: itemId, previewPic: picsDisplay.image, itemName: itemDeets.itemName }} style={{display: userID == itemDeets.user_id ? "none" : "block"}}>
+                  {loggedIn &&
+                    <Link to="/reportitem" className="reportLink" state={{ passedID: itemId, previewPic: picsDisplay.image, itemName: itemDeets.itemName }} style={{display: userID === itemDeets.user_id ? "none" : "block"}}>
                     <div className='reportItem'>
                         <Flag size={30} /><p>Report Item</p>
                     </div>
                     </Link>
+                  }
+
+                  <div className='shareItem'>
+                    <ShareButton />
+                  </div>
 
 
                 </div>
@@ -308,10 +320,10 @@ useEffect(() => {
                 <h1>Meet The Seller</h1>
                 
                   <div className="seller-profile-pic">
-                    <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.firstName + " " + itemDeets.lastName}`} className="sellerLink">
+                    <Link to={userID === itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.firstName + " " + itemDeets.lastName}`} className="sellerLink">
                       <img 
                         src={itemDeets.profilePic || "/tuamar-profile-icon.jpg"} 
-                        alt="Profile Photo"
+                        alt="Profile Pic"
                         onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}
                       />
                     </Link>
@@ -319,7 +331,7 @@ useEffect(() => {
                 
                 
                 <div className="seller-profile-name">   
-                    <Link to={userID == itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.firstName + " " + itemDeets.lastName}`} className="sellerLink"><h1>{itemDeets.firstName + " " + itemDeets.lastName}</h1></Link>
+                    <Link to={userID === itemDeets.user_id ? "/myProfile" : `/userProfile/${itemDeets.firstName + " " + itemDeets.lastName}`} className="sellerLink"><h1>{itemDeets.firstName + " " + itemDeets.lastName}</h1></Link>
                     <p>{itemDeets.email}</p>
                     <div className="seller-rating-container">
                         <i id="seller-starReview" className="bi bi-star-fill"></i>
@@ -329,9 +341,9 @@ useEffect(() => {
             </div>
             <hr/>
             
-            {itemDeets.status == "AVAILABLE" && shouldRenderItemRecomm &&
+            {itemDeets.status === "AVAILABLE" && shouldRenderItemRecomm &&
             <div className='itemsRecommended'>
-             <Recommendation itemName={itemDeets.itemName} userId={userID} onFetchFail={() => setShouldRenderItemRecomm(false)}/> 
+             <Recommendation itemName={itemDeets.itemName} loggedIn={loggedIn} userId={userID} onFetchFail={() => setShouldRenderItemRecomm(false)}/> 
             </div>}
 
           {/* View Image Modal */}

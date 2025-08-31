@@ -32,7 +32,7 @@ const Reportuser = () => {
       .then((response) => response.json())
       .then((data) => {
         if (!data.user_id) {
-          navigate("/"); // Redirect to login if not authenticated
+          navigate("/login"); // Redirect to login if not authenticated
         }
       })
       .catch((error) => {
@@ -69,7 +69,7 @@ const Reportuser = () => {
             showConfirmButton: false,
             timer: 1500
             }); // Display raw response to user
-          navigate("/messages");
+          navigate(-1); // Navigate back to the previous page
         }
         else {
           MySwal.fire({
@@ -96,7 +96,7 @@ const Reportuser = () => {
 
 const goBack = (event) => {
     event.preventDefault(); 
-    navigate("/messages")
+    navigate(-1); // Navigate back to the previous page
 }
  
   return (

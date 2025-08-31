@@ -209,6 +209,13 @@ button:hover{
    font-size: 20px;
 }
 
+.shareItem {
+    margin: auto;
+    margin-top: 40px;
+    color: black;
+    display: flex;
+}
+
 .sellerSection{
     padding: 0px 15px;
     height: 225px;

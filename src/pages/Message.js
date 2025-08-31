@@ -68,7 +68,7 @@ function Message() {
 
   // Checking if logged in, if not redirected to log-in
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    
       fetch(`${ip}/fetchSession.php`, {
         method: "GET",
         credentials: "include",
@@ -76,9 +76,10 @@ function Message() {
         .then((response) => response.json())
         .then((data) => {
           if (!data.user_id) {
-            navigate("/");
+            navigate("/login", {replace: true});
           }
           else {
+            console.log(data.firebase_uid);
             setcurrentUserId(data.firebase_uid);
             setCurrentUserName(data.full_name);
             setCurrentPfp(data.pfp);
@@ -88,9 +89,7 @@ function Message() {
         .catch((error) => {
           console.error("Error fetching session data:", error);
         });
-    }, 3000);
 
-    return () => clearInterval(intervalId);
   }, [ip, navigate]);
 
   // Opening Chat Block for Messaging if the user comes from Item Deets Page
@@ -122,38 +121,42 @@ function Message() {
 
   // Fetching list of chats for messagebox class or chat inbox
   const fetchChats = (currentUserID) => {
-    if (!currentUserID) {
-      console.warn("fetchChats: currentUserId not yet available.");
-      return;
-    }
-
-    const chatsRef = ref(database, 'chatsList');
-
-    onValue(chatsRef, (snapshot) => {
-      if (!snapshot.exists()) {
-        console.log("fetchChats: No chats found.");
-        setChats([]);
-        setIsLoading(false);
-        return;
-      }
-
-      const allChats = snapshot.val();
-      const filteredChats = [];
-
-      Object.entries(allChats).forEach(([chatId, chatData]) => {
-        if (chatData.buyerID_fb === currentUserID || chatData.sellerID_fb === currentUserID) {
-          filteredChats.push({
-            ...chatData,
-            chat_id: chatId,
-          });
+    const intervalId = setInterval(() => {
+        if (!currentUserID) {
+          console.warn("fetchChats: currentUserId not yet available.");
+          return;
         }
-      });
 
-      filteredChats.sort((a, b) => b.timestamp - a.timestamp);
+        const chatsRef = ref(database, 'chatsList');
 
-      setChats(filteredChats);
-      setIsLoading(false);
-    });
+        onValue(chatsRef, (snapshot) => {
+          if (!snapshot.exists()) {
+            console.log("fetchChats: No chats found.");
+            setChats([]);
+            setIsLoading(false);
+            return;
+          }
+
+          const allChats = snapshot.val();
+          const filteredChats = [];
+
+          Object.entries(allChats).forEach(([chatId, chatData]) => {
+            if (chatData.buyerID_fb === currentUserID || chatData.sellerID_fb === currentUserID) {
+              filteredChats.push({
+                ...chatData,
+                chat_id: chatId,
+              });
+            }
+          });
+
+          filteredChats.sort((a, b) => b.timestamp - a.timestamp);
+
+          setChats(filteredChats);
+          setIsLoading(false);
+        });
+    }, 3000);
+
+    return () => clearInterval(intervalId);
   };
 
   // For Automatic Scroll to the latest message
@@ -274,7 +277,7 @@ function Message() {
   // Listen for messages
   useEffect(() => {
     if (!currentUserId || !receiverID || !itemId) {
-      console.log("Missing IDs for message listening:", { currentUserId, receiverID });
+      console.log("Missing IDs for message listening:", { currentUserId, receiverID, itemId});
       return;
     }
 

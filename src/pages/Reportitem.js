@@ -28,7 +28,7 @@ const Reportitem = () => {
       .then((response) => response.json())
       .then((data) => {
         if (!data.user_id) {
-          navigate("/"); // Redirect to login if not authenticated
+          navigate("/login"); // Redirect to login if not authenticated
         }
       })
       .catch((error) => {

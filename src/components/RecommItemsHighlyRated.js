@@ -5,7 +5,7 @@
   import LoaderPart from './LoaderPart';
 
 
-  function RecommItemsHighlyRated({userId, onFetchFail, isNotLoading}) {
+  function RecommItemsHighlyRated({userId, onFetchFail, isNotLoading, loggedIn }) {
     const scrollRef = useRef(null);
     
     const ip = process.env.REACT_APP_LAPTOP_IP; // from .env file (e.g., 192.168.1.10)
@@ -182,10 +182,11 @@
                                         </Link>
 
                                 <div className="recomm-listButtons">
-                                    <Heart className="recomm-heart" onClick={() => toggleLike(item)} fill= {liked[item.item_id] ?'green' : 'none'} color= {liked[item.item_id] ?'green' : 'black'}/>
+                                    {loggedIn && <Heart className="recomm-heart" onClick={() => toggleLike(item)} fill= {liked[item.item_id] ?'green' : 'none'} color= {liked[item.item_id] ?'green' : 'black'}/>}
+                                    {loggedIn &&
                                     <Link to="/reportitem"  className="recomm-browse-flag" state={{ passedID: item.item_id, previewPic: item.preview_pic, itemName: item.item_name }} style={{display: userId == item.user_id ? "none" : "block"}} >
                                         <Flag size={20} />
-                                    </Link>
+                                    </Link>}
                                 </div>
 
                                 <div className="recomm-price-condition">

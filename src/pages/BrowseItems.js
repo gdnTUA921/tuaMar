@@ -4,13 +4,13 @@ import "../assets/BrowseItems.css";
 import { Link, useNavigate} from "react-router-dom";
 import LoaderPart from "../components/LoaderPart";
 import Popup from 'reactjs-popup';
+import { set } from "firebase/database";
 
-const BrowseItems = () => {
+const BrowseItems = ({loggedIn}) => {
   const [isLoading, setIsLoading] = useState(true); //for loading state
   const [items, setItems] = useState([]);
   const [userId, setUserId] = useState("");
 
-  const navigate = useNavigate();
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
   
   useEffect(() => {
@@ -26,12 +26,12 @@ const BrowseItems = () => {
     .then(([sessionData, itemsData]) => {
       if (!isMounted) return;
 
-      if (!sessionData.user_id) {
-        navigate("/");
-        return;
+      if (sessionData.user_id) {
+        setUserId(sessionData.user_id);
+      } else {
+        //Do nothing, user is not logged in
       }
 
-      setUserId(sessionData.user_id);
       if (Array.isArray(itemsData)) {
         setItems(itemsData);
       } else {
@@ -232,7 +232,7 @@ const BrowseItems = () => {
 
   // For search items -- logging search history
   const searchItem = (query) => {
-    if (query != ""){
+    if (query.trim() !== "" && loggedIn === true){
         fetch(`${ip}/searchItem.php`, {
         method: "POST",
         headers: {
@@ -452,6 +452,7 @@ const BrowseItems = () => {
                       </div>
                     </Link>
 
+                   {loggedIn && 
                     <div className="listButtons">
                       <Heart 
                         className="heart" 
@@ -468,6 +469,7 @@ const BrowseItems = () => {
                         <Flag size={20} />
                       </Link>
                     </div>
+                    }
 
                     <div className="browse-price-condition">
                       <p>&#8369;{item.price}</p>

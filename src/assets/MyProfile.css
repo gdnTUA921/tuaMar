@@ -56,6 +56,41 @@ button:hover{
     height: 200px;
 }
 
+/*Share and Report buttons*/
+.shareButtonDiv1{
+    display: flex;
+    gap: 10px;
+    float: right;
+    position: relative;
+    top: 20px;
+    right: 25px;
+}
+
+.shareButtonDiv2 {
+    display: none;
+}
+
+/*report buttom*/
+.shareButtonDiv1 .reportProfile, .shareButtonDiv2.reportProfile{
+    color: white;
+    position: relative;
+    display: flex;
+    top: 10px;
+    right: 10px;
+    float: right;;
+    text-decoration: none;
+}
+
+.shareButtonDiv2 .reportProfile{
+    color: black;
+}
+
+
+.reportProfile:hover{
+   color: red;
+   fill: red;
+}
+
 /* Profile Picture */
 .profile-pic {
     position: relative;
@@ -1181,6 +1216,29 @@ button:hover{
     .image-preview-actions {
         flex-direction: column;
         gap: 8px;
+    }
+
+    .shareButtonDiv1 {
+        display: none;
+    }
+
+    .shareButtonDiv2 {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        margin-top: 12px;
+    }
+
+    .shareButtonDiv2 .centralize button{
+      padding: 5px;
+      height: 30px;
+      width: 100px;
+    }
+
+    .shareButtonDiv2 .centralize button.clicked{
+      width: 125px;
     }
 
 }

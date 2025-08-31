@@ -33,7 +33,7 @@ const Reviewmod = () => {
     })
       .then(res => res.json())
       .then(data => {
-        if (!data.user_id) navigate("/");
+        if (!data.user_id) navigate("/login");
       })
       .catch(console.error);
   }, [ip, navigate]);

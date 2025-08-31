@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   FaUsers, FaChartBar, FaList,
   FaUserPlus, FaUser, FaChevronLeft, FaChevronRight, FaEye,
-  FaEyeSlash, FaBan
+  FaEyeSlash, FaBan, FaArrowRightToBracket
 } from "react-icons/fa6";
 import {FaArchive, FaOutdent} from "react-icons/fa";
 import { FaTachometerAlt, FaCog } from "react-icons/fa";
@@ -36,7 +36,7 @@ export default function Admin() {
       .then((response) => response.json())
       .then((data) => {
         if (!data.admin_id) {
-          navigate("/"); // Redirect to login if not authenticated
+          navigate("/login"); // Redirect to login if not authenticated
         }
         else {
           setEmail(data.email);
@@ -116,7 +116,7 @@ export default function Admin() {
         showConfirmButton: false,
         timer: 1500
       }).then(() => {
-        navigate("/");
+        navigate("/login");
       });
     })
     .catch((error) => console.error("Error fetching data:", error));
@@ -179,12 +179,12 @@ export default function Admin() {
       else {
         MySwal.fire({
               title: "FAILED!",
-              html: data.status + "<br>" + data.message,
+              html: "Failed to Register." + "<br>" + data.message,
               icon: "error",
               confirmButtonColor: "#547B3E",
           }).then((result) => {
               if (result.isConfirmed){
-                window.location.reload();
+                //window stays the same
               }
           });
       }
@@ -310,7 +310,7 @@ export default function Admin() {
           </button>
           {dropdownOpen && (
             <div className="admin-dropdown">
-              <button onClick={handleLogOut}>Log Out</button>
+              <button onClick={handleLogOut}><FaArrowRightToBracket />Log Out</button>
             </div>
           )}
         </div>

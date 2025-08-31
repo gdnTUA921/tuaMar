@@ -52,6 +52,7 @@ function ArchivedItems() {
     item.item_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  //For restoring items
   const handleRestore = async (itemId) => {
     const confirmRestore = await MySwal.fire({
       title: `Restore this item?`,
@@ -93,6 +94,57 @@ function ArchivedItems() {
       }
     } catch (e) {
       console.error("Restore error:", e);
+      await MySwal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to communicate with the server.',
+      });
+    }
+  };
+
+  //For deleting items permanently
+    const handleDelete = async (itemId) => {
+    const confirmRestore = await MySwal.fire({
+      title: `Delete this item permanently?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#547B3E",
+      cancelButtonColor: "#d33",
+    });
+
+    if (!confirmRestore.isConfirmed) return;
+
+    try {
+      const res = await fetch(`${ip}/permDeleteItem.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item_id: itemId }),
+        credentials: 'include',
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        await MySwal.fire({
+          icon: 'success',
+          title: 'Item Deleted Permanently',
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        setItems((prev) => prev.filter((item) => item.item_id !== itemId));
+        setSelectedItem(null);
+      } else {
+        await MySwal.fire({
+          icon: 'error',
+          title: 'Failed to delete',
+          text: result.message || "Unknown error",
+        });
+      }
+    } catch (e) {
+      console.error("Deletion error:", e);
       await MySwal.fire({
         icon: 'error',
         title: 'Error',
@@ -259,6 +311,7 @@ function ArchivedItems() {
           </div>
           <br/>
           <button className="listButton" onClick={() => handleRestore(selectedItem.item_id)}>RESTORE ITEM</button>
+          <button className="listButton" style={{backgroundColor: "#F44336"}} onClick={() => handleDelete(selectedItem.item_id)}>DELETE ITEM</button>
         </div>
       </div>
     )}

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate} from "react-router-dom";
-import { Heart, Flag, SquarePen, Trash2 } from "lucide-react";
+import { Heart, Flag, SquarePen, Trash2} from "lucide-react";
 import "../assets/MyProfile.css";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'; 
 import LoaderPart from "../components/LoaderPart";
 import { database } from '../firebaseConfig';
 import { ref, get, update } from 'firebase/database';
+import ShareProfileButton from "../components/ShareProfileButton";
 
 function MyProfile() {
 
@@ -51,7 +52,7 @@ function MyProfile() {
         const sessionData = await sessionRes.json();
 
         if (!sessionData.user_id) {
-          navigate("/");
+          navigate("/login", {replace: true});
           return;
         }
 
@@ -383,7 +384,11 @@ function MyProfile() {
         {/* PROFILE */}
         <div className="profile-container">
           <div className="profile-nameBox">
-            <div className="profile-coverBG"></div>
+            <div className="profile-coverBG">
+              <div className="shareButtonDiv1">
+                 <ShareProfileButton fullName={userData.first_name + " " + userData.last_name}/>
+              </div>
+            </div>
             <div className="profile-pic">
               <img 
                 src={userData.profile_pic || "/tuamar-profile-icon.jpg"} 
@@ -400,6 +405,9 @@ function MyProfile() {
                 </span>
                 <p className="rating-score">{userData.ratingAvg || "0.0"}</p>
               </div>
+            </div>
+            <div className="shareButtonDiv2">
+               <ShareProfileButton fullName={userData.first_name + " " + userData.last_name}/>
             </div>
            
           </div>

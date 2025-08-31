@@ -13,13 +13,13 @@ body {
 }
 
 .headerLogIn img{
-    width: 85px;
-    height: 85px;
+    width: 70px;
+    height: 70px;
 }
 
 .headerLogIn h1 {
     padding-left: 10px;
-    font-size: 28px;
+    font-size: 25px;
 }
 
 .logInBG {
@@ -282,6 +282,24 @@ body {
   font-family: Arial, sans-serif;
   box-sizing: border-box;
 }
+
+/* For Webkit browsers like Chrome, Safari */
+.inputWrapper #otpCode::-webkit-outer-spin-button,
+.inputWrapper #otpCode::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* For Firefox */
+.inputWrapper #otpCode {
+  -moz-appearance: textfield;
+}
+
+/* For Internet Explorer/Edge */
+.inputWrapper #otpCode {
+  appearance: textfield;
+}
+
 
 /* Shared input icon style */
 .inputIcon {

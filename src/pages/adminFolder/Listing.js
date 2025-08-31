@@ -184,7 +184,7 @@ const handleDelete = async (itemId) => {
                           <p>&#x2022; {item.item_condition}</p>
                         </div>
                         
-                        <button className="listButton" onClick={() => handleDelete(item.item_id)}> DELETE LISTING </button>
+                        <button className="listButton" style={{backgroundColor: "#F44336"}} onClick={() => handleDelete(item.item_id)}> DELETE LISTING </button>
                         <button className="listButton" onClick={() => handleViewDetails(item)}> VIEW DETAILS</button>
                       </div>
                     </div>

@@ -5,7 +5,7 @@
   import LoaderPart from './LoaderPart';
 
 
-  function Recommendation({itemName, userId, onFetchFail}) {
+  function Recommendation({itemName, userId, onFetchFail, loggedIn}) {
     
     const ip = process.env.REACT_APP_LAPTOP_IP; // from .env file (e.g., 192.168.1.10)
     const ipPython = process.env.REACT_APP_IP_PYTHON; // from .env file (e.g., https://python-backend-388938576760.asia-southeast1.run.app)
@@ -147,12 +147,14 @@
                                     </div>
                                 </Link>
 
+                      {loggedIn &&
                         <div className="listButtons">
                           <Heart className="heart" onClick={() => toggleLike(item)} fill= {liked[item.item_id] ?'green' : 'none'} color= {liked[item.item_id] ?'green' : 'black'}/>
                           <Link to="/reportitem"  className="browse-flag" state={{ passedID: item.item_id, previewPic: item.preview_pic, itemName: item.item_name }} style={{display: userId == item.user_id ? "none" : "block"}} >
                             <Flag size={20} />
                           </Link>
                         </div>
+                      }
 
                         <div className="price-condition">
                           <p></p>

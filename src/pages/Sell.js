@@ -38,7 +38,7 @@ function Sell() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (!data.user_id) navigate("/");
+        if (!data.user_id) navigate("/login", {replace: true});
       })
       .catch((err) => console.error("Session error:", err));
   }, [ip, navigate]);

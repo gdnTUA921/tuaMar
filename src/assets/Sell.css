@@ -144,6 +144,10 @@
       margin: auto;
   }
 
+  .buttonsDisplay{
+    flex-direction: column;
+  }
+
 }
 
 

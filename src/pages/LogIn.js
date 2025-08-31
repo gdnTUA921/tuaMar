@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import '../assets/Header.css';
 import '../assets/LogIn.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link} from "react-router-dom";
 import { signInWithPopup, signOut} from 'firebase/auth';
 import { auth, googleProvider } from '../firebaseConfig';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import CountdownTimer from '../components/CountdownTimer';
 
-function LogIn() {
+function LogIn({setLoggedIn}) {
 
     const MySwal = withReactContent(Swal);
 
@@ -191,8 +191,9 @@ function LogIn() {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                setLoggedIn(true);
                 sessionStorage.removeItem("reloaded"); // Clear the reload session storage
-                navigate("/home");
+                navigate("/");
             } else {
                 await MySwal.fire({
                     icon: 'error',
@@ -364,6 +365,7 @@ function LogIn() {
   return (
     <>
     <div className="pageWrapper">
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
         <header className="headerLogIn">
             <div className="logo">
                 <img 
@@ -373,6 +375,7 @@ function LogIn() {
             </div>
             <h1>TUA Marketplace</h1>
         </header>
+        </Link>
 
         <div className="logInBG">
             <div className="logInBox">
@@ -401,7 +404,7 @@ function LogIn() {
                             <input
                                 className="userName"
                                 id="userName"
-                                type="text"
+                                type="email"
                                 name="username"
                                 placeholder="Email"
                                 onChange={handleUserChange}
@@ -448,7 +451,7 @@ function LogIn() {
                             <input
                                 className="userName"
                                 id="userName2"
-                                type="text"
+                                type="email"
                                 name="username"
                                 placeholder="Email"
                                 onChange={handleUserChange2}
@@ -475,7 +478,7 @@ function LogIn() {
                             <i className="bi bi-shield-lock-fill inputIcon"></i>
                             <input
                                 id="otpCode"
-                                type="text"
+                                type="number"
                                 name="otp"
                                 placeholder="Enter 6-digit OTP"
                                 maxLength="6"

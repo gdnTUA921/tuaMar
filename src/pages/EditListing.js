@@ -50,7 +50,7 @@ function EditListing() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (!data.user_id) navigate("/");
+        if (!data.user_id) navigate("/login");
       })
       .catch((error) => console.error("Session error:", error));
   }, [ip, navigate]);

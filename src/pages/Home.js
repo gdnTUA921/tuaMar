@@ -7,9 +7,8 @@ import MostViewed from '../components/MostViewed';
 import RecommItemsHighlyRated from '../components/RecommItemsHighlyRated';
 import TopPicks from '../components/TopPicks';
 import Popup from 'reactjs-popup';
-import { display } from '@mui/system';
 
-function Home() {
+function Home({loggedIn}) {
   const navigate = useNavigate();
   const [userID, setUserID] = useState("");
   const ip = process.env.REACT_APP_LAPTOP_IP;
@@ -43,7 +42,7 @@ function Home() {
       .then((response) => response.json())
       .then((data) => {
         if (!data.user_id) {
-          navigate("/");
+          //Do nothing, user is not logged in
         } else {
           if (!userID) {
             setUserID(data.user_id);
@@ -190,29 +189,29 @@ function Home() {
         </div>
 
         {/* Recommendations */}
-        {shouldRenderRecom1 && 
+        {shouldRenderRecom1 && loggedIn &&
         (<div className="items-recommend" style={{justifyContent: isLoading1 ? "center" : "flex-start"}}>
          <PersonalizedRecommendation userId={userID} onFetchFail={() => setShouldRenderRecom1(false)} isNotLoading={() => setIsLoading1(false)}/>
         </div>)}
 
         {shouldRenderRecom2 && 
         (<div className="items-recommend" style={{justifyContent: isLoading2 ? "center" : "flex-start"}}>
-          <TopPicks userId={userID} onFetchFail={() => setShouldRenderRecom2(false)} isNotLoading={() => setIsLoading2(false)}/>
+          <TopPicks userId={userID} loggedIn={loggedIn} onFetchFail={() => setShouldRenderRecom2(false)} isNotLoading={() => setIsLoading2(false)}/>
         </div>)}
 
         {shouldRenderRecom3 && 
         (<div className="items-recommend" style={{justifyContent: isLoading3 ? "center" : "flex-start"}}>
-          <RecentlyPosted userId={userID} onFetchFail={() => setShouldRenderRecom3(false)} isNotLoading={() => setIsLoading3(false)}/>
+          <RecentlyPosted userId={userID} loggedIn={loggedIn} onFetchFail={() => setShouldRenderRecom3(false)} isNotLoading={() => setIsLoading3(false)}/>
         </div>)}
 
         {shouldRenderRecom4 && 
         (<div className="items-recommend" style={{justifyContent: isLoading4 ? "center" : "flex-start"}}>
-          <MostViewed userId={userID} onFetchFail={() => setShouldRenderRecom4(false)} isNotLoading={() => setIsLoading4(false)}/>
+          <MostViewed userId={userID} loggedIn={loggedIn} onFetchFail={() => setShouldRenderRecom4(false)} isNotLoading={() => setIsLoading4(false)}/>
         </div>)}
 
         {shouldRenderRecom5 && 
         (<div className="items-recommend" style={{justifyContent: isLoading5 ? "center" : "flex-start"}}>
-          <RecommItemsHighlyRated userId={userID} onFetchFail={() => setShouldRenderRecom5(false)} isNotLoading={() => setIsLoading5(false)}/>
+          <RecommItemsHighlyRated userId={userID} loggedIn={loggedIn} onFetchFail={() => setShouldRenderRecom5(false)} isNotLoading={() => setIsLoading5(false)}/>
         </div>)}
       </main>
     </>

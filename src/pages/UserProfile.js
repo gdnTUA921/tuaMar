@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link, useParams} from "react-router-dom";
-import { Flag, Heart, X, Search} from "lucide-react";
+import { Flag, Heart} from "lucide-react";
 import "../assets/MyProfile.css";
 import LoaderPart from "../components/LoaderPart";
+import ShareProfileButton from "../components/ShareProfileButton";
 
-function UserProfile() {
+function UserProfile({loggedIn}) {
 
   const [loading, setLoading] = useState(true); //For loading state
 
@@ -31,8 +32,6 @@ function UserProfile() {
   useEffect(() => {
   const fetchData = async () => {
 
-    console.log(userName);
-
     try {
       // Fetching session
       const sessionRes = await fetch(`${ip}/fetchSession.php`, {
@@ -42,16 +41,15 @@ function UserProfile() {
       const sessionData = await sessionRes.json();
 
       if (!sessionData.user_id) {
-        navigate("/");
-        return;
+        //Do nothing, user is not logged in
+      } else {
+        setUserId(sessionData.user_id);
       }
 
       if (userName === sessionData.full_name) {
         navigate("/myProfile");
         return;
       }
-
-      setUserId(sessionData.user_id);
 
       // Fetch user profile & listings concurrently
       const [profileRes, itemsRes] = await Promise.all([
@@ -183,7 +181,19 @@ else{
           {/* PROFILE */}
           <div className="profile-container">
             <div className="profile-nameBox">
-              <div className="profile-coverBG"></div>
+              <div className="profile-coverBG">
+                <div className="shareButtonDiv1">
+                 <ShareProfileButton fullName={userData.first_name + " " + userData.last_name}/>
+                 
+                 {
+                    loggedIn && 
+                    <Link to="/reportUser" className="reportProfile" state={{passedItemID: null, receiverPicture: userData.profile_pic, reportedUser: userData.first_name + " " + userData.last_name, reportedUserId: userData.user_id }}>
+                      <Flag width={22} height={22}/>
+                    </Link>
+                 }     
+
+                 </div>
+              </div>
               <div className="profile-pic">
                 <img 
                   src={userData.profile_pic || "/tuamar-profile-icon.jpg"} 
@@ -201,12 +211,23 @@ else{
                   <p className="rating-score">{userData.ratingAvg || "0.0"}</p>
                 </div>
               </div>
+              <div className="shareButtonDiv2">
+                 <ShareProfileButton fullName={userData.first_name + " " + userData.last_name}/>
+                 
+                 {
+                    loggedIn && 
+                    <Link to="/reportUser" className="reportProfile" state={{passedItemID: null, receiverPicture: userData.profile_pic, reportedUser: userData.first_name + " " + userData.last_name, reportedUserId: userData.user_id }}>
+                      <Flag width={22} height={22} />
+                    </Link>
+                 }     
+
+              </div>
             </div>
 
             {/* PROFILE TABS */}
             <div className="profile-tabs">
               <div className="navMenu">
-                <a href="#myListings" onClick={() => setActiveTab("myListings")}>
+                <a href="#listings" onClick={() => setActiveTab("myListings")}>
                   Listings
                 </a>
                 <a href="#reviews" onClick={() => setActiveTab("reviews")}>
@@ -270,12 +291,14 @@ else{
                                   </div>
                               </Link>
 
+                      {loggedIn &&
                       <div className="listButtons">
                         <Heart className="heart" onClick={() => toggleLike(item)} fill= {liked[item.item_id] ?'green' : 'none'} color= {liked[item.item_id] ?'green' : 'black'}/>
                         <Link to="/reportitem"  className="browse-flag" state={{ passedID: item.item_id, previewPic: item.preview_pic, itemName: item.item_name }} style={{display: userId === item.user_id ? "none" : "block"}} >
                           <Flag size={20} />
                         </Link>
                       </div>
+                      } 
 
                           <div className="price-condition">
                             <p></p>

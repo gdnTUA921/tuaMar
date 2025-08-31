@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Members.css"; // Don't forget the CSS!
 import UserListingsPopup from "./UserListingsPopup.js";
-import { database } from '../../firebaseConfig.js';
-import { ref, onValue, push, set, get, update} from 'firebase/database';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -87,6 +85,7 @@ export default function BannedMembers() {
     return matchesTab && matchesSearch;
   });
 
+  //For Viewing User Listings
   const handleViewListings = (user) => {
     fetch(`${ip}/getmemberslistings.php?user_id=${user.id}`)
       .then(res => res.json())
@@ -101,6 +100,7 @@ export default function BannedMembers() {
       });
   };
 
+  //For Updating User Details
   const handleUpdateUser = (user) => {
     fetch(`${ip}/updateuserdetails.php?user_id=${user.id}`)
       .then((res) => res.json())
@@ -126,6 +126,7 @@ export default function BannedMembers() {
       });
   };
 
+  //For Restoring User
   const handleRestoreUser = async (user_id) => {
     MySwal.fire({
       title: `Restore User ID: ${user_id}?`,
@@ -158,7 +159,7 @@ export default function BannedMembers() {
           } else {
             MySwal.fire({
               title: `Failed to Restore User`,
-              text: "Failed to delete user: " + result.message,
+              text: "Failed to restore user: " + result.message,
               icon: "error",
               confirmButtonColor: "#547B3E",
               confirmButtonText: "OK"
@@ -167,6 +168,57 @@ export default function BannedMembers() {
         } catch (error) {
           console.error("Error restoring user:", error);
           alert("An error occurred while restoring the user.");
+        }
+      }
+      else{
+        return;
+      }
+    })
+  };
+
+  //For Deleting User Permanently
+    const handleDeleteUser = async (user_id) => {
+    MySwal.fire({
+      title: `Delete User ID: ${user_id} Permanently?`,
+      text: `Are you sure you want to permanently delete this user (ID: ${user_id}) to the marketplace?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#547B3E",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes"
+    }).then(async (result) => {
+
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(`${ip}/permDeleteUser.php`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id }),
+            credentials: 'include',
+          });
+
+          const result = await response.json();
+          if (result.success) {
+            MySwal.fire({
+              title: `Successfully Deleted User Permanently`,
+              icon: "success",
+              confirmButtonColor: "#547B3E",
+              confirmButtonText: "OK"
+            })
+            setUsers((prev) => prev.filter((u) => u.id !== user_id));
+            setRefresh(!refresh);
+          } else {
+            MySwal.fire({
+              title: `Failed to Delete User Permanently`,
+              text: "Failed to delete user permanently: " + result.message,
+              icon: "error",
+              confirmButtonColor: "#547B3E",
+              confirmButtonText: "OK"
+            })
+          }
+        } catch (error) {
+          console.error("Error deleting user:", error);
+          alert("An error occurred while deleting the user.");
         }
       }
       else{
@@ -246,6 +298,9 @@ export default function BannedMembers() {
         <button className="restore-btn" onClick={() => handleRestoreUser(user.id)}>
           Restore
         </button>
+        <button className="delete-btn" onClick={() => handleDeleteUser(user.id)}>
+          Delete
+        </button>
       </div>
     </div>
   );
@@ -262,6 +317,7 @@ export default function BannedMembers() {
             <th>Listings</th>
             <th>Update</th>
             <th>Restore</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -284,6 +340,11 @@ export default function BannedMembers() {
               <td>
                 <button className="restore-btn" onClick={() => handleRestoreUser(user.id)}>
                   Restore
+                </button>
+              </td>
+              <td>
+                <button className="delete-btn" onClick={() => handleDeleteUser(user.id)}>
+                  Delete 
                 </button>
               </td>
             </tr>

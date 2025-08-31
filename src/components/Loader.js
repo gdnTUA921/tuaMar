@@ -7,7 +7,7 @@ const Loader = () => {
   return (
     <StyledWrapper>
       <div className="loader">
-        <img src="tuamar.png" alt="TUA Logo" className="loader-logo" />
+        <img src="/tuamar.png" alt="TUA Logo" className="loader-logo" />
         <div className="loading-text">
           Loading<span className="dot">.</span><span className="dot">.</span><span className="dot">.</span>
         </div>
