@@ -28,13 +28,13 @@ useEffect(() => {
         .then((response) => response.json())
         .then((data) => {
           if (data.user_id) {
-            setRedirectPage("/home");
+            setRedirectPage("/");
           }
           else if (data.admin_id){
             setRedirectPage("/admin");
           }
           else{
-            setRedirectPage("/");
+            setRedirectPage("/login");
           }
         })
         .catch((error) => {

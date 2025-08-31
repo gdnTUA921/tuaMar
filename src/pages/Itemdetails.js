@@ -78,7 +78,7 @@ useEffect(() => {
 
 
       if (itemData.user_id !== userId && itemData.status === "IN REVIEW") {
-        navigate("/home");
+        navigate("/");
         return;
       }
 

@@ -86,6 +86,7 @@ function PendingListings() {
         });
 
         setItems((prev) => prev.filter((i) => i.item_id !== itemId));
+        closePopup();
       } else {
         // Notify the user of failure
         await MySwal.fire({
@@ -147,6 +148,7 @@ function PendingListings() {
         });
 
         setItems((prev) => prev.filter((i) => i.item_id !== itemId));
+        closePopup();
       } else {
         await MySwal.fire({
           icon: 'error',
@@ -233,8 +235,6 @@ function PendingListings() {
                             <p>&#x2022; {item.item_condition}</p>
                           </div>
                         
-                          <button className="listButton" onClick={() => handleApprove(item.item_id)}>APPROVE LISTING</button>
-                          <button className="listButton" onClick={() => handleDelete(item.item_id)}>DELETE LISTING</button>
                           <button className="listButton" onClick={() => handleViewDetails(item)}>VIEW DETAILS</button>
                         </div>
                       </div>
@@ -323,6 +323,10 @@ function PendingListings() {
             />
             <p>{selectedItem.first_name + " " + selectedItem.last_name}</p>
           </div>
+
+          <br />
+          <button className="listButton" onClick={() => handleApprove(selectedItem.item_id)}>APPROVE LISTING</button>
+          <button className="listButton" style={{backgroundColor: "#F44336"}} onClick={() => handleDelete(selectedItem.item_id)}>DELETE LISTING</button>
         </div>
       </div>
     )}

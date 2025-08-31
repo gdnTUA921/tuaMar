@@ -80,7 +80,7 @@ function Sell() {
           icon: "success",
           confirmButtonColor: "#547B3E",
         });
-        navigate("/home");
+        navigate("/");
       } else {
         throw new Error(data.message);
       }
@@ -95,7 +95,7 @@ function Sell() {
     }
   };
 
-  const goHome = () => navigate("/home");
+  const goHome = () => navigate("/");
 
   return (
     <div className="sell-container">
