@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Listing.css";
+import "../../assets/MyProfile.css"; 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -231,7 +232,7 @@ function PendingListings() {
                           
                           <div className="price-condition">
                             <p></p>
-                            <p>&#8369;{item.price}</p>
+                            <p>&#8369;{Number(item.price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                             <p>&#x2022; {item.item_condition}</p>
                           </div>
                         
@@ -277,7 +278,7 @@ function PendingListings() {
               </span>
               <br />
               <span style={{ fontWeight: "bold", color: "#4CAF50" }}>
-                ₱{selectedItem.price}
+                ₱{Number(selectedItem.price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2})}
               </span>
             </div>
           </div>

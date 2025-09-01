@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   FaUsers, FaChartBar, FaList,
   FaUserPlus, FaUser, FaChevronLeft, FaChevronRight, FaEye,
-  FaEyeSlash, FaBan, FaArrowRightToBracket
+  FaEyeSlash, FaBan, FaArrowRightToBracket, FaClipboardQuestion
 } from "react-icons/fa6";
 import {FaArchive, FaOutdent} from "react-icons/fa";
 import { FaTachometerAlt, FaCog } from "react-icons/fa";
@@ -240,8 +240,12 @@ export default function Admin() {
   //fetch total number of users and total items
   const [totalUsers, setTotalUsers] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [totalPendingItems, setTotalPendingItems] = useState(0);
+  const [totalArchivedItems, setTotalArchivedItems] = useState(0);
 
   useEffect(() => {
+
+    //Fetching total users
     fetch(`${ip}/fetchTotalUsers.php`, {
       method: "GET",
       credentials: "include",
@@ -258,6 +262,7 @@ export default function Admin() {
         console.error("Error fetching total users:", error);
       });
 
+    //Fetching total items
     fetch(`${ip}/fetchTotalItems.php`, {
       method: "GET",
       credentials: "include",
@@ -273,8 +278,45 @@ export default function Admin() {
       .catch((error) => {
         console.error("Error fetching total items:", error);
       });
+
+    //Fetching total pending items
+    fetch(`${ip}/fetchTotalPendingItems.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          setTotalPendingItems(data.total_pending_items);
+        } else {
+          console.error("Error fetching total pending items:", data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching total pending items:", error);
+      });
+
+    //Fetching total archived items
+    fetch(`${ip}/fetchTotalArchivedItems.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data) {
+          setTotalArchivedItems(data.total_archived_items);
+        }
+        else {
+          console.error("Error fetching total archived items:", data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching total archived items:", error);
+      });
   }, [ip, refresh]);
 
+
+  //fetch data for charts
   useEffect(() => {
     fetch(`${ip}/getCollegeStats.php`)
       .then(res => res.json())
@@ -424,6 +466,24 @@ export default function Admin() {
                       <p className="stat-title">Total Items</p>
                       <p className="stat-number">{totalItems}</p>
                       <p className="stat-description">Listed items across all categories</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="stats-section">
+                  <div className="stat-box">
+                    <FaClipboardQuestion className="stat-icon" />
+                    <div>
+                      <p className="stat-title">Total Items Pending Review</p>
+                      <p className="stat-number">{totalPendingItems}</p>
+                      <p className="stat-description">Items needed to be reviewed</p>
+                    </div>
+                  </div>
+                  <div className="stat-box">
+                    <FaBan className="stat-icon" />
+                    <div>
+                      <p className="stat-title">Total Archived Items</p>
+                      <p className="stat-number">{totalArchivedItems}</p>
+                      <p className="stat-description">Items that violated commerce policies</p>
                     </div>
                   </div>
                 </div>

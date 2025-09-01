@@ -302,7 +302,7 @@ else{
 
                           <div className="price-condition">
                             <p></p>
-                            <p>&#8369;{item.price}</p>
+                            <p>&#8369;{Number(item.price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                             <p>&#x2022; {item.item_condition}</p>
                           </div>
                         </div>

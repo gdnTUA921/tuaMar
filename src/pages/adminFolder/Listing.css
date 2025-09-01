@@ -61,7 +61,8 @@
 }
 
 .admin-listing-wrapper .itemCard{
-    display: block;
+    display: flex;
+    flex-direction: column;
     border-radius: 7px;
     border: 1px solid #ddd;
     margin: 5px 15px 50px 10px;

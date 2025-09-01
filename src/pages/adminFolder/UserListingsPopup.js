@@ -140,7 +140,7 @@ export default function UserListingsPopup({ listings, onClose }) {
                   <div>
                     <strong>{item.item_name}</strong><br />
                     <small>{item.category} • {item.item_condition}</small><br />
-                    <span style={{ fontWeight: 'bold', color: '#547B3E' }}>₱{item.price}</span>
+                    <span style={{ fontWeight: 'bold', color: '#547B3E' }}>₱{Number(item.price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                   </div>
                 </div>
                 {expandedIndex === index && (

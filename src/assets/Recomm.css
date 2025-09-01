@@ -66,12 +66,30 @@
 }
 
 .recomm-itemDeets h3{
-    font-size: 15px;
+    font-size: 16px;
 }
 
 .recomm-price-condition{
     display: flex;
     flex-wrap: wrap;
+    position: relative;
+    flex-direction: column;
+}
+
+.recomm-price-condition p{
+    margin: 0;
+}
+
+.recomm-price-condition p:nth-of-type(2){
+    margin-top: 16px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.recomm-price-condition p:nth-of-type(3){
+    margin-bottom: 25px;
+    font-size: 14px;
 }
 
 .recomm-itemDeets p:nth-of-type(1){
@@ -79,13 +97,6 @@
     translate: 200px 7px;
     font-size: 18px;
 }
-
-.recomm-price-condition{
-    position: relative;
-    display: flex;
-    gap: 50px;
-}
-
 
 .recomm-itemTitle{
     width: 140px;

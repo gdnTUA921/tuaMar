@@ -289,7 +289,7 @@ useEffect(() => {
             
                     <div className='price'>
                     <h2 >
-                        &#8369;{itemDeets.price}
+                        &#8369;{Number(itemDeets.price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </h2>
                     </div>
 
