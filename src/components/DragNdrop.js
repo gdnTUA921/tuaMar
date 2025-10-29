@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FileUploader } from "react-drag-drop-files";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 import "../assets/DragNdrop.css";
 
 const fileTypes = ["JPG", "JPEG", "PNG"];
@@ -8,10 +8,9 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
   const [files, setFiles] = useState([]);
   const hasInitialized = useRef(false);
 
+  // ✅ Initialize component with any pre-existing image URLs from parent
   useEffect(() => {
-    
     if (initialImages.length > 0 && !hasInitialized.current) {
-      
       // Store URLs directly, we'll handle them differently in the parent component
       setFiles(initialImages);
       onImagesChange(initialImages);
@@ -19,38 +18,49 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
     }
   }, [initialImages, onImagesChange]);
 
-  const handleChange = (selectedFiles) => {
-    let filesArray = [];
+  // ✅ Handler for new files dropped or selected via input
+  const handleChange = useCallback(
+    (selectedFiles) => {
+      let filesArray = Array.isArray(selectedFiles)
+        ? selectedFiles
+        : Array.from(selectedFiles);
 
-    if (selectedFiles instanceof FileList) {
-      filesArray = Array.from(selectedFiles);
-    } else if (Array.isArray(selectedFiles)) {
-      filesArray = selectedFiles;
-    } else {
-      filesArray = [selectedFiles];
-    }
+      if (files.length + filesArray.length > 5) {
+        alert("You can only upload up to 5 images.");
+        return;
+      }
 
-    if (files.length + filesArray.length > 5) {
-      alert("You can only upload up to 5 images.");
-      return;
-    }
+      const updatedFiles = [...files, ...filesArray];
+      setFiles(updatedFiles);
+      onImagesChange(updatedFiles);
+    },
+    [files, onImagesChange]
+  );
 
-    const updatedFiles = [...files, ...filesArray];
-    setFiles(updatedFiles);
-    onImagesChange(updatedFiles);
-  };
-
+  // ✅ Remove a selected image
   const handleRemoveImage = (indexToRemove) => {
     const updatedFiles = files.filter((_, index) => index !== indexToRemove);
     setFiles(updatedFiles);
     onImagesChange(updatedFiles);
   };
 
+  // ✅ Helpers for previewing file or URL
   const isFileObject = (item) => item instanceof File;
-  const isUrl = (item) => typeof item === 'string' && item.startsWith('http');
+  const isUrl = (item) => typeof item === "string" && item.startsWith("http");
+
+  // ✅ Configure the dropzone using react-dropzone
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: handleChange,
+    accept: {
+      "image/jpeg": [".jpeg", ".jpg"],
+      "image/png": [".png"],
+    },
+    multiple: true,
+  });
 
   return (
     <div className="drag-n-drop-container">
+      {/* === PREVIEW SECTION === */}
       <div className="preview-container">
         {files.length === 0 ? (
           <div className="blank-upload-container">
@@ -72,7 +82,7 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
               previewSrc = file;
               title = `Existing Image ${index + 1}`;
             } else {
-              console.error('Unknown file type:', file);
+              console.error("Unknown file type:", file);
               return null;
             }
 
@@ -111,20 +121,24 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
           })
         )}
       </div>
-      <div className="dropzone-wrapper">
-        <FileUploader
-          handleChange={handleChange}
-          name="files"
-          types={fileTypes}
-          multiple
+
+      {/* === DROPZONE SECTION === */}
+      <div className="dropzone-wrapper" {...getRootProps()}>
+        <input {...getInputProps()} />
+
+        <div
+          className={`custom-dropzone ${
+            isDragActive ? "drag-active" : "drag-inactive"
+          }`}
         >
-          <div className="custom-dropzone">
-            <i id="iconPic" className="bi bi-image-fill"></i>
-            <p>
-              Drag & Drop your Pictures Here or <span>Browse</span>
-            </p>
-          </div>
-        </FileUploader>
+          <i id="iconPic" className="bi bi-image-fill"></i>
+          <p>
+            {isDragActive
+              ? "Drop the files here..."
+              : "Drag & Drop your Pictures Here or "}
+            {!isDragActive && <span>Browse</span>}
+          </p>
+        </div>
       </div>
     </div>
   );

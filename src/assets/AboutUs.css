@@ -1,0 +1,184 @@
+.about-container {
+  font-family: "Poppins", sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding-bottom: 80px;
+}
+
+.about-hero {
+  background: linear-gradient(135deg, #547b3e, #7db95a);
+  color: #fff;
+  text-align: center;
+  padding: 40px 20px 80px 20px;
+}
+
+.about-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.about-hero p {
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  text-align: justify;
+}
+
+.about-tuamar-logo {
+  width: 250px;
+  height: 250px;
+  border-radius: 15px;
+  margin-top: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  padding: 15px;
+}
+
+/* SECTION STYLING */
+.about-section {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #fff;
+  margin: 40px auto;
+  max-width: 1100px;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.about-section h2 {
+  color: #547b3e;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+
+/* DEVELOPER CARDS */
+.developers {
+  padding: 50px;
+}
+
+.dev-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.dev-card {
+  background-color: #f4f4f4;
+  border-radius: 12px;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.3s ease;
+}
+
+.dev-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dev-card img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  padding: 0;
+}
+
+.dev-card h3 {
+  margin-top: 12px;
+  color: #333;
+  font-size: 18px;
+}
+
+.dev-card p {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* CEIS SECTION */
+.ceis {
+  background: #f8fff4;
+  padding: 50px;
+}
+
+.ceis p{
+  font-size: 18px;
+}
+
+.ceis-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 15px;
+  margin-top: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* ACKNOWLEDGEMENTS */
+.acknowledgements {
+  padding: 50px;
+}
+
+.acknowledgements p{
+  font-size: 18px;
+}
+
+.ack-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 25px;
+}
+
+.ack-card {
+  background-color: #f4f4f4;
+  border-radius: 12px;
+  padding: 20px;
+  width: 250px;
+  transition: all 0.3s ease;
+}
+
+.ack-card:hover {
+  transform: scale(1.03);
+}
+
+.ack-card img {
+  margin-top: 15px;
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  padding: 0;
+}
+
+.ack-card h3 {
+  margin-top: 12px;
+  color: #333;
+  font-size: 16px;
+}
+
+.ack-card p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  .dev-cards,
+  .ack-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .about-hero h1 {
+    font-size: 2rem;
+  }
+
+  .about-section {
+    margin: 20px;
+    padding: 40px 15px;
+  }
+}

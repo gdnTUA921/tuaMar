@@ -220,14 +220,12 @@ const BrowseItems = ({loggedIn}) => {
 
   const [topSellers, setTopSellers] = useState([]);
   useEffect(() => {
-    if (userId) {
       fetch(`${ip}/fetchRatedSellers.php`, {
         credentials: "include",
       })
        .then(res => res.json())
        .then(data => {setTopSellers(data);})
        .catch(err => console.error("Failed to fetch top sellers:", err));
-    }
   }, [userId, ip]);
 
   // For search items -- logging search history

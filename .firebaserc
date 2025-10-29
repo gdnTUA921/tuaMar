@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "tuamar-a7cfe"
-  }
+    "default": "tua-market"
+  },
+  "targets": {},
+  "etags": {}
 }

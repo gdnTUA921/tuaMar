@@ -19,6 +19,8 @@ const Reviewmod = React.lazy(() => import ('./pages/Reviewmod'));
 const UserProfile = React.lazy(() => import ('./pages/UserProfile'));
 const Admin = React.lazy(() => import ('./pages/adminFolder/TuaMarAdmin'));
 const Error = React.lazy(() => import ('./components/Error'));
+const FAQ = React.lazy(() => import ('./pages/FAQ'));
+const AboutUs = React.lazy(() => import ('./pages/AboutUs'));
 
 
 
@@ -79,7 +81,6 @@ function App() {
       <Routes>
         {/* Public Route */}
         <Route path="/login" element={<LogIn setLoggedIn={setLoggedIn} />} />
-        
 
         {/* Admin Route - uses Layout2 (no header/footer)*/}
         <Route path="/admin" element={<Layout2 />}>
@@ -100,6 +101,8 @@ function App() {
           <Route path="/reportUser" element={<ReportUser />} />
           <Route path="/reviewmod" element={<Reviewmod />} />
           <Route path="/loader" element={<Loader />} />
+          <Route path="/faq" element={<FAQ />} /> 
+          <Route path="/aboutUs" element={<AboutUs />} />
         </Route>
 
         <Route path="/error404" element={<Error />} />
