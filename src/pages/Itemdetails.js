@@ -29,6 +29,12 @@ const Itemdetails = ({loggedIn}) => {
   const [showEnlargeImg, setShowEnlargeImg] = useState(false);
   const [enlargedImg, setEnlargeImg] = useState("");
 
+  //close view modal popup
+  const closeViewModalPopup = () => {
+    setShowEnlargeImg(false); 
+    setEnlargeImg("");
+  };
+
 
   //For rendering item recommendations
   const [shouldRenderItemRecomm, setShouldRenderItemRecomm] = useState(true);
@@ -48,7 +54,10 @@ useEffect(() => {
       const sessionData = await sessionRes.json();
 
       if (!sessionData.user_id) {
-        //Do nothing, user is not logged in
+        //Do nothing, user is not logged in, but check if ever admin is logged in
+        if (sessionData.user_type === "admin") {
+            navigate('/admin');
+        }
       } else {
         userId = sessionData.user_id;
         setUserID(sessionData.user_id);
@@ -348,11 +357,11 @@ useEffect(() => {
 
           {/* View Image Modal */}
           {showEnlargeImg && (
-            <div className="image-preview-overlay">
-              <div className="image-preview-container">
+            <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+              <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
                 <div className="image-preview-header">
                   <h3></h3>
-                  <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
+                  <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
                     ×
                   </button>
                 </div>

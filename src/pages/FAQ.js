@@ -78,7 +78,7 @@ const FAQ = () => {
       items: [
         {
           q: "How do I post an item for sale?",
-          a: "Go to the Sell Item section, fill out the item’s details (name, description, category, condition, price), and upload up to three images. Once submitted, your listing will be reviewed and published."
+          a: "Go to the Sell Item section, fill out the item’s details (name, description, category, condition, price), and upload up to five images. Once submitted, your listing will be reviewed and published."
         },
         {
           q: "What items can I sell?",

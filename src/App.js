@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ScrollToTop from './ScrollToTop';
 import Loader from "./components/Loader";
+import AutoLogout from "./components/AutoLogout";
 
 const LogIn = React.lazy(() => import ('./pages/LogIn'));
 const Home = React.lazy(() => import ('./pages/Home'));
@@ -21,6 +22,7 @@ const Admin = React.lazy(() => import ('./pages/adminFolder/TuaMarAdmin'));
 const Error = React.lazy(() => import ('./components/Error'));
 const FAQ = React.lazy(() => import ('./pages/FAQ'));
 const AboutUs = React.lazy(() => import ('./pages/AboutUs'));
+const Terms = React.lazy(() => import ('./pages/Terms'));
 
 
 
@@ -67,6 +69,7 @@ function App() {
   function Layout2() {
     return (
       <>
+        <AutoLogout loggedIn={loggedIn} setLoggedIn={setLoggedIn} ip={ip} />
         <main>
         <Outlet />
         </main>
@@ -103,6 +106,7 @@ function App() {
           <Route path="/loader" element={<Loader />} />
           <Route path="/faq" element={<FAQ />} /> 
           <Route path="/aboutUs" element={<AboutUs />} />
+          <Route path="/terms&conditions" element={<Terms />} />
         </Route>
 
         <Route path="/error404" element={<Error />} />

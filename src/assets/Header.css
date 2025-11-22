@@ -37,7 +37,7 @@ nav{
 
 
 #headerIcon {
-    font-size: 50px;
+    font-size: 52px;
     position: absolute;
     top: 25px;
     right: 80px; /* Icon stays on the right */
@@ -48,12 +48,12 @@ nav{
     text-decoration: none;  
     color: #000;            
     font-size: 15px;    
-     background:
+    background:
       linear-gradient(currentColor 0 0)
       center  80% / 0 3px
-    no-repeat;
-  transition:0.5s;          
-  }
+      no-repeat;
+    transition:0.5s;          
+}
  
 .nav-link:hover {
       background-size:  100% 3px;
@@ -61,13 +61,29 @@ nav{
        
 }
 
+.profile-icon img {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-color: #456a31;
+    border-style: solid;  
+    border-width: 2.5px; 
+}
+
+.profile-icon {
+    position: absolute;
+    top: 20px;
+    right: 80px;
+}
 
 .profile-icon-container {
     position: relative;
     display: inline-block;
   }
  
-  .dropdown-menu {
+.dropdown-menu {
     position: absolute;
     top: 100%;
     right: 0;
@@ -77,7 +93,7 @@ nav{
     border-radius: 5px;
     min-width: 150px;
     z-index: 1000;
-  }
+}
  
   .dropdown-menu a {
     display: block;
@@ -101,7 +117,7 @@ nav{
 
 
 
-  .productDropDown {
+.productDropDown {
     display: none;
     background-color: green;
     position: absolute;
@@ -109,7 +125,7 @@ nav{
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
-    top: 80px;
+    top: 85px;
     right: 35px; /* Icon stays on the right */
     width: 120px;
     text-align: center;
@@ -192,21 +208,25 @@ nav{
 @media (max-width: 768px) {
     #headerIcon {
         right: 60px; /* Adjust position */
-        font-size: 40px;
+        font-size: 45px;
     }
 
+    .profile-icon img {
+        width: 40px;
+        height: 40px;
+    }
 
     .productDropDown {
-        top: 65px; /* Move further left */
+        top: 72px; /* Move further left */
         right: 25px; /* Adjust position */
         padding: 10px;
-        padding-left: 5px;
-        padding-right: 5px;
+        padding-left: 0px;
+        padding-right: 0px;
     }
 
 
     .productDropDown a, .logOut{
-        font-size: 15px;
+        font-size: 12px;
     }
 }
 

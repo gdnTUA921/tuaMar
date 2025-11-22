@@ -174,6 +174,18 @@ function PendingListings() {
     setSelectedItem(null);
   };
 
+  
+  //New state for large image viewing modal
+  const [showEnlargeImg, setShowEnlargeImg] = useState(false);
+  const [enlargedImg, setEnlargeImg] = useState("");
+    
+  //close view modal popup
+  const closeViewModalPopup = () => {
+    setShowEnlargeImg(false); 
+    setEnlargeImg("");
+  };
+  
+
   return (
     <>
       <div className="admin-listing-wrapper">
@@ -310,6 +322,7 @@ function PendingListings() {
                     flexShrink: 0,
                     padding: 0
                   }}
+                  onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(img); e.stopPropagation()}}
                 />
               ))}
             </div>
@@ -330,6 +343,23 @@ function PendingListings() {
           <button className="listButton" style={{backgroundColor: "#F44336"}} onClick={() => handleDelete(selectedItem.item_id)}>DELETE LISTING</button>
         </div>
       </div>
+    )}
+
+    {/* View Image Modal */}
+    {showEnlargeImg && (
+        <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+          <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
+            <div className="image-preview-header">
+              <h3></h3>
+              <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
+                ×
+              </button>
+            </div>
+            <div className="image-preview-content">
+              <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
+            </div>
+          </div>
+        </div>
     )}
     </>
   );

@@ -123,6 +123,16 @@ const handleDelete = async (itemId) => {
   const closePopup = () => {
     setSelectedItem(null);
   };
+
+  //New state for large image viewing modal
+  const [showEnlargeImg, setShowEnlargeImg] = useState(false);
+  const [enlargedImg, setEnlargeImg] = useState("");
+
+  //close view modal popup
+  const closeViewModalPopup = () => {
+    setShowEnlargeImg(false); 
+    setEnlargeImg("");
+  };
   
 
   return (
@@ -258,6 +268,7 @@ const handleDelete = async (itemId) => {
                     flexShrink: 0,
                     padding: 0
                   }}
+                  onClick={() => {setShowEnlargeImg(true); setEnlargeImg(img)}}
                 />
               ))}
             </div>
@@ -274,6 +285,23 @@ const handleDelete = async (itemId) => {
         </div>
       </div>
     )}
+
+      {/* View Image Modal */}
+      {showEnlargeImg && (
+        <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+          <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
+            <div className="image-preview-header">
+              <h3></h3>
+              <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
+                ×
+              </button>
+            </div>
+            <div className="image-preview-content">
+              <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
+            </div>
+          </div>
+        </div>
+      )}
 </>
   );
 }

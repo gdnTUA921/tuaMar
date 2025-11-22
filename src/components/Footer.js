@@ -33,7 +33,7 @@ function Footer() {
           <ul>
             <li><a href="/aboutUs">About Us</a></li>
             <li><a href="/faq">FAQs</a></li>
-            <li><a href="#">Terms & Conditions</a></li>
+            <li><a href="/terms&conditions">Terms & Conditions</a></li>
           </ul>
         </div>
 

@@ -88,17 +88,17 @@ export default function AboutUs() {
         </p>
         <div className="ack-cards">
           <div className="ack-card">
-            <img src={adviser1} alt="Adviser 1" />
+            <img src={"/tuamar-profile-icon.jpg" || adviser1} alt="Adviser 1" />
             <h3>Prof. Roman B. Villones, MIT</h3>
             <p>Research Adviser</p>
           </div>
           <div className="ack-card">
-            <img src={adviser2} alt="Adviser 1" />
+            <img src={"/tuamar-profile-icon.jpg" || adviser2} alt="Adviser 1" />
             <h3>Prof. Ronina C. Tayuan, MSCS</h3>
             <p>Research Adviser</p>
           </div>
           <div className="ack-card">
-            <img src={dean} alt="Dean" />
+            <img src={"/tuamar-profile-icon.jpg" || dean} alt="Dean" />
             <h3>Dr. Ferdinand R. Bunag</h3>
             <p>Dean, CEIS</p>
           </div>

@@ -50,7 +50,11 @@ function DragNdrop({ onImagesChange, initialImages = [] }) {
 
   // ✅ Configure the dropzone using react-dropzone
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: handleChange,
+    onDrop: (files) => {
+      window.__startUpload();       // PREVENT auto logout
+      handleChange(files);
+      setTimeout(() => window.__stopUpload(), 1000); // resume after drop stabilizes
+    },
     accept: {
       "image/jpeg": [".jpeg", ".jpg"],
       "image/png": [".png"],

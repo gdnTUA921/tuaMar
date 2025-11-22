@@ -3,18 +3,23 @@ import { Send } from "lucide-react"; // Library for icons
 import { useNavigate, useLocation } from 'react-router-dom';
 import "../assets/Reportitem.css"; // Import CSS file
 import Swal from 'sweetalert2';
+import DragNdrop from '../components/DragNdrop';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebaseConfig"; // Adjust path if needed
 import withReactContent from 'sweetalert2-react-content';
+import { v4 as uuidv4 } from "uuid";
 
 
 const Reportitem = () => {
   const location = useLocation();
   const { passedID, previewPic, itemName} = location.state || {}; // Extract passedID from location state
   const navigate = useNavigate(); // Initialize navigate for programmatic navigation
+  const [images, setImages] = useState([]); // File objects
 
 
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-
+  const handleImagesFromChild = (imageData) => setImages(imageData);
   const MySwal = withReactContent(Swal); //For alerts
   const ip = process.env.REACT_APP_LAPTOP_IP; // IP address (see env file for set up)
 
@@ -37,16 +42,36 @@ const Reportitem = () => {
   }, [ip, navigate]);
 
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
- 
-    console.log({
-      item_id: passedID,
-      category,
-      description,
+ const uploadImagesToFirebase = async () => {
+    const uploadPromises = images.map(async (file) => {
+      if (file instanceof File) {
+        const storageRef = ref(storage, `reports/${uuidv4()}_${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        return getDownloadURL(snapshot.ref);
+      } else {
+        // Already a URL (initial image perhaps)
+        return file;
+      }
     });
- 
-    fetch(`${ip}/report.php`, {
+
+
+    return Promise.all(uploadPromises);
+  };
+
+
+
+
+const handleSubmit = async (event) => {
+  event.preventDefault();
+
+
+  try {
+    // upload local image files (if any) and get array of URLs
+    const uploadedImageURLs = await uploadImagesToFirebase();
+
+
+    // now send the report including uploaded image URLs
+    const response = await fetch(`${ip}/report.php`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,46 +80,49 @@ const Reportitem = () => {
         item_id: passedID,
         category,
         description,
+        images: uploadedImageURLs, // include uploaded image URLs here
       }),
       credentials: 'include',
-    })
-      .then((res) => res.json())  // Change this to .json() to get raw response
-      .then((data) => {
-        console.log(data.message);
-        if (data.message === "Report submitted successfully"){
-          MySwal.fire({
-            icon: 'success',
-            title: 'Report Submitted',
-            text: data.message,
-            showConfirmButton: false,
-            timer: 1500
-            }); // Display raw response to user
-          navigate("/browseItems");
-        }
-        else {
-          MySwal.fire({
-            icon: 'error',
-            title: 'Report Submit Error',
-            text: data.message,
-            showConfirmButton: false,
-            timer: 1500
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Report Submit Error:", error);
-        MySwal.fire({
-          icon: 'error',
-          title: 'Report Submit Error',
-          text: error.message,
-          showConfirmButton: false,
-          timer: 1500
-        });
+    });
+
+
+    const data = await response.json();
+    console.log(data.message);
+
+
+    if (data.message === "Report submitted successfully") {
+      MySwal.fire({
+        icon: 'success',
+        title: 'Report Submitted',
+        text: data.message,
+        showConfirmButton: false,
+        timer: 1500
       });
-  };
+      navigate("/browseItems");
+    } else {
+      MySwal.fire({
+        icon: 'error',
+        title: 'Report Submit Error',
+        text: data.message,
+        showConfirmButton: false,
+        timer: 1500
+      });
+    }
+  } catch (error) {
+    console.error("Report Submit Error:", error);
+    MySwal.fire({
+      icon: 'error',
+      title: 'Report Submit Error',
+      text: error.message || "An error occurred",
+      showConfirmButton: false,
+      timer: 1500
+    });
+  }
+};
+
 
   const goBack = (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     navigate("/browseItems")
   }
  
@@ -142,7 +170,10 @@ const Reportitem = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-
+          <h3>Upload Pictures</h3>
+          <div className="report-picture">
+            <DragNdrop onImagesChange={handleImagesFromChild} />
+          </div>
           <div className="buttons-display">
             <button type="submit" className="submit-report"><Send size={19} /><b>Submit</b></button>
             <button className="cancel-button" onClick={(event) => {goBack(event);}}><b>Cancel</b></button>

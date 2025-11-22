@@ -35,6 +35,25 @@ const PrintableContent = React.forwardRef(({ report }, ref) => (
       </div>
       <p><strong>Report Description:</strong></p>
       <p>{report.description}</p>
+  
+      <div className="print-images-section">
+        <p><strong>Supporting Images:</strong></p>
+        <div className="print-images-container" style={{display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '0px'}}>
+          {report.images && report.images.length > 0 ? (
+            report.images.map((imgSrc, index) => (
+              <img
+                key={index}
+                src={imgSrc}
+                alt={`Report Image ${index + 1}`}
+                className="print-image"
+                style={{width: 'auto', height: '90px', objectFit: 'cover', borderRadius: '6px'}}
+              />
+            ))
+          ) : (
+            <p>No images provided.</p>
+          )}
+        </div>
+      </div>
     </div>
 
     <div className="print-report-status">
@@ -52,6 +71,17 @@ export default function Reports() {
   const [editingId, setEditingId] = useState(null);
   const [popupContent, setPopupContent] = useState({});
   const [showPopup, setShowPopup] = useState(false);
+
+
+  //New state for large image viewing modal
+  const [showEnlargeImg, setShowEnlargeImg] = useState(false);
+  const [enlargedImg, setEnlargeImg] = useState("");
+
+  //close view modal popup
+  const closeViewModalPopup = () => {
+    setShowEnlargeImg(false); 
+    setEnlargeImg("");
+  };
 
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //ip address of computer or hosting machine
@@ -82,6 +112,7 @@ export default function Reports() {
         department: r.department || "N/A",
         item_name: r.item_name || "", 
         reporter: r.reporter || "Unknown",
+        images: JSON.parse(r.images || "[]"),
       }));
       setReports(formatted);
     })
@@ -211,8 +242,8 @@ export default function Reports() {
               &times;
             </span>
             <h2>Report Details</h2>
-            <br/>
-            <h3>Content Information</h3>
+            
+            <h3 style={{marginTop: '35px'}}>Content Information</h3>
             <p><strong>Report ID:</strong> {popupContent.id}</p>
             <p><strong>Report Date:</strong> {popupContent.date}</p>
             <p><strong>Report Type:</strong> {popupContent.type}</p>
@@ -220,12 +251,30 @@ export default function Reports() {
             {popupContent.item_name && popupContent.type === "Item" && <p><strong>Listing Reported:</strong> {popupContent.item_name}</p>}
             {popupContent.type === "User" && <p><strong>Department:</strong> {popupContent.department}</p>}
             <p><strong>Reported By:</strong> {popupContent.reporter}</p>
-            <br/>
-            <h3>Report Reason</h3>
+            
+            <h3 style={{marginTop: '50px'}}>Report Reason</h3>
             <p>{popupContent.reason}</p>
-            <br/>
-            <h3>Report Description</h3>
+            
+            <h3 style={{marginTop: '40px'}}>Report Description</h3>
             <p>{popupContent.description}</p>
+            
+            <h3 style={{marginTop: '40px'}}>Supporting Images</h3>
+            <div className="popup-images">
+              {popupContent.images && popupContent.images.length > 0 ? (
+                popupContent.images.map((imgSrc, index) => (
+                  <img
+                    key={index}
+                    src={imgSrc}
+                    alt={`Report Image ${index + 1}`}
+                    className="popup-image"
+                    onClick={() => {setShowEnlargeImg(true); setEnlargeImg(imgSrc)}}
+                  />
+                ))
+              ) : (
+                <p>No images provided.</p>
+              )}
+            </div>
+            <br/>
 
             <div style={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column"}}>
               <button className="popup-button" onClick={handlePrint}>
@@ -236,6 +285,23 @@ export default function Reports() {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* View Image Modal */}
+      {showEnlargeImg && (
+        <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+          <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
+            <div className="image-preview-header">
+              <h3></h3>
+              <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
+                ×
+              </button>
+            </div>
+            <div className="image-preview-content">
+              <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
+            </div>
           </div>
         </div>
       )}

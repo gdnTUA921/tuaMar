@@ -41,8 +41,12 @@ function Home({loggedIn}) {
     })
       .then((response) => response.json())
       .then((data) => {
+        
         if (!data.user_id) {
-          //Do nothing, user is not logged in
+          //Do nothing, user is not logged in, but we check if the user logged in is an admin
+          if (data.user_type === "admin") {
+            navigate('/admin');
+          }
         } else {
           if (!userID) {
             setUserID(data.user_id);

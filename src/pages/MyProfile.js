@@ -36,6 +36,11 @@ function MyProfile() {
   const [showEnlargeImg, setShowEnlargeImg] = useState(false);
   const [enlargedImg, setEnlargeImg] = useState("");
 
+  //close view modal popup
+  const closeViewModalPopup = () => {
+    setShowEnlargeImg(false); 
+    setEnlargeImg("");
+  };
 
   //fetching items owned and the number of likes per item
   const [numLikes, setNumLikes] = useState({})
@@ -545,22 +550,22 @@ function MyProfile() {
               ) : (<div className="no-reviews">No reviews for&nbsp;<span className="spanName">{userData.first_name + " " + userData.last_name}.</span>&nbsp;</div>)}
           </div>
 
-          {/* View Image Modal For Review Pics*/}
-          {showEnlargeImg && (
-            <div className="image-preview-overlay">
-              <div className="image-preview-container">
-                <div className="image-preview-header">
-                  <h3></h3>
-                  <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
-                    ×
-                  </button>
-                </div>
-                <div className="image-preview-content">
-                  <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
-                </div>
+        {/* View Image Modal */}
+        {showEnlargeImg && (
+          <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+            <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
+              <div className="image-preview-header">
+                <h3></h3>
+                <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
+                  ×
+                </button>
+              </div>
+              <div className="image-preview-content">
+                <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
 
           {/* Settings Tab */}
@@ -660,7 +665,7 @@ function MyProfile() {
 
                         <div className="price-condition">
                           <p></p>
-                          <p>&#8369;{item.price}</p>
+                          <p>&#8369;{Number(item.price).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
                           <p>&#x2022; {item.item_condition}</p>
                         </div>
 

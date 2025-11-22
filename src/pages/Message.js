@@ -60,6 +60,12 @@ function Message() {
   const [showEnlargeImg, setShowEnlargeImg] = useState(false);
   const [enlargedImg, setEnlargeImg] = useState("");
 
+  //close view modal popup
+  const closeViewModalPopup = () => {
+    setShowEnlargeImg(false); 
+    setEnlargeImg("");
+  };
+
   // Alternative user ID for data fetching
   const [appUserID, setAppUserID] = useState("");
 
@@ -230,6 +236,23 @@ function Message() {
         await set(chatListRef, chatData);
       }
 
+      const response = await fetch(`${ip}/messageNotif.php`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ 
+            senderID: currentUserId, 
+            receiverID: receiverID, 
+            itemName: itemName, 
+            itemPic: itemPicture, 
+            messageText: input}),
+          credentials: "include",
+        });
+
+      const messageResult = await response.json();
+      console.log("Notification response:", messageResult);
+
       setInput("");
     } catch (error) {
       console.error("Error sending message or updating chat list:", error);
@@ -237,8 +260,10 @@ function Message() {
   };
 
 
-  // Sending images
+  // Sending images (UPLOAD + PREVENT AUTO LOGOUT during upload)
   const handleImageUpload = async (file, chat_id, currentUserId, receiverID, itemId) => {
+    window.__startUpload();  // ⛔ Pause Auto Logout while uploading
+
     const finalChatId = chat_id
       ? chat_id
       : [String(itemId), String(currentUserId), String(receiverID)].sort().join("_");
@@ -247,11 +272,14 @@ function Message() {
     const imageRef = storageRef(storage, `chat_images/${Date.now()}_${file.name}`);
 
     try {
+      // 1️⃣ Upload to Firebase Storage
       const snapshot = await uploadBytes(imageRef, file);
+
+      // 2️⃣ Get public URL
       const downloadURL = await getDownloadURL(snapshot.ref);
 
+      // 3️⃣ Save message with image URL
       const messageRef = push(ref(database, `messages/${finalChatId}`));
-
       await set(messageRef, {
         imageUrl: downloadURL,
         senderId: currentUserId,
@@ -260,7 +288,7 @@ function Message() {
         timestamp: Date.now()
       });
 
-      // Update chat list with image message
+      // 4️⃣ Update chat list with "image" preview
       const chatListRef = ref(database, `chatsList/${finalChatId}`);
       await update(chatListRef, {
         last_message: "📷 Image",
@@ -268,9 +296,25 @@ function Message() {
         last_sender_id: currentUserId,
       });
 
-      console.log("Image sent");
+      // 5️⃣ Send email notification through PHP backend
+      await fetch(`${ip}/messageNotif.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          senderID: currentUserId,
+          receiverID: receiverID,
+          itemName: itemName,
+          itemPic: itemPicture,
+          messageText: "image",
+        }),
+      });
+
+      console.log("Image message sent successfully.");
     } catch (error) {
-      console.error("Image not sent", error);
+      console.error("Image upload error:", error);
+    } finally {
+      window.__stopUpload();  // ✅ Resume Auto Logout after upload completes
     }
   };
 
@@ -491,8 +535,8 @@ function Message() {
   // Add this function to send the image:
   const sendPreviewImage = async () => {
     if (selectedImageFile) {
-      await handleImageUpload(selectedImageFile, chat_id, currentUserId, receiverID, itemId);
       closePreview();
+      await handleImageUpload(selectedImageFile, chat_id, currentUserId, receiverID, itemId);
     }
   };
 
@@ -793,16 +837,16 @@ function Message() {
 
           {/* View Image Modal */}
           {showEnlargeImg && (
-            <div className="image-preview-overlay">
-              <div className="image-preview-container">
+            <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+              <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
                 <div className="image-preview-header">
                   <h3></h3>
-                  <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
+                  <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
                     ×
                   </button>
                 </div>
                 <div className="image-preview-content">
-                  <img src={enlargedImg} alt="Preview" className="popup-preview-image" />
+                  <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
                 </div>
               </div>
             </div>
@@ -821,9 +865,14 @@ function Message() {
           <textarea
             className='sendinput'
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              window.__startTyping();       // <-- NEW
+            }}
+            onBlur={() => window.__stopTyping()} // <-- NEW
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
+                window.__stopTyping();     // clicking Send stops typing state
                 e.preventDefault();
                 sendMessage();
               }

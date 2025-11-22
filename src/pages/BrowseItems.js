@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Flag, Heart, X, Search} from "lucide-react";
 import "../assets/BrowseItems.css";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoaderPart from "../components/LoaderPart";
 import Popup from 'reactjs-popup';
-import { set } from "firebase/database";
 
 const BrowseItems = ({loggedIn}) => {
   const [isLoading, setIsLoading] = useState(true); //for loading state
@@ -12,6 +11,8 @@ const BrowseItems = ({loggedIn}) => {
   const [userId, setUserId] = useState("");
 
   const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
+
+  const navigate = useNavigate();
   
   useEffect(() => {
     let isMounted = true;
@@ -29,7 +30,10 @@ const BrowseItems = ({loggedIn}) => {
       if (sessionData.user_id) {
         setUserId(sessionData.user_id);
       } else {
-        //Do nothing, user is not logged in
+        //Do nothing, user is not logged in, but check if ever admin is logged in
+        if (sessionData.user_type === "admin") {
+            navigate('/admin');
+        }
       }
 
       if (Array.isArray(itemsData)) {
@@ -89,8 +93,7 @@ const BrowseItems = ({loggedIn}) => {
     good: false,
     minPrice: "",
     maxPrice: "",
-    sortDate: "newest",
-    sortPrice: "",
+    sortBy: "newest",
   };
 
   const [filters, setFilters] = useState(initialFilterState);
@@ -339,6 +342,8 @@ const BrowseItems = ({loggedIn}) => {
                   Others
                 </label>
 
+                <br/>
+
                 {/* Price Range */}
                 <div style={{ color: "#547B3E", marginTop: "8px" }}>
                   <h2>Price</h2>
@@ -361,6 +366,8 @@ const BrowseItems = ({loggedIn}) => {
                   />
                 </div>
 
+                <br/>
+
                 {/* Condition */}
                 <div style={{ color: "#547B3E", marginTop: "8px" }}>
                   <h2>Condition</h2>
@@ -378,32 +385,21 @@ const BrowseItems = ({loggedIn}) => {
                   Good
                 </label>
 
-                {/* Sort by Date Posted */}
+                <br/>
+
+                {/* Sort By */}
                 <div style={{ color: "#547B3E", marginTop: "8px" }}>
-                  <h2>Date Posted</h2>
+                  <h2>Sort By</h2>
                   <select
-                    name="sortDate"
+                    name="sortBy"
                     value={filters.sortDate}
                     onChange={handleSelectChange}
                     className="select-filter"
                   >
-                    <option value="newest">Newest to Oldest</option>
-                    <option value="oldest">Oldest to Newest</option>
-                  </select>
-                </div>
-
-                {/* Sort by Price */}
-                <div style={{ color: "#547B3E", marginTop: "8px" }}>
-                  <h2>Sort by Price</h2>
-                  <select
-                    name="sortPrice"
-                    value={filters.sortPrice}
-                    onChange={handleSelectChange}
-                    className="select-filter"
-                  >
-                    <option value="">-- Select --</option>
-                    <option value="lowToHigh">Low to High</option>
-                    <option value="highToLow">High to Low</option>
+                    <option value="newest">Date Listed: Newest to Oldest</option>
+                    <option value="oldest">Date Listed: Oldest to Newest</option>
+                    <option value="lowToHigh">Price: Low to High</option>
+                    <option value="highToLow">Price: High to Low</option>
                   </select>
                 </div>
               </div>

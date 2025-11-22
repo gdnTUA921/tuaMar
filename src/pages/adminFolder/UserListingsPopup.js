@@ -86,7 +86,20 @@ export default function UserListingsPopup({ listings, onClose }) {
   const categories = Array.from(new Set(listings.map(item => item.category)));
   const statuses = Array.from(new Set(listings.map(item => item.status)));
 
+
+  //New state for large image viewing modal
+  const [showEnlargeImg, setShowEnlargeImg] = useState(false);
+  const [enlargedImg, setEnlargeImg] = useState("");
+  
+  //close view modal popup
+  const closeViewModalPopup = () => {
+    setShowEnlargeImg(false); 
+    setEnlargeImg("");
+  };
+
+
   return (
+  <>
     <div className="popup-overlay" onClick={onClose}>
       <div className="popup-content" onClick={(e) => e.stopPropagation()}>
         <button className="close-btn" onClick={onClose}>
@@ -171,6 +184,7 @@ export default function UserListingsPopup({ listings, onClose }) {
                               flexShrink: 0, 
                               padding: 0
                             }}
+                            onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(img); e.stopPropagation()}}
                           />
                         ))}
                       </div>
@@ -202,5 +216,23 @@ export default function UserListingsPopup({ listings, onClose }) {
         )}
       </div>
     </div>
+    
+    {/* View Image Modal */}
+      {showEnlargeImg && (
+        <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+          <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
+            <div className="image-preview-header">
+              <h3></h3>
+              <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
+                ×
+              </button>
+            </div>
+            <div className="image-preview-content">
+              <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
+            </div>
+          </div>
+        </div>
+    )}
+  </>
   );
 }

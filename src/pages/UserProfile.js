@@ -28,6 +28,12 @@ function UserProfile({loggedIn}) {
   const [showEnlargeImg, setShowEnlargeImg] = useState(false);
   const [enlargedImg, setEnlargeImg] = useState("");
 
+  //close view modal popup
+  const closeViewModalPopup = () => {
+    setShowEnlargeImg(false); 
+    setEnlargeImg("");
+  };
+
 
   useEffect(() => {
   const fetchData = async () => {
@@ -41,7 +47,10 @@ function UserProfile({loggedIn}) {
       const sessionData = await sessionRes.json();
 
       if (!sessionData.user_id) {
-        //Do nothing, user is not logged in
+        //Do nothing, user is not logged in, but check if ever admin is logged in
+        if (sessionData.user_type === "admin") {
+            navigate('/admin');
+        }
       } else {
         setUserId(sessionData.user_id);
       }
@@ -352,22 +361,22 @@ else{
           </div>
 
           
-          {/* View Image Modal For Review Pics*/}
-          {showEnlargeImg && (
-            <div className="image-preview-overlay">
-              <div className="image-preview-container">
-                <div className="image-preview-header">
-                  <h3></h3>
-                  <button className="close-preview-btn" onClick={(e) => {setShowEnlargeImg(false); setEnlargeImg("");}}>
-                    ×
-                  </button>
-                </div>
-                <div className="image-preview-content">
-                  <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
+            {/* View Image Modal */}
+            {showEnlargeImg && (
+              <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+                <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
+                  <div className="image-preview-header">
+                    <h3></h3>
+                    <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
+                      ×
+                    </button>
+                  </div>
+                  <div className="image-preview-content">
+                    <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
 
             {/* Settings Tab */}
