@@ -1,0 +1,90 @@
+/* Wraps the logs content inside the white card */
+.logs-container {
+  width: 100%;
+  padding:  0;
+  height: 100px;
+  background-color: #e6e6e6;
+}
+
+/* Title styled like h2 from myListings */
+.logs-container h1 {
+  font-size: 25px;
+  margin: 40px 0 35px 80px;
+  font-weight: bold;
+}
+
+/* Action buttons row */
+.logs-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-left: 80px;
+}
+
+/* Buttons styled to match admin UI */
+.export-btn,
+.clear-btn {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  background: #547B3E;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.clear-btn {
+  background: #a63a3a;
+}
+
+.export-btn:disabled,
+.clear-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Table wrapper â€” THIS now scrolls instead of the whole page */
+.logs-table-wrapper {
+  width: 100%;
+  padding: 0 35px;
+
+  /* ðŸš€ MAKE ONLY THE TABLE SCROLL */
+  max-height: 60vh;     /* visible height */
+  overflow-y: auto;     /* scrolls vertically */
+  overflow-x: auto;     /* scrolls horizontally when needed */
+
+  /* optional for smoother experience */
+  scrollbar-gutter: stable;
+}
+
+/* Table styling */
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.logs-table th,
+.logs-table td {
+  text-align: left;
+  padding: 12px 10px;
+  font-size: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.logs-table th {
+  background: #eee;
+  font-weight: bold;
+}
+
+.logs-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* Empty / loading state */
+.logs-empty {
+  padding: 25px;
+  color: #555;
+  margin-left: 80px;
+  font-size: 18px;
+}

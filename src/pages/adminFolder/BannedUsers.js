@@ -3,6 +3,7 @@ import "./Members.css"; // Don't forget the CSS!
 import UserListingsPopup from "./UserListingsPopup.js";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { logAdminActivity } from '../../utils/adminLogHelper';
 
 export default function BannedMembers() {
   const ip = process.env.REACT_APP_LAPTOP_IP; // IP address (see env file for set up);
@@ -143,6 +144,7 @@ export default function BannedMembers() {
           const response = await fetch(`${ip}/restoreUser.php`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: 'include',
             body: JSON.stringify({ user_id }),
           });
 
@@ -154,6 +156,7 @@ export default function BannedMembers() {
               confirmButtonColor: "#547B3E",
               confirmButtonText: "OK"
             })
+            try { await logAdminActivity(`Restored/unbanned user ${user_id}`); } catch (err) { /* ignore */ }
             setUsers((prev) => prev.filter((u) => u.id !== user_id));
             setRefresh(!refresh);
           } else {
@@ -236,6 +239,7 @@ export default function BannedMembers() {
       const res = await fetch(`${ip}/updateUser.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({
           user_id: editUser.id,
           original_full_name: `${editUser.first_name} ${editUser.last_name}`.trim() || "",
@@ -269,6 +273,7 @@ export default function BannedMembers() {
         icon: "success",
         confirmButtonColor: "#547B3E",
       });
+      try { await logAdminActivity(`Updated user ${editUser.id}`); } catch (err) { /* ignore */ }
 
     } catch (error) {
       console.error("Update error:", error);

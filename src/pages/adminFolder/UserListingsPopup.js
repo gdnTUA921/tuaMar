@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./UserListingsPopup.css";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { logAdminActivity } from '../../utils/adminLogHelper';
 
 export default function UserListingsPopup({ listings, onClose }) {
   const [filterCategory, setFilterCategory] = useState("All");
@@ -56,6 +57,7 @@ export default function UserListingsPopup({ listings, onClose }) {
           timer: 1500,
         });
 
+        try { await logAdminActivity(`Deleted listing ${itemId} (reason: ${reason.trim()})`); } catch (err) { /* ignore */ }
         setItems((prev) => prev.filter((i) => i.item_id !== itemId));
       } else {
         await MySwal.fire({

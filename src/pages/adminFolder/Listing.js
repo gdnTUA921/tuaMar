@@ -3,6 +3,7 @@ import "./Listing.css";
 import "../../assets/MyProfile.css"; 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { logAdminActivity } from '../../utils/adminLogHelper';
 
 function Listing() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -96,6 +97,8 @@ const handleDelete = async (itemId) => {
           timer: 1500,
         });
 
+        // record this admin action (best-effort: server or localStorage)
+        try { await logAdminActivity(`Deleted listing ${itemId} (reason: ${reason.trim()})`); } catch (err) { /* ignore */ }
         setItems((prev) => prev.filter((i) => i.item_id !== itemId));
       } else {
         await MySwal.fire({

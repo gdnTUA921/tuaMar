@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/Header.css';
 import { Link } from "react-router-dom";
@@ -7,15 +7,15 @@ import { auth, googleProvider } from '../firebaseConfig';
 import { LogIn, LogOut } from 'lucide-react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import AutoLogout from "./AutoLogout";
-
+import RatingModal from './RatingModal';
 
 function Header({loggedIn, setLoggedIn}) {
-  const [userData, setUserData] = React.useState({});
-  
+const [userData, setUserData] = useState({});
+const [showRatingModal, setShowRatingModal] = useState(false);
+const [hasRated, setHasRated] = useState(false);
+
   //for IP address
   const ip = process.env.REACT_APP_LAPTOP_IP;
-
 
 useEffect(() => {
   const fetchAllData = async () => {
@@ -27,51 +27,58 @@ useEffect(() => {
       });
       const sessionData = await sessionRes.json();
 
-      if (!sessionData.user_id) {
-        return; // User not logged in, exit early
-      }
       // Step 2: Fetch user profile details
       const profileRes = await fetch(`${ip}/fetchMyProfileDeets.php`, {
         method: "GET",
         credentials: "include",
       });
+
       const profileData = await profileRes.json();
+      setUserData(profileData); // This contains the profile_pic
 
-      if (profileData){
-        setUserData(profileData); // This contains the profile_pic
+      // Step 3: Check if user has already rated
+      if (sessionData.user_id) {
+        const ratingRes = await fetch(`${ip}/checkUserRating.php`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const ratingData = await ratingRes.json();
+        setHasRated(ratingData.has_rated || false);
       }
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-
   fetchAllData();
 }, [ip]);
 
-
     const MySwal = withReactContent(Swal);
 
-
     const navigate = useNavigate();
-
 
     const handleLogOut = async (event) => {
       event.preventDefault();
 
+      // Check if user has rated, if not show rating modal
+      if (!hasRated) {
+        setShowRatingModal(true);
+        return;
+      }
 
+      // Proceed with logout if user has already rated
+      performLogout();
+    }
+
+    const performLogout = async () => {
       try{
           await signOut(auth);
-
 
           const response = await fetch(`${ip}/logOut.php`, {
             credentials: "include", // This is important for cookies!
           });
 
-
           const data = await response.json();
-
 
           if (data.message){
             MySwal.fire({
@@ -94,6 +101,39 @@ useEffect(() => {
       }
     }
 
+    const handleRatingSubmit = async (rating, feedback) => {
+      try {
+        const response = await fetch(`${ip}/submitRating.php`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            rating: rating,
+            feedback: feedback
+          })
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          setHasRated(true);
+          setShowRatingModal(false);
+          performLogout();
+        } else {
+          throw new Error(data.message || 'Failed to submit rating');
+        }
+      } catch (error) {
+        console.error('Rating submission error:', error);
+        throw error;
+      }
+    }
+
+    const handleRatingClose = () => {
+      setShowRatingModal(false);
+      performLogout();
+    }
 
     const handleLogIn = async (event) => {
       event.preventDefault();
@@ -103,12 +143,11 @@ useEffect(() => {
 
   return (
     <header>
-      <AutoLogout loggedIn={loggedIn} setLoggedIn={setLoggedIn} ip={ip} />
       <Link to="/" className="homeLogo">
       <div className="logo">
-        <img
-          src="/tuamar.png"
-          alt="TUA Logo"
+        <img 
+          src="/tuamar.png" 
+          alt="TUA Logo" 
         />
       </div>
       <h1>TUA Marketplace</h1>
@@ -134,10 +173,16 @@ useEffect(() => {
           <Link onClick={loggedIn ? handleLogOut : handleLogIn}>{loggedIn ? <LogIn/> : <LogOut/>}&nbsp;&nbsp;&nbsp;{loggedIn ? "Log Out" : "Log In"}</Link>
         </div>
       </div>
+
+      {showRatingModal && (
+        <RatingModal 
+          onSubmit={handleRatingSubmit}
+          onClose={handleRatingClose}
+        />
+      )}
          
     </header>
   );
 }
-
 
 export default Header;

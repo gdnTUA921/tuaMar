@@ -3,6 +3,7 @@ import "./Listing.css";
 import "../../assets/MyProfile.css"; 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { logAdminActivity } from '../../utils/adminLogHelper';
 
 function ArchivedItems() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -84,6 +85,7 @@ function ArchivedItems() {
           showConfirmButton: false,
         });
 
+        try { await logAdminActivity(`Restored item ${itemId}`); } catch (err) { /* ignore */ }
         setItems((prev) => prev.filter((item) => item.item_id !== itemId));
         setSelectedItem(null);
       } else {
@@ -135,6 +137,7 @@ function ArchivedItems() {
           showConfirmButton: false,
         });
 
+        try { await logAdminActivity(`Permanently deleted item ${itemId}`); } catch (err) { /* ignore */ }
         setItems((prev) => prev.filter((item) => item.item_id !== itemId));
         setSelectedItem(null);
       } else {

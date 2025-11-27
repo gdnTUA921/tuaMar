@@ -9,6 +9,7 @@ import { FaTachometerAlt, FaCog } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 import "./TuaMarAdmin.css";
 import Reports from "./Reports.js";
+import Logs from "./Logs.js";
 import Listings from "./Listing.js";
 import Members from "./Members.js";
 import PendingListing from "./PendingListing.js";
@@ -18,6 +19,7 @@ import withReactContent from 'sweetalert2-react-content';
 import UsersByCollegeChart from './UsersByCollegeChart';
 import ItemsByCategoryChart from './ItemsByCategoryChart';
 import BannedUsers from './BannedUsers.js'
+import AdminRegistrations from "./AdminRegistrations.js";
 
 
 export default function Admin() {
@@ -40,6 +42,7 @@ export default function Admin() {
         }
         else {
           setEmail(data.email);
+          setAdminId(data.admin_id);
         }
       })
       .catch((error) => {
@@ -54,6 +57,7 @@ export default function Admin() {
   
   //to be used in case there are updates in data
   const [refresh, setRefresh] = useState(false);
+  const [adminId, setAdminId] = useState(null);
 
 
   // for Sidebar
@@ -69,6 +73,7 @@ export default function Admin() {
   const [showPendingListing, setShowPendingListings] = useState(false);
   const [showArchivedItems, setShowArchivedItems] = useState(false);
   const [showBannedUsers, setShowBannedUsers] = useState(false);
+  const [showLogs, setShowLogs] = useState(false);
 
 
   const menuItems = [
@@ -79,6 +84,7 @@ export default function Admin() {
   { name: "Listings", icon: <FaList /> },
   { name: "Pending Listings", icon: <FaOutdent /> },
   { name: "Archived Items", icon: <FaArchive /> },
+  { name: "Logs", icon: <FaClipboardQuestion /> },
   { name: "Banned Users", icon: <FaBan /> },
   { name: "Settings", icon: <FaCog /> }
 ];
@@ -95,8 +101,53 @@ export default function Admin() {
     setShowPendingListings(itemName === "Pending Listings");
     setShowArchivedItems(itemName === "Archived Items");
     setShowBannedUsers(itemName === "Banned Users");
+    setShowLogs(itemName === "Logs");
     setRefresh(!refresh);
+    // record UI navigation
+    try { logActivity(`Opened panel: ${itemName}`); } catch (err) { /* if not yet initialized */ }
   };
+
+  // Helper: record admin activity (tries server endpoint first; falls back to localStorage)
+ async function logActivity(activity) {
+  const datetime = new Date(); // for backend or formatting
+  const entry = { 
+    admin_id: adminId || email || 'unknown', 
+    activity, 
+    ip_address: await getPublicIP() 
+  };
+
+  if (ip) {
+    try {
+      await fetch(`${ip}/recordAdminLog.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(entry)
+      });
+      return;
+    } catch (err) {
+      console.error('Server logging failed', err);
+    }
+  }
+
+  // fallback: localStorage
+  try {
+    const raw = localStorage.getItem('adminLogs');
+    const arr = raw ? JSON.parse(raw) : [];
+    arr.push({ ...entry, datetime: datetime.toISOString() });
+    localStorage.setItem('adminLogs', JSON.stringify(arr));
+  } catch (err) {
+    console.error('Failed to save admin log locally', err);
+  }
+}
+
+async function getPublicIP() {
+  try {
+    const res = await fetch('https://api.ipify.org?format=json');
+    if (res.ok) return (await res.json()).ip;
+  } catch {}
+  return '';
+}
 
 
   //LOG OUT 
@@ -115,7 +166,8 @@ export default function Admin() {
         title: 'Log-Out Successful',
         showConfirmButton: false,
         timer: 1500
-      }).then(() => {
+      }).then(async () => {
+        await logActivity('Log-Out');
         navigate("/login");
       });
     })
@@ -170,8 +222,9 @@ export default function Admin() {
               text: data.message,
               icon: "success",
               confirmButtonColor: "#547B3E",
-          }).then((result) => {
+          }).then(async (result) => {
               if (result.isConfirmed){
+                try { await logActivity(`Registered user: ${email}`); } catch (err) { /* ignore */ }
                 window.location.reload();
               }
           });
@@ -220,12 +273,13 @@ export default function Admin() {
         }),
       })
         .then((res) => res.json())
-        .then((data) => {
+        .then(async (data) => {
           if (data.status === "success") {
             Swal.fire("Success", data.message, "success");
             setOldPassword("");
             setNewPassword("");
             setConfirmPassword("");
+            try { await logActivity('Updated password'); } catch (err) { /* ignore */ }
           } else {
             Swal.fire("Error", data.message, "error");
           }
@@ -498,7 +552,7 @@ export default function Admin() {
                   </div>
                 </div>
               </div>
-            ) : showRegistration ? (
+            ) : showRegistration ? <AdminRegistrations/> /*(
               <div className="registration-container">
                 <h1>TUA Marketplace Registration</h1>
                 <div className="actualreg-container">
@@ -551,7 +605,7 @@ export default function Admin() {
                   </form>
                 </div>
               </div>
-          ) : 
+          )*/ : 
           showReports ? (
             <Reports />
           ) : 
@@ -566,6 +620,9 @@ export default function Admin() {
           ) :
           showArchivedItems ? (
             <ArchivedItems/> 
+          ) :
+          showLogs ? (
+            <Logs ip={ip} />
           ) :
           showBannedUsers ? (
             <BannedUsers/> 

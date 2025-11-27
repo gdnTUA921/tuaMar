@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import ScrollToTop from './ScrollToTop';
 import Loader from "./components/Loader";
 import AutoLogout from "./components/AutoLogout";
+import Register from './pages/Register';
 
 const LogIn = React.lazy(() => import ('./pages/LogIn'));
 const Home = React.lazy(() => import ('./pages/Home'));
@@ -84,6 +85,7 @@ function App() {
       <Routes>
         {/* Public Route */}
         <Route path="/login" element={<LogIn setLoggedIn={setLoggedIn} />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Admin Route - uses Layout2 (no header/footer)*/}
         <Route path="/admin" element={<Layout2 />}>

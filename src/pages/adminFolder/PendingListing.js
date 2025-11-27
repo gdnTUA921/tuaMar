@@ -3,6 +3,7 @@ import "./Listing.css";
 import "../../assets/MyProfile.css"; 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { logAdminActivity } from '../../utils/adminLogHelper';
 
 function PendingListings() {
 
@@ -86,6 +87,7 @@ function PendingListings() {
           timer: 1500,
         });
 
+        try { await logAdminActivity(`Approved listing ${itemId}`); } catch (err) { /* ignore */ }
         setItems((prev) => prev.filter((i) => i.item_id !== itemId));
         closePopup();
       } else {
@@ -148,6 +150,7 @@ function PendingListings() {
           timer: 1500,
         });
 
+        try { await logAdminActivity(`Deleted listing ${itemId} (reason: ${reason.trim()})`); } catch (err) { /* ignore */ }
         setItems((prev) => prev.filter((i) => i.item_id !== itemId));
         closePopup();
       } else {

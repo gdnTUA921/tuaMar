@@ -130,10 +130,15 @@ export default function Reports() {
     fetch(`${ip}/update_report_status.php`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: 'include',
       body: JSON.stringify({ report_id: id, status: newStatus }),
     })
       .then((res) => res.json())
-      .then((data) => alert(`Remarks updated to "${newStatus}"`))
+      .then(async (data) => {
+        alert(`Remarks updated to "${newStatus}"`);
+        // client-side log for visibility and reliability
+        try { await import('../../utils/adminLogHelper').then(mod => mod.logAdminActivity(`Updated report ${id} status to ${newStatus}`)); } catch (err) { /* ignore */ }
+      })
       .catch((err) => {
         console.error("Update failed:", err);
         alert("Failed to update remarks. Please try again.");

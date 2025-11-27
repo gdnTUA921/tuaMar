@@ -5,6 +5,7 @@ import { database } from '../../firebaseConfig';
 import { ref, onValue, push, set, get, update} from 'firebase/database';
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { logAdminActivity } from '../../utils/adminLogHelper';
 
 export default function Members() {
   const ip = process.env.REACT_APP_LAPTOP_IP; // IP address (see env file for set up);
@@ -151,6 +152,7 @@ export default function Members() {
               confirmButtonColor: "#547B3E",
               confirmButtonText: "OK"
             })
+            try { await logAdminActivity(`Deleted user ${user_id}`); } catch (err) { /* ignore */ }
             setUsers((prev) => prev.filter((u) => u.id !== user_id));
             setRefresh(!refresh);
           } else {
@@ -181,6 +183,7 @@ export default function Members() {
       const res = await fetch(`${ip}/updateUser.php`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({
           user_id: editUser.id,
           original_full_name: `${editUser.first_name} ${editUser.last_name}`.trim() || "",
@@ -214,6 +217,8 @@ export default function Members() {
         icon: "success",
         confirmButtonColor: "#547B3E",
       });
+      // client-side log for update (best-effort)
+      try { await logAdminActivity(`Updated user ${editUser.id}`); } catch (err) { /* ignore */ }
 
     } catch (error) {
       console.error("Update error:", error);

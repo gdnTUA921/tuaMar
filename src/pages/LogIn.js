@@ -10,9 +10,7 @@ import CountdownTimer from '../components/CountdownTimer';
 
 function LogIn({setLoggedIn}) {
 
-     const navigate = useNavigate(); //for navigation to other pages
-
-     const MySwal = withReactContent(Swal);
+    const MySwal = withReactContent(Swal);
 
      const ip = process.env.REACT_APP_LAPTOP_IP; //IP address (see env file for set up)
 
@@ -39,31 +37,6 @@ function LogIn({setLoggedIn}) {
         setAdminLogIn("none");
         setAdminOTP("none");
      }
-
-       // Checking if logged in, if logged in, redirect to home page
-       useEffect(() => {
-         
-           fetch(`${ip}/fetchSession.php`, {
-             method: "GET",
-             credentials: "include",
-           })
-             .then((response) => response.json())
-             .then((data) => {
-               if (!data.user_id) {
-                 //Do nothing, user is not logged in, but we check if the user logged in is an admin
-                    if (data.user_type === "admin") {
-                        navigate('/admin');
-                    }
-               }
-               else {
-                 navigate('/'); //redirect to home page if logged in
-               }
-             })
-             .catch((error) => {
-               console.error("Error fetching session data:", error);
-             });
-     
-       }, [ip, navigate]);
 
      //Reload the page upon start up -- beneficial for clearing CSS properties of popup boxes for both admin and user accounts
      //This is to ensure that the CSS properties for popup box does not affect each account types upon switching accounts.
@@ -113,6 +86,8 @@ function LogIn({setLoggedIn}) {
     const handleUserChange = (event) => setUser(event.target.value);
     const handleUserPassword = (event) => setPassword(event.target.value);
 
+    
+    const navigate = useNavigate(); //for navigation to other pages
 
     //For Admin Log In
     //This function handles the log in of the admin account
@@ -415,6 +390,9 @@ function LogIn({setLoggedIn}) {
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png" alt='Google Logo' className='gLogo'/>
                         Continue with Google
                     </button>
+                                                 <p className="register-link">
+                            Don't have an account? <Link to="/register">Register here</Link>
+                            </p>
                 </div>
 
                 {/*Admin Log In*/}
@@ -570,6 +548,7 @@ function LogIn({setLoggedIn}) {
                                 <br/><br/>
                                 <button type="submit" className='signInButton'>Submit</button>
                                 <button type="submit" className="signInButton cancel" onClick={(e) => {e.preventDefault(); setAdminForgotPass("none"); setAdminOTP("none"); setResetPass("none"); setOTPVerified(false); setAdminLogIn("flex");}}><b>Cancel</b></button>
+
                     </form>
                 </div>
             </div>
