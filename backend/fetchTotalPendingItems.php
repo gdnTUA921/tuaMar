@@ -12,7 +12,7 @@ try {
     $year = isset($_GET['year']) ? intval($_GET['year']) : null;
 
     // Build WHERE clause based on period
-    $whereClause = "WHERE p.status = 'PENDING' AND u.is_banned = 0";
+    $whereClause = "WHERE p.status = 'IN REVIEW' AND u.is_banned = 0";
 
     if ($period === 'week') {
         if ($week !== null) {
