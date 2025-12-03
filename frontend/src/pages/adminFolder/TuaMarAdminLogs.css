@@ -1,0 +1,137 @@
+/* ===========================
+   CONTAINER
+=========================== */
+.logs-container {
+  width: 100%;
+  padding: 30px 50px;
+  background: #d9d9d9;
+  min-height: 100vh; /* FIXED: no more 100px height */
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.logs-container h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* ===========================
+   ACTION BUTTONS
+=========================== */
+.logs-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.export-btn,
+.clear-btn {
+  padding: 10px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.export-btn {
+  background: #547B3E;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.export-btn:hover {
+  background: #4a6f36;
+}
+
+.clear-btn {
+  background: #b23b3b;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.clear-btn:hover {
+  background: #9b3232;
+}
+
+.export-btn:disabled,
+.clear-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===========================
+   TABLE WRAPPER
+=========================== */
+.logs-table-wrapper {
+  width: 100%;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  max-height: 75vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* Custom Scrollbar */
+.logs-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+.logs-table-wrapper::-webkit-scrollbar-track {
+  background: #e4e4e4;
+  border-radius: 10px;
+}
+.logs-table-wrapper::-webkit-scrollbar-thumb {
+  background: #547B3E;
+  border-radius: 10px;
+}
+
+/* ===========================
+   TABLE STYLING
+=========================== */
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.logs-table thead th {
+  background: #547B3E;
+  color: white;
+  padding: 14px 10px;
+  font-size: 15px;
+  text-align: left;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.logs-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e6e6e6;
+  font-size: 15px;
+  color: #333;
+}
+
+.logs-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.logs-table tr:hover {
+  background: #f2f7ed;
+}
+
+/* ===========================
+   EMPTY STATE / LOADING
+=========================== */
+.logs-empty {
+  padding: 25px;
+  color: #666;
+  font-size: 18px;
+  font-weight: 500;
+}

@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# Firebase Admin SDK credentials
+tua-market-firebase-adminsdk-fbsvc-0bacb503ad.json
+
+# Composer dependencies
+/vendor/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
