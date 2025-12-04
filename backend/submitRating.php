@@ -1,7 +1,6 @@
 <?php
 include "connect_db.php";
 include "corsHeader.php";
-session_start();
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     http_response_code(405);
@@ -30,7 +29,7 @@ try {
     // Check if user has already rated
     $stmt = $pdo->prepare("SELECT rating_id FROM user_ratings WHERE user_id = ?");
     $stmt->execute([$userId]);
-    
+
     if ($stmt->fetch()) {
         echo json_encode(["success" => false, "message" => "You have already submitted a rating"]);
         exit();
@@ -41,18 +40,18 @@ try {
         INSERT INTO user_ratings (user_id, rating, feedback, created_at) 
         VALUES (?, ?, ?, NOW())
     ");
-    
+
     $stmt->execute([$userId, $rating, $feedback]);
 
     echo json_encode([
-        "success" => true, 
+        "success" => true,
         "message" => "Rating submitted successfully"
     ]);
 
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode([
-        "success" => false, 
+        "success" => false,
         "message" => "Database error: " . $e->getMessage()
     ]);
 }

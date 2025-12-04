@@ -11,7 +11,7 @@ const RatingModal = ({ onSubmit, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (rating === 0) {
       MySwal.fire({
         icon: 'warning',
@@ -24,13 +24,7 @@ const RatingModal = ({ onSubmit, onClose }) => {
 
     try {
       await onSubmit(rating, feedback);
-      MySwal.fire({
-        icon: 'success',
-        title: 'Thank You!',
-        text: 'Your feedback has been submitted successfully.',
-        confirmButtonColor: '#456a31',
-        timer: 2000
-      });
+      // Don't show alert here - let the Header handle it after modal closes
       onClose();
     } catch (error) {
       MySwal.fire({
@@ -50,7 +44,7 @@ const RatingModal = ({ onSubmit, onClose }) => {
     <div className="rating-modal-overlay">
       <div className="rating-modal">
         <button className="rating-modal-close" onClick={handleSkip}>×</button>
-        
+
         <div className="rating-modal-header">
           <img src="/tuamar.png" alt="TUA Marketplace" className="rating-logo" />
           <h2>Rate Your Experience</h2>

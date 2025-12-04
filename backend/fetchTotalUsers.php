@@ -15,11 +15,13 @@ try {
     $whereClause = "WHERE is_banned = 0";
 
     if ($period === 'week') {
-        if ($week !== null) {
-            // Specific week of current month
-            $whereClause .= " AND WEEK(regDate, 1) = WEEK(MAKEDATE(YEAR(NOW()), 1) + INTERVAL ($week - 1) WEEK, 1)";
-            $whereClause .= " AND YEAR(regDate) = YEAR(NOW())";
-            $whereClause .= " AND MONTH(regDate) = MONTH(NOW())";
+        if ($week !== null && $month !== null && $year !== null) {
+            // Specific week of specific month (week 1 = days 1-7, week 2 = days 8-14, etc.)
+            $startDay = ($week - 1) * 7 + 1;
+            $endDay = $week * 7;
+            $whereClause .= " AND DAY(regDate) BETWEEN $startDay AND $endDay";
+            $whereClause .= " AND MONTH(regDate) = $month";
+            $whereClause .= " AND YEAR(regDate) = $year";
         } else {
             // Default to last 7 days
             $whereClause .= " AND regDate >= DATE_SUB(NOW(), INTERVAL 7 DAY)";

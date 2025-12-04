@@ -2,8 +2,6 @@
 include "connect_db.php";
 include "corsHeader.php";
 
-header('Content-Type: application/json');
-
 try {
 
     // Get period parameter (overall, week, month, year)
@@ -19,9 +17,13 @@ try {
 
     // Add date filter based on period
     if ($period === 'week') {
-        if ($week !== null) {
-            $sql .= " AND WEEK(created_at, 1) = WEEK(MAKEDATE(YEAR(NOW()), 1) + INTERVAL ($week - 1) WEEK, 1)";
-            $sql .= " AND YEAR(created_at) = YEAR(NOW()) AND MONTH(created_at) = MONTH(NOW())";
+        if ($week !== null && $month !== null && $year !== null) {
+            // Specific week of specific month (week 1 = days 1-7, week 2 = days 8-14, etc.)
+            $startDay = ($week - 1) * 7 + 1;
+            $endDay = $week * 7;
+            $sql .= " AND DAY(created_at) BETWEEN $startDay AND $endDay";
+            $sql .= " AND MONTH(created_at) = $month";
+            $sql .= " AND YEAR(created_at) = $year";
         } else {
             $sql .= " AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
         }

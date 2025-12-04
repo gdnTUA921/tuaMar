@@ -49,18 +49,33 @@ export default function Logs({ ip }) {
     return () => { cancelled = true; };
   }, [ip]);
 
-  function clearLocalLogs() {
-    if (window.confirm('Clear local logs? This cannot be undone.')) {
-      localStorage.removeItem('adminLogs');
-      setLogs([]);
+  async function clearLogs() {
+    if (window.confirm('Clear all admin logs from database? This cannot be undone.')) {
+      try {
+        const res = await fetch(`${ip}/clearAdminLogs.php`, {
+          method: 'POST',
+          credentials: 'include',
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          setLogs([]);
+          localStorage.removeItem('adminLogs');
+          alert('Admin logs cleared successfully');
+        } else {
+          alert('Failed to clear logs: ' + (data.message || 'Unknown error'));
+        }
+      } catch (err) {
+        alert('Error clearing logs: ' + err.message);
+      }
     }
   }
 
   function exportCsv() {
     if (!logs || logs.length === 0) return;
-    const header = ['DateTime','AdminId','Activity','IpAddress'];
+    const header = ['DateTime', 'AdminId', 'Activity', 'IpAddress'];
     const rows = logs.map(l => [l.datetime, l.admin_id, l.activity, l.ip_address]);
-    const csv = [header, ...rows].map(r => r.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const csv = [header, ...rows].map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -76,8 +91,8 @@ export default function Logs({ ip }) {
     <div className="logs-container">
       <h1>Admin Logs</h1>
       <div className="logs-actions">
-        <button className="export-btn" onClick={exportCsv} disabled={!logs || logs.length===0}>Export CSV</button>
-        <button className="clear-btn" onClick={clearLocalLogs} disabled={!logs || logs.length===0}>Clear Local Logs</button>
+        <button className="export-btn" onClick={exportCsv} disabled={!logs || logs.length === 0}>Export CSV</button>
+        <button className="clear-btn" onClick={clearLogs} disabled={!logs || logs.length === 0}>Clear Logs</button>
       </div>
 
       {loading ? (
@@ -96,7 +111,7 @@ export default function Logs({ ip }) {
               </tr>
             </thead>
             <tbody>
-              {logs.slice().reverse().map((l, idx) => (
+              {logs.map((l, idx) => (
                 <tr key={idx}>
                   <td>{l.datetime}</td>
                   <td>{l.admin_id}</td>

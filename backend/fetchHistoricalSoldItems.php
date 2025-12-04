@@ -14,9 +14,13 @@ try {
     $whereClause = "WHERE status = 'SOLD'";
 
     if ($period === 'week') {
-        if ($week !== null) {
-            $whereClause .= " AND WEEK(listing_date, 1) = WEEK(MAKEDATE(YEAR(NOW()), 1) + INTERVAL ($week - 1) WEEK, 1)";
-            $whereClause .= " AND YEAR(listing_date) = YEAR(NOW()) AND MONTH(listing_date) = MONTH(NOW())";
+        if ($week !== null && $month !== null && $year !== null) {
+            // Specific week of specific month (week 1 = days 1-7, week 2 = days 8-14, etc.)
+            $startDay = ($week - 1) * 7 + 1;
+            $endDay = $week * 7;
+            $whereClause .= " AND DAY(listing_date) BETWEEN $startDay AND $endDay";
+            $whereClause .= " AND MONTH(listing_date) = $month";
+            $whereClause .= " AND YEAR(listing_date) = $year";
         } else {
             $whereClause .= " AND listing_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
         }

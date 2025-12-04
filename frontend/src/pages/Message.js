@@ -62,7 +62,7 @@ function Message() {
 
   //close view modal popup
   const closeViewModalPopup = () => {
-    setShowEnlargeImg(false); 
+    setShowEnlargeImg(false);
     setEnlargeImg("");
   };
 
@@ -74,27 +74,27 @@ function Message() {
 
   // Checking if logged in, if not redirected to log-in
   useEffect(() => {
-    
-      fetch(`${ip}/fetchSession.php`, {
-        method: "GET",
-        credentials: "include",
+
+    fetch(`${ip}/fetchSession.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.user_id) {
+          navigate("/login", { replace: true });
+        }
+        else {
+          console.log(data.firebase_uid);
+          setcurrentUserId(data.firebase_uid);
+          setCurrentUserName(data.full_name);
+          setCurrentPfp(data.pfp);
+          fetchChats(data.firebase_uid);
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (!data.user_id) {
-            navigate("/login", {replace: true});
-          }
-          else {
-            console.log(data.firebase_uid);
-            setcurrentUserId(data.firebase_uid);
-            setCurrentUserName(data.full_name);
-            setCurrentPfp(data.pfp);
-            fetchChats(data.firebase_uid);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching session data:", error);
-        });
+      .catch((error) => {
+        console.error("Error fetching session data:", error);
+      });
 
   }, [ip, navigate]);
 
@@ -128,38 +128,38 @@ function Message() {
   // Fetching list of chats for messagebox class or chat inbox
   const fetchChats = (currentUserID) => {
     const intervalId = setInterval(() => {
-        if (!currentUserID) {
-          console.warn("fetchChats: currentUserId not yet available.");
+      if (!currentUserID) {
+        console.warn("fetchChats: currentUserId not yet available.");
+        return;
+      }
+
+      const chatsRef = ref(database, 'chatsList');
+
+      onValue(chatsRef, (snapshot) => {
+        if (!snapshot.exists()) {
+          console.log("fetchChats: No chats found.");
+          setChats([]);
+          setIsLoading(false);
           return;
         }
 
-        const chatsRef = ref(database, 'chatsList');
+        const allChats = snapshot.val();
+        const filteredChats = [];
 
-        onValue(chatsRef, (snapshot) => {
-          if (!snapshot.exists()) {
-            console.log("fetchChats: No chats found.");
-            setChats([]);
-            setIsLoading(false);
-            return;
+        Object.entries(allChats).forEach(([chatId, chatData]) => {
+          if (chatData.buyerID_fb === currentUserID || chatData.sellerID_fb === currentUserID) {
+            filteredChats.push({
+              ...chatData,
+              chat_id: chatId,
+            });
           }
-
-          const allChats = snapshot.val();
-          const filteredChats = [];
-
-          Object.entries(allChats).forEach(([chatId, chatData]) => {
-            if (chatData.buyerID_fb === currentUserID || chatData.sellerID_fb === currentUserID) {
-              filteredChats.push({
-                ...chatData,
-                chat_id: chatId,
-              });
-            }
-          });
-
-          filteredChats.sort((a, b) => b.timestamp - a.timestamp);
-
-          setChats(filteredChats);
-          setIsLoading(false);
         });
+
+        filteredChats.sort((a, b) => b.timestamp - a.timestamp);
+
+        setChats(filteredChats);
+        setIsLoading(false);
+      });
     }, 3000);
 
     return () => clearInterval(intervalId);
@@ -237,18 +237,19 @@ function Message() {
       }
 
       const response = await fetch(`${ip}/messageNotif.php`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ 
-            senderID: currentUserId, 
-            receiverID: receiverID, 
-            itemName: itemName, 
-            itemPic: itemPicture, 
-            messageText: input}),
-          credentials: "include",
-        });
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          senderID: currentUserId,
+          receiverID: receiverID,
+          itemName: itemName,
+          itemPic: itemPicture,
+          messageText: input
+        }),
+        credentials: "include",
+      });
 
       const messageResult = await response.json();
       console.log("Notification response:", messageResult);
@@ -262,7 +263,7 @@ function Message() {
 
   // Sending images (UPLOAD + PREVENT AUTO LOGOUT during upload)
   const handleImageUpload = async (file, chat_id, currentUserId, receiverID, itemId) => {
-    window.__startUpload();  // ⛔ Pause Auto Logout while uploading
+    if (window.__startUpload) window.__startUpload();  // ⛔ Pause Auto Logout while uploading (with safety check)
 
     const finalChatId = chat_id
       ? chat_id
@@ -314,14 +315,14 @@ function Message() {
     } catch (error) {
       console.error("Image upload error:", error);
     } finally {
-      window.__stopUpload();  // ✅ Resume Auto Logout after upload completes
+      if (window.__stopUpload) window.__stopUpload();  // ✅ Resume Auto Logout after upload completes (with safety check)
     }
   };
 
   // Listen for messages
   useEffect(() => {
     if (!currentUserId || !receiverID || !itemId) {
-      console.log("Missing IDs for message listening:", { currentUserId, receiverID, itemId});
+      console.log("Missing IDs for message listening:", { currentUserId, receiverID, itemId });
       return;
     }
 
@@ -543,39 +544,39 @@ function Message() {
   //Navigate to Review Module
   const goToReview = (itemId, itemPicture, itemName, userName, appUserID, receiverPicture, receiverStatus) => {
 
-    fetch (`${ip}/checkReview.php`, {
+    fetch(`${ip}/checkReview.php`, {
       headers: {
         "Content-Type": "application/json",
       },
       method: "POST",
-      body: JSON.stringify({ itemId: itemId, reviewed_user_id: appUserID}),
+      body: JSON.stringify({ itemId: itemId, reviewed_user_id: appUserID }),
       credentials: "include",
     })
-    .then ((res) => res.json())
-    .then ((data) => {
-      if (data.message === "No Reviews Yet"){
-        navigate("/Reviewmod", {
-          state: {
-            passedID: itemId,
-            previewPic: itemPicture,
-            itemName: itemName,
-            reviewedUser: userName,
-            reviewedUserID: appUserID,
-            receiverPicture: receiverPicture,
-            passedStatus: receiverStatus
-          }
-        })
-      }
-      else{
-        MySwal.fire({
-          html: "<h2>You have already made a review for this " + receiverStatus + ".</h2>",
-          confirmButtonColor: "#547B3E",
-        });
-      }
-    })
-    .catch((error) => {
-      console.error("Error checking review data:", error);
-    });
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.message === "No Reviews Yet") {
+          navigate("/Reviewmod", {
+            state: {
+              passedID: itemId,
+              previewPic: itemPicture,
+              itemName: itemName,
+              reviewedUser: userName,
+              reviewedUserID: appUserID,
+              receiverPicture: receiverPicture,
+              passedStatus: receiverStatus
+            }
+          })
+        }
+        else {
+          MySwal.fire({
+            html: "<h2>You have already made a review for this " + receiverStatus + ".</h2>",
+            confirmButtonColor: "#547B3E",
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error checking review data:", error);
+      });
   }
 
 
@@ -687,7 +688,7 @@ function Message() {
       {/* Default Message Prompt */}
       {isLoading === false ? (
         <div className={`messageRightCon-default ${chatBlock ? 'hidden' : ''}`}>
-          <img src='tuamar.png' className='message-defaultPic' alt='tuamar_logo'/>
+          <img src='tuamar.png' className='message-defaultPic' alt='tuamar_logo' />
           <h1>Press Any Chat To Continue</h1>
         </div>
       ) : (
@@ -702,7 +703,7 @@ function Message() {
           <div className="profile">
             <MoveLeft className='arrow-left' onClick={() => setChatBlock(false)} />
             <Link to={`/userProfile/${userName}`} className="messageSellerLink">
-              <img src={receiverPicture || "/tuamr-profile-icon.jpg"} className="right-con-pfp" alt='userName' onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")}/>
+              <img src={receiverPicture || "/tuamr-profile-icon.jpg"} className="right-con-pfp" alt='userName' onError={(e) => (e.target.src = "/tuamar-profile-icon.jpg")} />
             </Link>
             <Link to={`/userProfile/${userName}`} className="messageSellerLink">
               <h3>{userName}</h3>
@@ -716,7 +717,7 @@ function Message() {
         <div className='itemInquired'>
           <div className='itemInquiredDetails'>
             <Link to={`/itemdetails/${itemId}/${encodeURIComponent(itemName)}`} className="item-details-link">
-              <img src={itemPicture || "/default-image.png"} alt='itemName' onError={(e) => (e.target.src = "/default-image.png")}/>
+              <img src={itemPicture || "/default-image.png"} alt='itemName' onError={(e) => (e.target.src = "/default-image.png")} />
             </Link>
             <div className='itemInquiredDeets'>
               <Link to={`/itemdetails/${itemId}/${encodeURIComponent(itemName)}`} className="item-details-link">
@@ -780,7 +781,7 @@ function Message() {
               >
                 <div className={msg.senderId === currentUserId ? "specific-messages sent-message" : "specific-messages received-message"}>
                   {msg.imageUrl ? (
-                    <img src={msg.imageUrl} alt="sent" style={{ width: "auto", height: "120px", borderRadius: "8px", padding: 0 }} onClick={(e) => {setShowEnlargeImg(true); setEnlargeImg(msg.imageUrl)}}/>
+                    <img src={msg.imageUrl} alt="sent" style={{ width: "auto", height: "120px", borderRadius: "8px", padding: 0 }} onClick={(e) => { setShowEnlargeImg(true); setEnlargeImg(msg.imageUrl) }} />
                   ) : (
                     msg.text
                   )}
@@ -837,16 +838,16 @@ function Message() {
 
           {/* View Image Modal */}
           {showEnlargeImg && (
-            <div className="image-preview-overlay" onClick={() => {closeViewModalPopup();}}>
+            <div className="image-preview-overlay" onClick={() => { closeViewModalPopup(); }}>
               <div className="image-preview-container" onClick={(e) => e.stopPropagation()}>
                 <div className="image-preview-header">
                   <h3></h3>
-                  <button className="close-preview-btn" onClick={() => {closeViewModalPopup();}}>
+                  <button className="close-preview-btn" onClick={() => { closeViewModalPopup(); }}>
                     ×
                   </button>
                 </div>
                 <div className="image-preview-content">
-                  <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")}/>
+                  <img src={enlargedImg || "/default-image.png"} alt="Preview" className="popup-preview-image" onError={(e) => (e.target.src = "/default-image.png")} />
                 </div>
               </div>
             </div>
@@ -867,12 +868,12 @@ function Message() {
             value={input}
             onChange={(e) => {
               setInput(e.target.value);
-              window.__startTyping();       // <-- NEW
+              if (window.__startTyping) window.__startTyping();       // <-- NEW (with safety check)
             }}
-            onBlur={() => window.__stopTyping()} // <-- NEW
+            onBlur={() => { if (window.__stopTyping) window.__stopTyping(); }} // <-- NEW (with safety check)
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
-                window.__stopTyping();     // clicking Send stops typing state
+                if (window.__stopTyping) window.__stopTyping();     // clicking Send stops typing state (with safety check)
                 e.preventDefault();
                 sendMessage();
               }

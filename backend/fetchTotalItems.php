@@ -15,11 +15,13 @@ try {
     $whereClause = "WHERE p.status = 'AVAILABLE' AND u.is_banned = 0";
 
     if ($period === 'week') {
-        if ($week !== null) {
-            // Specific week of current month
-            $whereClause .= " AND WEEK(p.listing_date, 1) = WEEK(MAKEDATE(YEAR(NOW()), 1) + INTERVAL ($week - 1) WEEK, 1)";
-            $whereClause .= " AND YEAR(p.listing_date) = YEAR(NOW())";
-            $whereClause .= " AND MONTH(p.listing_date) = MONTH(NOW())";
+        if ($week !== null && $month !== null && $year !== null) {
+            // Specific week of specific month (week 1 = days 1-7, week 2 = days 8-14, etc.)
+            $startDay = ($week - 1) * 7 + 1;
+            $endDay = $week * 7;
+            $whereClause .= " AND DAY(p.listing_date) BETWEEN $startDay AND $endDay";
+            $whereClause .= " AND MONTH(p.listing_date) = $month";
+            $whereClause .= " AND YEAR(p.listing_date) = $year";
         } else {
             // Default to last 7 days
             $whereClause .= " AND p.listing_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)";

@@ -14,9 +14,13 @@ try {
     $whereClause = "WHERE status = 'PENDING'";
 
     if ($period === 'week') {
-        if ($week !== null) {
-            $whereClause .= " AND WEEK(created_at, 1) = WEEK(MAKEDATE(YEAR(NOW()), 1) + INTERVAL ($week - 1) WEEK, 1)";
-            $whereClause .= " AND YEAR(created_at) = YEAR(NOW()) AND MONTH(created_at) = MONTH(NOW())";
+        if ($week !== null && $month !== null && $year !== null) {
+            // Specific week of specific month (week 1 = days 1-7, week 2 = days 8-14, etc.)
+            $startDay = ($week - 1) * 7 + 1;
+            $endDay = $week * 7;
+            $whereClause .= " AND DAY(created_at) BETWEEN $startDay AND $endDay";
+            $whereClause .= " AND MONTH(created_at) = $month";
+            $whereClause .= " AND YEAR(created_at) = $year";
         } else {
             $whereClause .= " AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
         }

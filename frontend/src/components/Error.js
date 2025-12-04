@@ -19,48 +19,48 @@ const Error = () => {
   const [redirectPage, setRedirectPage] = useState();
 
 
-useEffect(() => {
-      // Checking if logged in, if not redirected to log-in
-      fetch(`${ip}/fetchSession.php`, {
-        method: "GET",
-        credentials: "include",
+  useEffect(() => {
+    // Checking if logged in, if not redirected to log-in
+    fetch(`${ip}/fetchSession.php`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.user_id) {
+          setRedirectPage("/");
+        }
+        else if (data.admin_id) {
+          setRedirectPage("/admin");
+        }
+        else {
+          setRedirectPage("/");
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.user_id) {
-            setRedirectPage("/");
-          }
-          else if (data.admin_id){
-            setRedirectPage("/admin");
-          }
-          else{
-            setRedirectPage("/login");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching session data:", error);
-        });
-}, [ip, navigate]);
+      .catch((error) => {
+        console.error("Error fetching session data:", error);
+      });
+  }, [ip, navigate]);
 
 
   return (
     <div className="error-container">
-        <div className='error-container-inside'>
-            <img src="/tuamar.png" className="error-image"/>
-            <h1 className="error-heading-1">404</h1>
-            <h1 className="error-heading-2">Page Not Found</h1>
-            <p className="error-message">
-                Oops! The page you're looking for doesn't exist or has been moved.
-            </p>
-            <div className="error-buttons">
-                <button className="error-button" onClick={handleGoBack}>
-                Go Back
-                </button>
-                <button className="error-button" onClick={handleGoHome}>
-                Go Home
-                </button>
-            </div>
+      <div className='error-container-inside'>
+        <img src="/tuamar.png" className="error-image" />
+        <h1 className="error-heading-1">404</h1>
+        <h1 className="error-heading-2">Page Not Found</h1>
+        <p className="error-message">
+          Oops! The page you're looking for doesn't exist or has been moved.
+        </p>
+        <div className="error-buttons">
+          <button className="error-button" onClick={handleGoBack}>
+            Go Back
+          </button>
+          <button className="error-button" onClick={handleGoHome}>
+            Go Home
+          </button>
         </div>
+      </div>
     </div>
   );
 };
