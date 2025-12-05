@@ -3,11 +3,10 @@ import "../assets/AboutUs.css";
 import adviser1 from "../assets/images/adviser1.jpg";
 import adviser2 from "../assets/images/adviser2.jpg";
 import dean from "../assets/images/dean.jpg";
-import dev1 from "../assets/images/dev1.jpg";
+import dev1 from "../assets/images/dev1_1.JPG";
 import dev2 from "../assets/images/dev2.png";
-import dev3 from "../assets/images/dev3.jpeg";
+import dev3 from "../assets/images/dev3.JPG";
 import dev4 from "../assets/images/dev4.jpeg";
-
 import ceis from "../assets/images/ceis.png";
 
 
@@ -83,7 +82,7 @@ export default function AboutUs() {
         <h2>Acknowledgements</h2>
         <p>
           We extend our heartfelt gratitude to our research advisers and
-          department heads for their unwavering support <br/>and guidance throughout
+          department heads for their unwavering support <br />and guidance throughout
           the development of TUA Marketplace.
         </p>
         <div className="ack-cards">
